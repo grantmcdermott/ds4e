@@ -907,6 +907,13 @@
       "Repository": "RSPM",
       "Hash": "bb6f643247d35c947e9f113567e2bf7a"
     },
+    "rgeos": {
+      "Package": "rgeos",
+      "Version": "0.5-5",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "94a44c3f0d49ceb80c385610696873ca"
+    },
     "rlang": {
       "Package": "rlang",
       "Version": "0.4.10",
