@@ -43,6 +43,8 @@ jobs:
 
       - name: Build site
         run: Rscript -e 'bookdown::render_book("index.Rmd", quiet = TRUE)'
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
 
       - name: Install npm
         uses: actions/setup-node@v1
