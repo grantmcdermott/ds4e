@@ -18,6 +18,7 @@ _main.*
 !README.md
 **/*.html 
 # ignore all html files except:
+!ga_script.html
 !**/mathjax_header.html
 **/*.pdf
 **/*.bib
