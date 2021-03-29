@@ -9,3 +9,5 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Imports: bookdown
 Remotes: rstudio/bookdown
+URL: https://github.com/grantmcdermott/ds4e
+BugReports: https://github.com/grantmcdermott/ds4e/issues
