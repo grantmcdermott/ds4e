@@ -22,5 +22,5 @@ example, some key geospatial libraries will need to be installed separately
 through your distribution's package manager (e.g. aptitude). In each chapter, we 
 do our best to detail any additional system requirements and who to install them. 
 Alternatively, users may consider the 
-[`remotes::system_requirements()`(https://remotes.r-lib.org/reference/system_requirements.html)
+[`remotes::system_requirements()`](https://remotes.r-lib.org/reference/system_requirements.html)
 command.
