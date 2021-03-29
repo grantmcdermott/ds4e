@@ -1,0 +1,21 @@
+book_filename: "ds4e"
+new_session: yes
+delete_merged_file: true
+# language:
+#   ui:
+#     chapter_name: "Chapter "
+
+rmd_files: [
+  "index.Rmd",
+
+  "intro.Rmd",
+  
+  # Programming section
+  "funcs-intro.Rmd",
+  "funcs-adv.Rmd",
+  
+  # Analysis section
+  "spatial.Rmd",
+]
+
+before_chapter_script: "_common.R"

@@ -1,0 +1,11 @@
+Package: ds4e
+Title: Data Science for Economists and Other Animals
+Version: 0.0.1
+Authors@R: 
+    person(given = "Grant",
+           family = "McDermott",
+           role = c("aut", "cre"),
+           email = "grantmcd@uoregon.edu.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Imports: bookdown
+Remotes: rstudio/bookdown
