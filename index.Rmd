@@ -3,6 +3,9 @@ title: "Data Science for Economists and Other Animals"
 author: "Grant McDermott and Ed Rubin"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
+url: 'https\://grantmcdermott/ds4e'
+github-repo: grantmcdermott/ds4e
+twitter-handle: grant_mcdermott
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
