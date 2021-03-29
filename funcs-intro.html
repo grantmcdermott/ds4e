@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>2 Functions: Introductory concepts | Data Science for Economists and Other Animals</title>
+<meta name="author" content="Grant McDermott and Ed Rubin">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.7.4/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4/tabs.js"></script><script src="libs/bs3compat-0.2.4/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Data Science for Economists and Other Animals</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction</a></li>
+<li class="book-part">Programming</li>
+<li><a class="active" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li class="book-part">Analysis</li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="funcs-intro" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> Functions: Introductory concepts<a class="anchor" aria-label="anchor" href="#funcs-intro"><i class="fas fa-link"></i></a>
+</h1>
+<p><em>Note: This will be the first of several lectures on programming. Today, we’ll cover the basics of function writing and functional programming (especially as it applies to iteration). My goal is to provide a solid foundation through a bunch of conceptually simple examples, which will allow us to tackle more complex problems later on.</em></p>
+<div id="software-requirements" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"><i class="fas fa-link"></i></a>
+</h2>
+<div id="r-packages" class="section level3" number="2.1.1">
+<h3>
+<span class="header-section-number">2.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>New: <strong>pbapply</strong>
+</li>
+<li>Already used: <strong>tidyverse</strong>, <strong>data.table</strong>
+</li>
+</ul>
+<p>We’ll be sticking mostly with base R functions today, but I also want to show you a few extra features and considerations for our main data wrangling packages. As per usual, run the following code chunk to install (if necessary) and load everything.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/trinker/pacman">"pacman"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span>
+<span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">pbapply</span>, <span class="va">data.table</span>, <span class="va">tidyverse</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="basic-syntax" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Basic syntax<a class="anchor" aria-label="anchor" href="#basic-syntax"><i class="fas fa-link"></i></a>
+</h2>
+<p>We have already seen and used a multitude of functions in R. Some of these functions come pre-packaged with base R (e.g. <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>), while others are from external packages (e.g. <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code>). Regardless of where they come from, functions in R all adopt the same basic syntax:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">function_name</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span></code></pre></div>
+<p>For much of the time, we will rely on functions that other people have written for us. However, you can — and should! — write your own functions too. This is easy to do with the generic <strong><code>function()</code></strong> function.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Yes, it’s a function that let’s you write functions. Very meta.&lt;/p&gt;"><sup>1</sup></a> The syntax will again look familiar to you:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">function</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">OPERATIONS</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">VALUE</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>While it’s possible and reasonably common to write anonymous functions like the above, we typically write functions because we want to reuse code. For this typical use-case it makes sense to name our functions.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Remember: “In R, everything is an object and everything has a name.”&lt;/p&gt;"><sup>2</sup></a></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_func</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">OPERATIONS</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">VALUE</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<p>For some short functions, you don’t need to invoke the curly brackets or assign an explicit return object (more on this below). In these cases, you can just write your function on a single line:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_short_func</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span> <span class="va">OPERATION</span></code></pre></div>
+<p>Try to give your functions short, pithy names that are informative to both you and anyone else reading your code. This is harder than it sounds, but will pay off down the road.</p>
+</div>
+<div id="a-simple-example" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> A simple example<a class="anchor" aria-label="anchor" href="#a-simple-example"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s write out a simple example function, which gives the square of an input number.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span>        <span class="co">## Our function name</span>
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> <span class="co">## The argument(s) that our function takes as an input</span>
+    <span class="va">x</span><span class="op">^</span><span class="fl">2</span>         <span class="co">## The operation(s) that our function performs</span>
+  <span class="op">}</span></code></pre></div>
+<p>Test it.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+<span class="co">#&gt; [1] 9</span></code></pre></div>
+<p>Great, it works. Note that for this simple example we could have written everything on a single line; i.e. <code>square = function(x) x^2</code> would work just as well. (Confirm this for yourself.) However, we’re about to add some extra conditions and options to our function, which will strongly favour the multi-line format.</p>
+<blockquote>
+<p><strong>Aside:</strong> I want to stress that our new <code>square()</code> function is not particularly exciting… or, indeed, useful. R’s built-in arithmetic functions already take care of (vectorised) exponentiation and do so very efficiently. (See <code><a href="https://rdrr.io/r/base/Arithmetic.html">?Arithmetic</a></code>.) However, we’re going to continue with this conceptually simple example, since it will provide a clear framework for demonstrating some general principles about functions in R.</p>
+</blockquote>
+<div id="specifying-return-values" class="section level3" number="2.3.1">
+<h3>
+<span class="header-section-number">2.3.1</span> Specifying return values<a class="anchor" aria-label="anchor" href="#specifying-return-values"><i class="fas fa-link"></i></a>
+</h3>
+<p>Notice that we didn’t specify a return value for our function. This will work in many cases because R’s default behaviour is to automatically return the final object that you created within the function. However, this won’t always be the case. Opinions on this differ, but my own recommendation is that you get into the habit of assigning the return object(s) explicitly with `return()``. Let’s modify our function to do exactly that.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> 
+    <span class="co">## Create an intermediary object (that will be returned)</span>
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span>  
+    
+    <span class="co">## The value(s) or object(s) that we want returned.</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x_sq</span><span class="op">)</span>  
+  <span class="op">}</span></code></pre></div>
+<p>Again, test that it works.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; [1] 25</span></code></pre></div>
+<p>Specifying an explicit return value is also helpful when we want to return more than one object. For example, let’s say that we want to remind our user what variable they used as an argument in our function:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> 
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
+    
+    <span class="co">## The list of object(s) that we want returned.</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">x</span>, value_squared <span class="op">=</span> <span class="va">x_sq</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>
+<span class="co">#&gt; $value</span>
+<span class="co">#&gt; [1] 3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $value_squared</span>
+<span class="co">#&gt; [1] 9</span></code></pre></div>
+<p>Note that multiple return objects have to be combined in a list. I didn’t have to name these separate list elements — i.e. “value” and “value_squared” — but it will be helpful for users of our function. Nevertheless, remember that many objects in R contain multiple elements (vectors, data frames, and lists are all good examples of this). So we can also specify one of these “array”-type objects within the function itself if that provides a more convenient form of output. For example, we could combine the input and output values into a data frame:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> 
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
+    
+    <span class="co">## Bundle up our input and output values into a convenient dataframe.</span>
+    <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>value<span class="op">=</span><span class="va">x</span>, value_squared<span class="op">=</span><span class="va">x_sq</span><span class="op">)</span> 
+    
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<p>Test.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1    12           144</span></code></pre></div>
+</div>
+<div id="specifying-default-argument-values" class="section level3" number="2.3.2">
+<h3>
+<span class="header-section-number">2.3.2</span> Specifying default argument values<a class="anchor" aria-label="anchor" href="#specifying-default-argument-values"><i class="fas fa-link"></i></a>
+</h3>
+<p>Another thing worth noting about R functions is that you can assign default argument values. You have already encountered some examples of this in action.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;E.g. Type &lt;code&gt;?rnorm&lt;/code&gt; and see that it provides a default mean and standard deviation of 0 and 1, respectively.&lt;/p&gt;"><sup>3</sup></a> We can add a default option to our own function pretty easily.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span> <span class="co">## Setting the default argument value </span>
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
+    <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">x</span>, value_squared <span class="op">=</span> <span class="va">x_sq</span><span class="op">)</span>
+    
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="op">)</span>  <span class="co">## Will take the default value of 1.</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     1             1</span>
+<span class="fu">square</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="co">## Now takes the explicit value that we give it.</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     2             4</span></code></pre></div>
+<p>We’ll return the issue of specifying default values (and handling invalid inputs) in the next lecture on function debugging.</p>
+</div>
+<div id="aside-environments-and-lexical-scoping" class="section level3" number="2.3.3">
+<h3>
+<span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping<a class="anchor" aria-label="anchor" href="#aside-environments-and-lexical-scoping"><i class="fas fa-link"></i></a>
+</h3>
+<p>Before continuing, I want to highlight the fact that none of the intermediate objects that we created within the above functions (<code>x_sq</code>, <code>df</code>, etc.) have made their way into our global environment. Take a moment to confirm this for yourself by looking in the “Environment” pane of your RStudio session.</p>
+<p>R has a set of so-called <a href="https://adv-r.hadley.nz/functions.html#lexical-scoping"><em>lexical scoping</em></a> rules, which govern where it stores and evaluates the values of different objects. Without going into too much depth, the practical implication of lexical scoping is that functions operate in a quasi-sandboxed <a href="https://adv-r.hadley.nz/environments.html"><em>environment</em></a>. They don’t return or use objects in the global environment unless they are forced to (e.g. with a <code><a href="https://rdrr.io/r/base/function.html">return()</a></code> command). Similarly, a function will only look to outside environments (e.g. a level “up”) to find an object if it doesn’t see the object named within itself.</p>
+<p>We’ll explore the ideas of separate environments and lexical scoping a bit further when we get to the <a href="funcs-intro.html#functional-programming">Functional programming</a> section below. We’ll also go into more depth during the next lecture on debugging.</p>
+</div>
+</div>
+<div id="control-flow" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Control flow<a class="anchor" aria-label="anchor" href="#control-flow"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now that we’ve got a good sense of the basic function syntax, it’s time to learn control flow. That is, we want to control the order (or “flow”) of statements and operations that our functions evaluate.</p>
+<div id="if-and-ifelse" class="section level3" number="2.4.1">
+<h3>
+<span class="header-section-number">2.4.1</span> if and ifelse<a class="anchor" aria-label="anchor" href="#if-and-ifelse"><i class="fas fa-link"></i></a>
+</h3>
+<p>We’ve already encountered conditional statements like <code>if()</code> and <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> numerous times in the course thus far.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;E.g Conditional mutation in the tidyverse lecture (see &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>4</sup></a> However, let’s see how they can work in our own bespoke functions by slightly modifying our previous square function. This time, instead of specifying a default input value of 1 in the function argument itself, we’ll specify a value of <code>NULL</code>. Then we’ll use an <code>if()</code> statement to reassign this default to one.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>  <span class="co">## Default value of NULL</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="va">x</span> <span class="op">=</span> <span class="fl">1</span> <span class="co">## Re-assign default to 1</span>
+    
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
+    <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">x</span>, value_squared <span class="op">=</span> <span class="va">x_sq</span><span class="op">)</span>
+    
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span>
+<span class="fu">square</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     1             1</span></code></pre></div>
+<p>Why go through the rigmarole of specifying a NULL default inpute if we’re going to change it to 1 anyway? Admittedly, this is a pretty silly thing to do in the above example. However, consider what it buys us in the next code chunk:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> <span class="co">## Start multi-line IF statement with `{`</span>
+      <span class="va">x</span> <span class="op">=</span> <span class="fl">1</span>
+      <span class="co">## Message to users:</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"No input value provided. Using default value of 1."</span><span class="op">)</span>
+      <span class="op">}</span>               <span class="co">## Close multi-line if statement with `}`</span>
+    
+    <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
+    <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>value <span class="op">=</span> <span class="va">x</span>, value_squared <span class="op">=</span> <span class="va">x_sq</span><span class="op">)</span>
+    
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span>
+<span class="fu">square</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; No input value provided. Using default value of 1.</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     1             1</span></code></pre></div>
+<p>This time, by specifying NULL in the argument — alongside the expanded <code>if()</code> statement — our function now both takes a default value <em>and</em> generates a helpful message.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Think about how you might have tried to achieve this if we’d assigned the &lt;code&gt;x = 1&lt;/code&gt; default directly in function argument as before. It quickly gets complicated, because how can your message discriminate whether a user left the argument blank or deliberately entered &lt;code&gt;square(1)&lt;/code&gt;?&lt;/p&gt;"><sup>5</sup></a> Note too the use of curly brackets for conditional operations that span multiple lines after an <code>if()</code> statement.
+This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. As we’ve already seen , these be written as a single conditional call where the format is:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="funcs-intro.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(CONDITION, DO IF <span class="cn">TRUE</span>, DO IF <span class="cn">FALSE</span>)</span></code></pre></div>
+<p>Within our own functions, though we’re more likely to write them over several lines. Consider, for example a new function that evaluates whether our <code>square()</code> function is doing its job properly.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">eval_square</span> <span class="op">=</span>
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+    
+    <span class="kw">if</span> <span class="op">(</span><span class="fu">square</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">$</span><span class="va">value_squared</span> <span class="op">==</span> <span class="va">x</span><span class="op">*</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+      <span class="co">## What to do if the condition is TRUE </span>
+      <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Nailed it."</span><span class="op">)</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+      <span class="co">## What to do if the condition is FALSE</span>
+      <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Dude, your function sucks."</span><span class="op">)</span>
+    <span class="op">}</span>
+    
+  <span class="op">}</span>
+<span class="fu">eval_square</span><span class="op">(</span><span class="fl">64</span><span class="op">)</span>
+<span class="co">#&gt; Nailed it.</span></code></pre></div>
+<div id="aside-ifelse-gotchas-and-alternatives" class="section level4" number="2.4.1.1">
+<h4>
+<span class="header-section-number">2.4.1.1</span> Aside: ifelse gotchas and alternatives<a class="anchor" aria-label="anchor" href="#aside-ifelse-gotchas-and-alternatives"><i class="fas fa-link"></i></a>
+</h4>
+<p>The base R <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> function normally works great and I use it all the time. However, there are a couple of “gotcha” cases that you should be aware of. Consider the following (silly) function which is designed to return either today’s date, or the day before.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">today</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu">today</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] 18715</span></code></pre></div>
+<p>You are no doubt surprised to find that our function returns a number instead of a date. This is because <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date(today(TRUE), origin = "1970-01-01")</a></code>.</p>
+<blockquote>
+<p><strong>Aside:</strong> The “dot-dot-dot” argument (<code>...</code>) that I’ve used above is a convenient shortcut that allows users to enter unspecified arguments into a function. This is beyond the scope of our current lecture, but can prove to be an incredibly useful and flexible programming strategy. I highly encourage you to look at the <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">relevant section</a> of <em>Advanced R</em> to get a better idea.</p>
+</blockquote>
+<p>To guard against this type of unexpected behaviour, as well as incorporate some other optimisations, both the tidyverse (through <strong>dplyr</strong>) and <strong>data.table</strong> offer their own versions of <code>ifelse</code> statements. I won’t explain these next code chunks in depth (consult the relevant help pages if needed), but here are adapted versions of our <code>today()</code> function based on these alternatives.</p>
+<p>First, <code><a href="https://dplyr.tidyverse.org/reference/if_else.html">dplyr::if_else()</a></code>:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">today2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu">today2</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] "2021-03-29"</span></code></pre></div>
+<p>Second, <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">data.table::fifelse()</a></code>:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">today3</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+<span class="fu">today3</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; [1] "2021-03-29"</span></code></pre></div>
+</div>
+</div>
+<div id="case-when-nested-ifelse" class="section level3" number="2.4.2">
+<h3>
+<span class="header-section-number">2.4.2</span> <em>case when</em> (nested ifelse)<a class="anchor" aria-label="anchor" href="#case-when-nested-ifelse"><i class="fas fa-link"></i></a>
+</h3>
+<p>As you may have guessed, it’s certainly possible to write nested <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. For example,</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="funcs-intro.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(CONDITION1, DO IF <span class="cn">TRUE</span>, <span class="fu">ifelse</span>(CONDITION2, DO IF <span class="cn">TRUE</span>, <span class="fu">ifelse</span>(...)))</span></code></pre></div>
+<p>However, these nested statements quickly become difficult to read and troubleshoot. A better solution was originally developed in SQL with the <code>CASE WHEN</code> statement. Both <strong>dplyr</strong> with <code>case_when()</code> and <strong>data.table</strong> with <code>fcase()</code> provide implementations R. Here is a simple illustration of both implementations.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>
+
+<span class="co">## dplyr::case_when()</span>
+<span class="fu">case_when</span><span class="op">(</span>
+  <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"small"</span>,
+  <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">7</span> <span class="op">~</span> <span class="st">"medium"</span>,
+  <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"big"</span> <span class="co">## Default value. Could also write `x &gt; 7 ~ "big"` here.</span>
+  <span class="op">)</span>
+<span class="co">#&gt;  [1] "small"  "small"  "small"  "medium" "medium" "medium" "medium" "big"   </span>
+<span class="co">#&gt;  [9] "big"    "big"</span>
+
+<span class="co">## data.table::fcase()</span>
+<span class="fu">fcase</span><span class="op">(</span>
+    <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">3</span>, <span class="st">"small"</span>,
+    <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">7</span>, <span class="st">"medium"</span>,
+    default <span class="op">=</span> <span class="st">"big"</span> <span class="co">## Default value. Could also write `x &gt; 7, "big"` here.</span>
+    <span class="op">)</span>
+<span class="co">#&gt;  [1] "small"  "small"  "small"  "medium" "medium" "medium" "medium" "big"   </span>
+<span class="co">#&gt;  [9] "big"    "big"</span></code></pre></div>
+<p>Not to belabour the point, but you can easily use these <em>case when</em> implementations inside of data frames/tables too.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## dplyr::case_when()</span>
+<span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">mutate</span><span class="op">(</span>grp <span class="op">=</span> <span class="fu">case_when</span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">3</span> <span class="op">~</span> <span class="st">"small"</span>,
+                           <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">7</span> <span class="op">~</span> <span class="st">"medium"</span>,
+                           <span class="cn">TRUE</span> <span class="op">~</span> <span class="st">"big"</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt;     x    grp</span>
+<span class="co">#&gt; 1   1  small</span>
+<span class="co">#&gt; 2   2  small</span>
+<span class="co">#&gt; 3   3  small</span>
+<span class="co">#&gt; 4   4 medium</span>
+<span class="co">#&gt; 5   5 medium</span>
+<span class="co">#&gt; 6   6 medium</span>
+<span class="co">#&gt; 7   7 medium</span>
+<span class="co">#&gt; 8   8    big</span>
+<span class="co">#&gt; 9   9    big</span>
+<span class="co">#&gt; 10 10    big</span>
+<span class="co">## data.table::fcase()</span>
+<span class="fu">data.table</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">[</span>, <span class="va">grp</span> <span class="op">:=</span> <span class="fu">fcase</span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">3</span>, <span class="st">"small"</span>,
+                                    <span class="va">x</span> <span class="op">&lt;=</span> <span class="fl">7</span>, <span class="st">"medium"</span>,
+                                    default <span class="op">=</span> <span class="st">"big"</span><span class="op">)</span><span class="op">]</span><span class="op">[</span><span class="op">]</span>
+<span class="co">#&gt;      x    grp</span>
+<span class="co">#&gt;  1:  1  small</span>
+<span class="co">#&gt;  2:  2  small</span>
+<span class="co">#&gt;  3:  3  small</span>
+<span class="co">#&gt;  4:  4 medium</span>
+<span class="co">#&gt;  5:  5 medium</span>
+<span class="co">#&gt;  6:  6 medium</span>
+<span class="co">#&gt;  7:  7 medium</span>
+<span class="co">#&gt;  8:  8    big</span>
+<span class="co">#&gt;  9:  9    big</span>
+<span class="co">#&gt; 10: 10    big</span></code></pre></div>
+</div>
+</div>
+<div id="iteration" class="section level2" number="2.5">
+<h2>
+<span class="header-section-number">2.5</span> Iteration<a class="anchor" aria-label="anchor" href="#iteration"><i class="fas fa-link"></i></a>
+</h2>
+<p>Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate — or <em>map</em> — over a set of inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Our focus today will only be on sequential iteration, but we’ll return to parallel iteration in the lecture after next.&lt;/p&gt;"><sup>6</sup></a> By far the most common way to iterate across different programming languages is <em>for</em> loops. Indeed, we already saw some examples of <em>for</em> loops back in the shell lecture (see <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95">here</a>). However, while R certainly accepts standard <em>for</em> loops, I’m going to advocate that you adopt what is known as a “functional programming” approach to writing loops. Let’s dive into the reasons why and how these approaches differ.</p>
+<div id="vectorisation" class="section level3" number="2.5.1">
+<h3>
+<span class="header-section-number">2.5.1</span> Vectorisation<a class="anchor" aria-label="anchor" href="#vectorisation"><i class="fas fa-link"></i></a>
+</h3>
+<p>The first question you need to ask is: “Do I need to iterate at all?” You may remember from a previous lecture that I spoke about R being <em>vectorised</em>. This means that we can apply a function over an entire vector, rather than explicitly iterating over each element.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Vectorisation is a common feature of high-level programming languages like R and Python. What’s really happening with vectorisation is that a loop &lt;em&gt;is&lt;/em&gt; being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran. To borrow a phrase from Jenny Bryan: “Someone has to write a for loop. It just doesn’t have to be you.”&lt;/p&gt;"><sup>7</sup></a> Let’s demonstrate this property with our <code>square</code> function:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     1             1</span>
+<span class="co">#&gt; 2     2             4</span>
+<span class="co">#&gt; 3     3             9</span>
+<span class="co">#&gt; 4     4            16</span>
+<span class="co">#&gt; 5     5            25</span>
+<span class="fu">square</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt;   value value_squared</span>
+<span class="co">#&gt; 1     2             4</span>
+<span class="co">#&gt; 2     4            16</span></code></pre></div>
+<p>So you may not need to worry about explicit iteration at all. That being said, there are certainly cases where you will need to worry about it. Let’s explore with some simple examples (some of which are already vectorised) that provide a mental springboard for thinking about more complex cases.</p>
+</div>
+<div id="for-loops" class="section level3" number="2.5.2">
+<h3>
+<span class="header-section-number">2.5.2</span> <em>for</em> loops<a class="anchor" aria-label="anchor" href="#for-loops"><i class="fas fa-link"></i></a>
+</h3>
+<p>In R, standard <em>for</em> loops take a pretty intuitive form. For example:</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; [1] "A"</span>
+<span class="co">#&gt; [1] "B"</span>
+<span class="co">#&gt; [1] "C"</span>
+<span class="co">#&gt; [1] "D"</span>
+<span class="co">#&gt; [1] "E"</span>
+<span class="co">#&gt; [1] "F"</span>
+<span class="co">#&gt; [1] "G"</span>
+<span class="co">#&gt; [1] "H"</span>
+<span class="co">#&gt; [1] "I"</span>
+<span class="co">#&gt; [1] "J"</span></code></pre></div>
+<p>Note that in cases where we want to “grow” an object via a <em>for</em> loop, we first have to create an empty (or NULL) object.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">kelvin</span> <span class="op">=</span> <span class="fl">300</span><span class="op">:</span><span class="fl">305</span>
+<span class="va">fahrenheit</span> <span class="op">=</span> <span class="cn">NULL</span>
+<span class="co"># fahrenheit = vector("double", length(kelvin)) ## Better than the above. Why?</span>
+<span class="kw">for</span><span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">kelvin</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">fahrenheit</span><span class="op">[</span><span class="va">k</span><span class="op">]</span> <span class="op">=</span> <span class="va">kelvin</span><span class="op">[</span><span class="va">k</span><span class="op">]</span> <span class="op">*</span> <span class="fl">9</span><span class="op">/</span><span class="fl">5</span> <span class="op">-</span> <span class="fl">459.67</span>
+<span class="op">}</span>
+<span class="va">fahrenheit</span>
+<span class="co">#&gt; [1] 80.33 82.13 83.93 85.73 87.53 89.33</span></code></pre></div>
+<p>Unfortunately, basic <em>for</em> loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but I’ve still run into cases where an inconspicuous <em>for</em> loop has brought an entire analysis crashing to its knees.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160"&gt;Exhibit A&lt;/a&gt;. Trust me: debugging these cases is not much fun.&lt;/p&gt;'><sup>8</sup></a> The bigger problem with <em>for</em> loops, however, is that they deviate from the norms and best practices of <strong>functional programming</strong>.</p>
+</div>
+<div id="functional-programming" class="section level3" number="2.5.3">
+<h3>
+<span class="header-section-number">2.5.3</span> Functional programming<a class="anchor" aria-label="anchor" href="#functional-programming"><i class="fas fa-link"></i></a>
+</h3>
+<p>The concept of functional programming (FP) is arguably the most important thing that you can take away from today’s lecture. In his excellent book, <em>Advanced R</em>, <a href="http://adv-r.had.co.nz/Functional-programming.html">Hadley Wickham</a> explains the core idea as follows.</p>
+<blockquote>
+<p>R, at its heart, is a functional programming (FP) language. This means that it provides many tools for the creation and manipulation of functions. In particular, R has what’s known as first class functions. You can do anything with functions that you can do with vectors: you can assign them to variables, store them in lists, pass them as arguments to other functions, create them inside functions, and even return them as the result of a function.</p>
+</blockquote>
+<p>That may seem a little abstract, so <a href="https://www.youtube.com/embed/GyNqlOjhPCQ?rel=0&amp;start=372">here</a> is video of Hadley giving a much more intuitive explanation through a series of examples.</p>
+<iframe width="710" height="400" src="https://www.youtube.com/embed/GyNqlOjhPCQ?rel=0&amp;start=372" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+</iframe>
+<p></p>
+<p><strong>Summary:</strong> <em>for</em> loops tend to emphasise the <em>objects</em> that we’re working with (say, a vector of numbers) rather than the <em>operations</em> that we want to apply to them (say, get the mean or median or whatever). This is inefficient because it requires us to continually write out the <em>for</em> loops by hand rather than getting an R function to create the for-loop for us.</p>
+<p>As a corollary, <em>for</em> loops also pollute our global environment with the variables that are used as counting variables. Take a look at your “Environment” pane in RStudio. What do you see? In addition to the <code>kelvin</code> and <code>fahrenheit</code> vectors that we created, we also see two variables <code>i</code> and <code>k</code> (equal to the last value of their respective loops). Creating these auxiliary variables is almost certainly not an intended outcome when your write a for-loop.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The best case I can think of is when you are trying to keep track of the number of loops, but even then there are much better ways of doing this.&lt;/p&gt;"><sup>9</sup></a> More worringly, they can cause programming errors when we inadvertently refer to a similarly-named variable elsewhere in our script. So we best remove them manually as soon as we’re finished with a loop.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span></code></pre></div>
+<p>Another annoyance arrived in cases where we want to “grow” an object as we iterate over it (e.g. the <code>fahrenheit</code> object in our second example). In order to do this with a <em>for</em> loop, we had to go through the rigmarole of creating an empty object first.</p>
+<p>FP allows to avoid the explicit use of loop constructs and its associated downsides. In practice, there are two ways to implement FP in R:</p>
+<ol style="list-style-type: decimal">
+<li>The <code>*apply</code> family of functions in base R.</li>
+<li>The <code>map*()</code> family of functions from the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a>.</li>
+</ol>
+<p>Let’s explore these in more depth.</p>
+<div id="lapply-and-co." class="section level4" number="2.5.3.1">
+<h4>
+<span class="header-section-number">2.5.3.1</span> lapply and co.<a class="anchor" aria-label="anchor" href="#lapply-and-co."><i class="fas fa-link"></i></a>
+</h4>
+<p>Base R contains a very useful family of <code>*apply</code> functions. I won’t go through all of these here — see <code><a href="https://rdrr.io/r/base/apply.html">?apply</a></code> or <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">this blog post</a> among numerous excellent resources — but they all follow a similar philosophy and syntax. The good news is that this syntax very closely mimics the syntax of basic for-loops. For example, consider the code below, which is analgous to our first <em>for</em> loop above, but now invokes a <strong><code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code></strong> call instead.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># for(i in 1:10) print(LETTERS[i]) ## Our original for loop (for comparison)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; [1] "A"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; [1] "B"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; [1] "C"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; [1] "D"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; [1] "E"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; [1] "F"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; [1] "G"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; [1] "H"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt; [1] "I"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt; [1] "J"</span></code></pre></div>
+<p>A couple of things to notice.</p>
+<p>First, check your “Environment” pane in RStudio. Do you see an object called “i” in the Global Environment? (The answer should be“no.”) Again, this is because of R’s lexical scoping rules, which mean that any object created and invoked by a function is evaluated in a sandboxed environment outside of your global environment.</p>
+<p>Second, notice how little the basic syntax changed when switching over from <code>for()</code> to <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>. Yes, there are some differences, but the essential structure remains the same: We first provide the iteration list (<code>1:10</code>) and then specify the desired function or operation (<code>LETTERS[i]</code>).</p>
+<p>Third, notice that the returned object is a <em>list</em>. The <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> function can take various input types as arguments — vectors, data frames, lists — but always returns a list, where each element of the returned list is the result from one iteration of the loop. (So now you know where the “l” in “<strong>l</strong>apply” comes from.)</p>
+<p>Okay, but what if you don’t want the output in list form? There several options here.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;For example, we could pipe the output to &lt;code&gt;unlist()&lt;/code&gt; if you wanted a vector. Or you could use use &lt;code&gt;sapply()&lt;/code&gt; instead, which I’ll cover shortly.&lt;/p&gt;"><sup>10</sup></a> However, the method that I use most commonly is to bind the different list elements into a single data frame with either <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows()</a></code> or <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code>. For example, here’s a a slightly modified version of our function that now yields a data frame:</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;    num let</span>
+<span class="co">#&gt; 1    1   A</span>
+<span class="co">#&gt; 2    2   B</span>
+<span class="co">#&gt; 3    3   C</span>
+<span class="co">#&gt; 4    4   D</span>
+<span class="co">#&gt; 5    5   E</span>
+<span class="co">#&gt; 6    6   F</span>
+<span class="co">#&gt; 7    7   G</span>
+<span class="co">#&gt; 8    8   H</span>
+<span class="co">#&gt; 9    9   I</span>
+<span class="co">#&gt; 10  10   J</span></code></pre></div>
+<p>Taking a step back, while the default list-return behaviour may not sound ideal at first, I’ve found that I use <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> more frequently than any of the other <code>apply</code> family members. A key reason is that my functions normally return multiple objects of different type (which makes lists the only sensible format)… or a single data frame (which is where <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows()</a></code> or <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code> come in).</p>
+<p>Another option that would work well in the this particular case is <code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>, which stands for “<strong>s</strong>implify apply.” This is essentially a wrapper around <code>lapply</code> that tries to return simplified output that matches the input type. If you feed the function a vector, it will try to return a vector, etc.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> 
+<span class="co">#&gt;  [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J"</span></code></pre></div>
+<div id="aside-progress-bars" class="section level5" number="2.5.3.1.1">
+<h5>
+<span class="header-section-number">2.5.3.1.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
+</h5>
+<p>Who doesn’t like progress bars? Personally, I find it incredibly helpful to see how a function is progressing, or get a sense of how much longer I can expect to wait before completion.</p>
+<p>Along those lines, I’m a big fan of the <a href="https://github.com/psolymos/pbapply"><strong>pbapply</strong></a> package, which is a lightweight wrapper around the <code>*apply</code> functions that adds a progress bar. <code>pbapply</code> offers versions for all of the <code>*apply</code> family, but the one that I use the most is (unsurprisingly) <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html">pbapply::pblapply()</a></code>.</p>
+<p><em>Note: You will need to run this next example interactively to see the effect properly.</em></p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># library(pbapply) ## Already loaded</span>
+
+<span class="fu">pblapply</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;    num let</span>
+<span class="co">#&gt; 1    1   A</span>
+<span class="co">#&gt; 2    2   B</span>
+<span class="co">#&gt; 3    3   C</span>
+<span class="co">#&gt; 4    4   D</span>
+<span class="co">#&gt; 5    5   E</span>
+<span class="co">#&gt; 6    6   F</span>
+<span class="co">#&gt; 7    7   G</span>
+<span class="co">#&gt; 8    8   H</span>
+<span class="co">#&gt; 9    9   I</span>
+<span class="co">#&gt; 10  10   J</span></code></pre></div>
+<p>Another thing that I really like about the <code>pblapply()</code> function is that it allows for easy implementation of parallel (i.e. multicore) processing that works across operating systems. We’ll cover this next week, though.</p>
+<p>There’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. I won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
+</div>
+</div>
+<div id="purrr-package" class="section level4" number="2.5.3.2">
+<h4>
+<span class="header-section-number">2.5.3.2</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
+</h4>
+<p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>11</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">map</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> <span class="co">## only need to swap `lapply` for `map`</span>
+  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   1   A</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   2   B</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   3   C</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   4   D</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   5   E</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   6   F</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   7   G</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   8   H</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   9   I</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1  10   J</span></code></pre></div>
+<p>Given these similarities, I won’t spend much time on <strong>purrr</strong>. Although, I do think it could be the optimal entry point for many you when it comes to programming and iteration. You have already learned the syntax, so it should be very easy to switch over. However, one additional thing I wanted to flag for today is that <code>map()</code> also comes with its own variants, which are useful for returning objects of a desired type. For example, we can use <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map_df()</a></code> to return a data frame.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> <span class="co">## don't need bind_rows with `map_df`</span>
+  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+<span class="co">#&gt;    num let</span>
+<span class="co">#&gt; 1    1   A</span>
+<span class="co">#&gt; 2    2   B</span>
+<span class="co">#&gt; 3    3   C</span>
+<span class="co">#&gt; 4    4   D</span>
+<span class="co">#&gt; 5    5   E</span>
+<span class="co">#&gt; 6    6   F</span>
+<span class="co">#&gt; 7    7   G</span>
+<span class="co">#&gt; 8    8   H</span>
+<span class="co">#&gt; 9    9   I</span>
+<span class="co">#&gt; 10  10   J</span></code></pre></div>
+<p>Note that this is more efficient (i.e. involves less typing) than the <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> version, since we don’t have to go through the extra step of binding rows at the end.</p>
+</div>
+</div>
+<div id="create-and-iterate-over-named-functions" class="section level3" number="2.5.4">
+<h3>
+<span class="header-section-number">2.5.4</span> Create and iterate over named functions<a class="anchor" aria-label="anchor" href="#create-and-iterate-over-named-functions"><i class="fas fa-link"></i></a>
+</h3>
+<p>As you may have guessed already, we can split the function and the iteration (and binding) into separate steps. This is generally a good idea, since you typically create (named) functions with the goal of reusing them.</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Create a named function</span>
+<span class="va">num_to_alpha</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<p>Now, we can easily iterate over our function using different input values. For example,</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">num_to_alpha</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;    num let</span>
+<span class="co">#&gt; 1    1   A</span>
+<span class="co">#&gt; 2    2   B</span>
+<span class="co">#&gt; 3    3   C</span>
+<span class="co">#&gt; 4    4   D</span>
+<span class="co">#&gt; 5    5   E</span>
+<span class="co">#&gt; 6    6   F</span>
+<span class="co">#&gt; 7    7   G</span>
+<span class="co">#&gt; 8    8   H</span>
+<span class="co">#&gt; 9    9   I</span>
+<span class="co">#&gt; 10  10   J</span></code></pre></div>
+<p>Or, say</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">map_df</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">26</span>, <span class="fl">3</span><span class="op">)</span>, <span class="va">num_to_alpha</span><span class="op">)</span>
+<span class="co">#&gt;   num let</span>
+<span class="co">#&gt; 1   1   A</span>
+<span class="co">#&gt; 2   5   E</span>
+<span class="co">#&gt; 3  26   Z</span>
+<span class="co">#&gt; 4   3   C</span></code></pre></div>
+</div>
+<div id="iterate-over-multiple-inputs" class="section level3" number="2.5.5">
+<h3>
+<span class="header-section-number">2.5.5</span> Iterate over multiple inputs<a class="anchor" aria-label="anchor" href="#iterate-over-multiple-inputs"><i class="fas fa-link"></i></a>
+</h3>
+<p>Thus far, we have only been working with functions that take a single input when iterating. For example, we feed them a single vector (even though that vector contains many elements that drive the iteration process). But what if we want to iterate over multiple inputs? Consider the following function, which takes two separate variables <code>x</code> and <code>y</code> as inputs, combines them in a data frame, and then uses them to create a third variable <code>z</code>.</p>
+<blockquote>
+<p><strong>Note:</strong> Again, this is a rather silly function that we could easily improve upon using standard (vectorised) tools. But my goal here is to demonstrate programming principles with simple examples that carry over to more complicated cases where vectorisation is not possible.</p>
+</blockquote>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Create a named function</span>
+<span class="va">multi_func</span> <span class="op">=</span> 
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">z</span> <span class="op">=</span> <span class="op">(</span><span class="va">x</span> <span class="op">+</span> <span class="va">y</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">z</span><span class="op">)</span>
+  <span class="op">}</span></code></pre></div>
+<p>Before continuing, quickly test that it works using non-iterated inputs.</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">multi_func</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span><span class="op">)</span>
+<span class="co">#&gt;   x y z</span>
+<span class="co">#&gt; 1 1 6 7</span></code></pre></div>
+<p>Great, it works. Now let’s imagine that we want to iterate over various levels of both <code>x</code> and <code>y</code>. There are two basics approaches that we can follow to achieve this:</p>
+<ol style="list-style-type: decimal">
+<li>Use <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>.</li>
+<li>Use a data frame of input combinations.</li>
+</ol>
+<p>I’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
+<div id="use-mapply-or-pmap" class="section level4" number="2.5.5.1">
+<h4>
+<span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapply-or-pmap"><i class="fas fa-link"></i></a>
+</h4>
+<p>Both base R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code> — and purrr — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I’ll demonstrate using both versions below.</p>
+<p>First, <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Note that the inputs are now moved to the *end* of the call. </span>
+<span class="co">## Also, mapply() is based on sapply(), so we also have to tell it not to </span>
+<span class="co">## simplify if we want to keep the list structure.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mapply.html">mapply</a></span><span class="op">(</span>
+  <span class="va">multi_func</span>,
+  x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,         <span class="co">## Our "x" vector input</span>
+  y <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span>,        <span class="co">## Our "y" vector input</span>
+  SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span> <span class="co">## Tell it not to simplify to keep the list structure</span>
+  <span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;   x  y        z</span>
+<span class="co">#&gt; 1 1  6 7.000000</span>
+<span class="co">#&gt; 2 2  7 6.363961</span>
+<span class="co">#&gt; 3 3  8 6.350853</span>
+<span class="co">#&gt; 4 4  9 6.500000</span>
+<span class="co">#&gt; 5 5 10 6.708204</span></code></pre></div>
+<p>Second, <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>:</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Note that the inputs are combined in a list.</span>
+<span class="fu">pmap_df</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y<span class="op">=</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, <span class="va">multi_func</span><span class="op">)</span>
+<span class="co">#&gt;   x  y        z</span>
+<span class="co">#&gt; 1 1  6 7.000000</span>
+<span class="co">#&gt; 2 2  7 6.363961</span>
+<span class="co">#&gt; 3 3  8 6.350853</span>
+<span class="co">#&gt; 4 4  9 6.500000</span>
+<span class="co">#&gt; 5 5 10 6.708204</span></code></pre></div>
+</div>
+<div id="using-a-data-frame-of-input-combinations" class="section level4" number="2.5.5.2">
+<h4>
+<span class="header-section-number">2.5.5.2</span> Using a data frame of input combinations<a class="anchor" aria-label="anchor" href="#using-a-data-frame-of-input-combinations"><i class="fas fa-link"></i></a>
+</h4>
+<p>While the above approaches work perfectly well, I find that I don’t actually use either all that much in practice. Rather, I prefer to “cheat” by feeding multi-input functions a <em>single</em> data frame that specifies the necessary combination of variables by row. I’ll demonstrate how this works in a second, but first let me explain why.</p>
+<p>It basically boils down to the fact that I feel this gives me more control over my functions and inputs.</p>
+<ul>
+<li>I don’t have to worry about accidentally feeding separate inputs of different lengths. Try running the above functions with an <code>x</code> vector input of <code>1:10</code>, for example. (Leave everything else unchanged.) <code>pmap()</code> will at least fail to iterate and give you a helpful message, but <code>mapply</code> will actually complete with totally misaligned columns. Putting everything in a (rectangular) data frame forces you to ensure the equal length of inputs <em>a priori</em>.</li>
+<li>Similarly, I often need to run a function over all possible combinations of different inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;A convenient way to do this is with &lt;code&gt;base::expand.grid()&lt;/code&gt; — or the equivalent &lt;code&gt;tidyr::expand_grid()&lt;/code&gt; and &lt;code&gt;data.table:CJ()&lt;/code&gt; functions — which automatically generate a data frame of all combinations.&lt;/p&gt;"><sup>12</sup></a> So it’s convenient for me to use this data frame as an input directly in my function.</li>
+<li>In my view, it’s just simpler and cleaner to keep things down to a single input. This will be harder to see in the simple example that I’m going to present next. But I’ve found that it can make a big difference with complicated functions that have a lot of nesting (i.e. functions of functions) and/or parallelization.</li>
+</ul>
+<p>Those justifications aside, let’s see how this might work with an example. Consider the following function:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">parent_func</span> <span class="op">=</span>
+  <span class="co">## Main function: Takes a single data frame as an input</span>
+  <span class="kw">function</span><span class="op">(</span><span class="va">input_df</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">d</span> <span class="op">=</span>
+      <span class="co">## Nested iteration function</span>
+      <span class="fu">map_df</span><span class="op">(</span>
+      <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">input_df</span><span class="op">)</span>, <span class="co">## i.e. Iterate (map) over each row of the input data frame</span>
+      <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span>
+        <span class="co">## Extract the `x` and `y` values from row "n" of the data frame</span>
+        <span class="va">x</span> <span class="op">=</span> <span class="va">input_df</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>
+        <span class="va">y</span> <span class="op">=</span> <span class="va">input_df</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>
+        <span class="co">## Use the extracted values</span>
+        <span class="va">d</span> <span class="op">=</span> <span class="fu">multi_func</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
+        <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+      <span class="op">}</span><span class="op">)</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+    <span class="op">}</span></code></pre></div>
+<p>There are three conceptual steps to the above code chunk:</p>
+<ol style="list-style-type: decimal">
+<li>First, I create a new function called <code>parent_func()</code>, which takes a single input: a data frame containing <code>x</code> and <code>y</code> columns (and potentially other columns too).</li>
+<li>This input data frame is then passed to a second (nested) function, which will <em>iterate over the rows of the data frame</em>.</li>
+<li>During each iteration, the <code>x</code> and <code>y</code> values for that row are passed to our original <code>multi_func()</code> function. This will return a data frame containing the desired output.</li>
+</ol>
+<p>Let’s test that it worked using two different input data frames.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Case 1: Iterate over x=1:5 and y=6:10</span>
+<span class="va">input_df1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
+<span class="fu">parent_func</span><span class="op">(</span><span class="va">input_df1</span><span class="op">)</span>
+<span class="co">#&gt;   x  y        z</span>
+<span class="co">#&gt; 1 1  6 7.000000</span>
+<span class="co">#&gt; 2 2  7 6.363961</span>
+<span class="co">#&gt; 3 3  8 6.350853</span>
+<span class="co">#&gt; 4 4  9 6.500000</span>
+<span class="co">#&gt; 5 5 10 6.708204</span>
+
+<span class="co">## Case 2: Iterate over *all possible combinations* of x=1:5 and y=6:10</span>
+<span class="va">input_df2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>
+<span class="fu">parent_func</span><span class="op">(</span><span class="va">input_df2</span><span class="op">)</span>
+<span class="co">#&gt;    x  y         z</span>
+<span class="co">#&gt; 1  1  6  7.000000</span>
+<span class="co">#&gt; 2  2  6  5.656854</span>
+<span class="co">#&gt; 3  3  6  5.196152</span>
+<span class="co">#&gt; 4  4  6  5.000000</span>
+<span class="co">#&gt; 5  5  6  4.919350</span>
+<span class="co">#&gt; 6  1  7  8.000000</span>
+<span class="co">#&gt; 7  2  7  6.363961</span>
+<span class="co">#&gt; 8  3  7  5.773503</span>
+<span class="co">#&gt; 9  4  7  5.500000</span>
+<span class="co">#&gt; 10 5  7  5.366563</span>
+<span class="co">#&gt; 11 1  8  9.000000</span>
+<span class="co">#&gt; 12 2  8  7.071068</span>
+<span class="co">#&gt; 13 3  8  6.350853</span>
+<span class="co">#&gt; 14 4  8  6.000000</span>
+<span class="co">#&gt; 15 5  8  5.813777</span>
+<span class="co">#&gt; 16 1  9 10.000000</span>
+<span class="co">#&gt; 17 2  9  7.778175</span>
+<span class="co">#&gt; 18 3  9  6.928203</span>
+<span class="co">#&gt; 19 4  9  6.500000</span>
+<span class="co">#&gt; 20 5  9  6.260990</span>
+<span class="co">#&gt; 21 1 10 11.000000</span>
+<span class="co">#&gt; 22 2 10  8.485281</span>
+<span class="co">#&gt; 23 3 10  7.505553</span>
+<span class="co">#&gt; 24 4 10  7.000000</span>
+<span class="co">#&gt; 25 5 10  6.708204</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="further-resources" class="section level2" number="2.6">
+<h2>
+<span class="header-section-number">2.6</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources"><i class="fas fa-link"></i></a>
+</h2>
+<p>In the next two lectures, we’ll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, I hope that today has given you solid grasp of the fundamentals. I highly encourage you to start writing some of your own functions. You will be doing this a <em>lot</em> as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:</p>
+<ul>
+<li>Garrett Grolemund and Hadley Wickham’s <a href="http://r4ds.had.co.nz"><em><b>R for Data Science</b></em></a> book — esp. chapters <a href="http://r4ds.had.co.nz/functions.html">19 (“Functions)”)</a> and <a href="http://r4ds.had.co.nz/iteration.html">21 (“Iteration)”)</a> — covers much of the same ground as we have here, with particular emphasis on the <strong>purrr</strong> package for iteration.</li>
+<li>If you’re looking for an in-depth treatment, then I can highly recommend Hadley’s <a href="https://adv-r.hadley.nz"><em><b>Advanced R</b></em></a> (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on today, including more on his (and R’s) philosophy regarding functional programming (see <a href="https://adv-r.hadley.nz/fp.html">Section ||</a>).</li>
+<li>If you’re in the market for a more concise overview of the different <code>*apply()</code> functions, then I recommend <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">this blog post</a> by Neil Saunders.</li>
+<li>On the other end of the scale, Jenny Bryan (all hail) has created a fairly epic <a href="https://jennybc.github.io/purrr-tutorial">purrr tutorial</a> mini-website. (Bonus: She goes into more depth about working with lists and list columns.)</li>
+</ul>
+</div>
+<div id="bonus-accessing-function-source-code" class="section level2" number="2.7">
+<h2>
+<span class="header-section-number">2.7</span> Bonus: Accessing function source code<a class="anchor" aria-label="anchor" href="#bonus-accessing-function-source-code"><i class="fas fa-link"></i></a>
+</h2>
+<p>Looking inside a function is not only important for debugging (i.e. a subject for our next lecture), but it’s also a great way to pick up programming tips and tricks. We refer to this as accessing a function’s <em>source code</em>. For simple functions, accessing the source is a mere matter of typing the function name into your R console (without parentheses) and letting R print the object to screen. Try this yourself with the <code>num_to_alpha</code> function that we created earlier, or, say, <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows</a></code>.</p>
+<p>Unfortunately, the simple print-function-to-screen approach doesn’t work once you start getting into functions that have different dispatch methods (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, even if that sometimes requires a bit more legwork. See Joshua Ulrich’s StackOverflow Q/A <a href="https://stackoverflow.com/a/19226817/4115816">here</a>, or Jenny Bryan’s summary <a href="https://github.com/jennybc/access-r-source">here</a>. Lastly, Jim Hester’s <a href="https://github.com/jimhester/lookup"><strong>lookup</strong></a> package can do all of the legwork for you if don’t feel like dealing with any complications.</p>
+
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="intro.html"><span class="header-section-number">1</span> Introduction</a></div>
+<div class="next"><a href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#funcs-intro"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li>
+<a class="nav-link" href="#software-requirements"><span class="header-section-number">2.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages"><span class="header-section-number">2.1.1</span> R packages</a></li></ul>
+</li>
+<li><a class="nav-link" href="#basic-syntax"><span class="header-section-number">2.2</span> Basic syntax</a></li>
+<li>
+<a class="nav-link" href="#a-simple-example"><span class="header-section-number">2.3</span> A simple example</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#specifying-return-values"><span class="header-section-number">2.3.1</span> Specifying return values</a></li>
+<li><a class="nav-link" href="#specifying-default-argument-values"><span class="header-section-number">2.3.2</span> Specifying default argument values</a></li>
+<li><a class="nav-link" href="#aside-environments-and-lexical-scoping"><span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#control-flow"><span class="header-section-number">2.4</span> Control flow</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#if-and-ifelse"><span class="header-section-number">2.4.1</span> if and ifelse</a></li>
+<li><a class="nav-link" href="#case-when-nested-ifelse"><span class="header-section-number">2.4.2</span> case when (nested ifelse)</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#iteration"><span class="header-section-number">2.5</span> Iteration</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#vectorisation"><span class="header-section-number">2.5.1</span> Vectorisation</a></li>
+<li><a class="nav-link" href="#for-loops"><span class="header-section-number">2.5.2</span> for loops</a></li>
+<li><a class="nav-link" href="#functional-programming"><span class="header-section-number">2.5.3</span> Functional programming</a></li>
+<li><a class="nav-link" href="#create-and-iterate-over-named-functions"><span class="header-section-number">2.5.4</span> Create and iterate over named functions</a></li>
+<li><a class="nav-link" href="#iterate-over-multiple-inputs"><span class="header-section-number">2.5.5</span> Iterate over multiple inputs</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#further-resources"><span class="header-section-number">2.6</span> Further resources</a></li>
+<li><a class="nav-link" href="#bonus-accessing-function-source-code"><span class="header-section-number">2.7</span> Bonus: Accessing function source code</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-03-29.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>
