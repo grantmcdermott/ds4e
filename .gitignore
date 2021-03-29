@@ -13,7 +13,11 @@ _book/*
 _main.*
 *.rds
 
-*.md
+**/*.md
+# ignore all md files except:
 !README.md
-*.html
-*.pdf
+**/*.html 
+# ignore all html files except:
+!**/mathjax_header.html
+**/*.pdf
+**/*.bib
