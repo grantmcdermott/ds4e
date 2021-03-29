@@ -14,7 +14,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(memoise, tidyverse, here)
 ```
 
-We will also be working with our simple `square()` function from the previous lecture. Let's create it again quickly.
+We will also be working with our simple `square()` function from Chapter \@ref(funcs-intro). Let's create it again quickly.
 
 ```{r square}
 square = 
@@ -31,7 +31,7 @@ Functions are incredibly powerful and helpful programming tools. They also tend 
 
 ### Debugging tools in RStudio
 
-R and the RStudio IDE provide a number of excellent tools for debugging. We'll walk through these together in a series of live coding examples in a minute. But, first here is a visual summary, cropped directly from the [RStudio IDE Cheat Sheet](https://www.rstudio.com/resources/cheatsheets/#ide).^[I mentioned this in an earlier lecture, but RStudio hosts a bunch of excellent [cheat sheets](https://www.rstudio.com/resources/cheatsheets/) that are all worth checking out.] 
+R and the RStudio IDE provide a number of excellent tools for debugging. We'll walk through these together in a series of live coding examples in a minute. But, first here is a visual summary, cropped directly from the [RStudio IDE Cheat Sheet](https://www.rstudio.com/resources/cheatsheets/#ide).^[RStudio hosts a bunch of excellent [cheat sheets](https://www.rstudio.com/resources/cheatsheets/) that are all worth checking out.] 
 
 ```{r rstudio_debug_pic, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("pics/funcs-adv/rstudio-debug.png")
@@ -41,7 +41,7 @@ knitr::include_graphics("pics/funcs-adv/rstudio-debug.png")
 
 *<b>Note:</b> This section should be run interactively and I've set most of the below code chunks to `eval=FALSE` in the R Markdown document. So don't be surprised if the knitted HTML document doesn't contain output corresponding to what I'm talking about in the text. My advice is to run the code chunks yourself and then follow along with the text.*
 
-As the figure above suggests, there are various ways to enter so-called **debug mode**. This is where you "step inside" a function and evaluate objects *within that function environment*. In other words, it allows you to pause time and interact with internal function objects that are normally hidden from your global environment.^[Remember from our last lecture: Functions operate in semi-sandboxed [environments](http://adv-r.had.co.nz/Environments.html) determined by R's [lexical scoping](http://adv-r.had.co.nz/Functions.html#lexical-scoping) rules.] Let's practice with an example.
+As the figure above suggests, there are various ways to enter so-called **debug mode**. This is where you "step inside" a function and evaluate objects *within that function environment*. In other words, it allows you to pause time and interact with internal function objects that are normally hidden from your global environment.^[Remember from our Chapter \@ref(funcs-intro): Functions operate in semi-sandboxed [environments](http://adv-r.had.co.nz/Environments.html) determined by R's [lexical scoping](http://adv-r.had.co.nz/Functions.html#lexical-scoping) rules.] Let's practice with an example.
 
 Suppose we feed some deliberately invalid input --- i.e. a character string --- to our `square()` function:
 
@@ -91,7 +91,7 @@ The automatic RStudio prompt will arise whenever there is something wrong with t
 
 ## Catching user errors
 
-In the previous lecture, we implicitly assumed that the user knows exactly how to use our function. However, this isn't always the case. A related, but more complicated, case is when we mistakenly input the wrong type of argument into a function. Let's return to our earlier example, where we "accidentally" entered a string into our `square()` function.
+In the previous chapter, we implicitly assumed that the user knows exactly how to use our function. However, this isn't always the case. A related, but more complicated, case is when we mistakenly input the wrong type of argument into a function. Let's return to our earlier example, where we "accidentally" entered a string into our `square()` function.
 
 ```{r square_err1, error=TRUE}
 square("one") 
@@ -107,7 +107,7 @@ Luckily, there are several approaches to guarding against these kind of mistakes
 
 ### Function-specific control flow
 
-We covered the basics of control flow in the previous lecture ([here](https://raw.githack.com/uo-ec607/lectures/master/10-funcs-intro/10-funcs-intro.html#control_flow)). Let's put the same concepts to use for debugging. In this particular function, for example, we know that our function requires a numeric input. So we can check whether the input argument is a numeric and use an `ifelse` statement to produce a warning/error message if it fails this test. Consider, then, a slightly modified version of our function, which I'll call `square_ifelse`.
+We covered the basics of control flow in Chapter \@ref(funcs-intro). Let's put the same concepts to use for debugging. In this particular function, for example, we know that our function requires a numeric input. So we can check whether the input argument is a numeric and use an `ifelse` statement to produce a warning/error message if it fails this test. Consider, then, a slightly modified version of our function, which I'll call `square_ifelse`.
 ```{r square_ifelse}
 square_ifelse = 
   function (x = 1) { 
@@ -196,13 +196,13 @@ Let's take a deeper look at our input vector:
 str(c(1, 2, "three"))
 ```
 
-*Ah-ha.* R has coerced every element in the input vector to a character string. (Remember: Vectors can only contain elements of the same type.) The solution is to use an input array that allows different element types --- i.e. a *list*. This, in turn, requires modifying the way that we invoke the function by putting it in a `base::lapply()` or `purrr::map()` call. As you'll hopefully remember from the last lecture, these two functions are syntactically identical, so I'll just use the latter:
+*Ah-ha.* R has coerced every element in the input vector to a character string. (Remember: Vectors can only contain elements of the same type.) The solution is to use an input array that allows different element types --- i.e. a *list*. This, in turn, requires modifying the way that we invoke the function by putting it in a `base::lapply()` or `purrr::map()` call. As you'll hopefully remember from Chapter \@ref(funcs-intro), these two functions are syntactically identical, so I'll just use the latter:
 
 ```{r square_trycatch_test3}
 map(list(1, 2, "three"),  square_trycatch) 
 ```
 
-As we practiced last lecture, we may wish to bind the resulting list of data frames into a single data frame using `dplyr::bind_rows()` or, more simply, `purrr::map_df()`. However, that actually produces errors of its own because all of the columns need to be the same. 
+As we practiced the previous chapter, we may wish to bind the resulting list of data frames into a single data frame using `dplyr::bind_rows()` or, more simply, `purrr::map_df()`. However, that actually produces errors of its own because all of the columns need to be the same. 
 
 ```{r square_trycatch_test4, error=TRUE}
 map_df(list(1, 2, "three"),  square_trycatch)
@@ -247,9 +247,9 @@ square_safely("three")
 
 ## Caching (memoisation)
 
-We've already experienced the benefits (and occasional frustrations) of caching with R Markdown documents.^[Like all of my notes for the course, this lecture is written in R Markdown and then "knitted" to HTML. If you look at the .Rmd source file, you'll see a code chunk with `knitr::opts_chunk$set(echo=TRUE, cache=TRUE, dpi=300)` right at the top. The `cache=TRUE` bit causes each subsequent code chunk to be cached, so that they don't have to be re-run every time I recompile the document (unless something changes).] Caching can also be extremely useful for regular R scripts and analyses. For example, we may wish to save some computationally-expensive output so that we don't have to run it again. On a related but more sinister note, programs and functions can crash midway through completion. This can happen for a variety of reasons: invalid function arguments buried in iterated input, computer malfunction, memory limits, power outages, timeouts, etc. Regardless, it can be a fairly soul-splintering experience to lose all of your work if you're working on a particularly lengthy simulation or computation problem. 
+If you've ever used R Markdown, then you've already experienced the benefits (and occasional frustrations) of caching. Caching can also be extremely useful for regular R scripts and analyses. For example, we may wish to save some computationally-expensive output so that we don't have to run it again. On a related but more sinister note, programs and functions can crash midway through completion. This can happen for a variety of reasons: invalid function arguments buried in iterated input, computer malfunction, memory limits, power outages, timeouts, etc. Regardless, it can be a fairly soul-splintering experience to lose all of your work if you're working on a particularly lengthy simulation or computation problem. 
 
-We'll get to parallel computation in the next lecture, but the problem is *even worse* there. What typically happens with a parallelized program is that the entire run will complete (potentially taking many hours or days) and only reveal an error right at the end... with no saved output! 
+We'll get to parallel computation in the next chapter, but the problem is *even worse* there. What typically happens with a parallelized program is that the entire run will complete (potentially taking many hours or days) and only reveal an error right at the end... with no saved output! 
 
 Fortunately, R has our back with several caching tools. Here I'm going to focus on the **memoise** package ([**link**](https://github.com/r-lib/memoise)). Note that [memoisation/memoization](https://en.wikipedia.org/wiki/Memoization) refers to a particular form of caching where we save (i.e. "remember") the results of expensive functions calls, so that we don't have to repeat them in the future.
 
