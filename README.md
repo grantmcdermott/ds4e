@@ -15,7 +15,7 @@ The R packages used throughout the book can be installed through
 renv::restore(prompt = FALSE)
 ```
 
-**Aside: **While the `renv::restore()` command above should install [R package
+**Aside:** While the `renv::restore()` command above should install [R package
 binaries](https://packagemanager.rstudio.com/) on most operating systems (OS), 
 it will not necessarily import _system_ dependencies on some Linux builds. For 
 example, some key geospatial libraries will need to be installed separately 
