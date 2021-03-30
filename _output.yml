@@ -1,9 +1,9 @@
 bookdown::bs4_book:
   theme:
     primary: "#637238"
-    repo: https://github.com/grantmcdermott/ds4e
-    includes:
-      in_header: [ga_script.html]
+  repo: https://github.com/grantmcdermott/ds4e
+  includes:
+    in_header: [ga_script.html]
       
 # bookdown::tufte_html_book:
 #   toc: yes
