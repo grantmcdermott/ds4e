@@ -16,6 +16,9 @@ rmd_files: [
   
   # Analysis section
   "spatial.Rmd",
+  
+  # Cloud computing section
+  "gce-i.Rmd",
 ]
 
 before_chapter_script: "_common.R"
