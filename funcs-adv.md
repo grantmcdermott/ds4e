@@ -329,7 +329,7 @@ Enabling caching (i.e. memoisation) of our slow function is a simple matter of f
 mem_square = memoise(slow_square)
 ```
 
-*Note: I've assigned the memoised version as its own function here (i.e. `mem_square()`). However, it's no problem to recycle the original function name if you prefer (i.e. `slow_square < - memoise(slow_square)`).*
+*Note: I've assigned the memoised version as its own function here (i.e. `mem_square()`). However, it's no problem to recycle the original function name if you prefer (i.e. `slow_square = memoise(slow_square)`).*
 
 The first time we execute our memoised `slow_square_mem()` function, it won't be able to draw on any saved results. This means that it will have to run through all of the underlying computation. In the process of doing so, however, it will save both the inputs and results for immediate retrieval later on.
 
@@ -341,7 +341,7 @@ system.time({
   m1 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.041   0.000  20.870
+#>   0.042   0.000  20.730
 ```
 
 As expected this took 20 seconds because of the enforced two second wait during each iteration. Now, we try calling the function a second time --- iterating over the exact same inputs and saving to a new `m2` object --- to see if caching makes a difference...
@@ -352,7 +352,7 @@ system.time({
   m2 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.002   0.000   0.001
+#>   0.002   0.000   0.002
 ```
 
 And does it ever! We're down to a fraction of a second, since we didn't need to run at all again. Rather, we simply recalled the previously saved (i.e. memoised) results. And just to prove that we're really saving meaningful output, here is a comparison of the two data frames, as well as the printed output of `m2`.
@@ -383,7 +383,7 @@ system.time({
   m3 = map_df(1:15, mem_square)
 })
 #>    user  system elapsed 
-#>   0.006   0.001  10.327
+#>   0.005   0.000  10.215
 ```
 
 As expected, this only took (5 $\times$ 2 = ) 10 seconds to generate the new results from scratch, with the previous results being called up from the cache. You can think of preceding example as approximating a real-life scenario, where your program crashes or halts midway through its run, yet you don't need to restart all the way at the beginning. These kinds of interruptions happen more frequently than you might expect, especially if you're working with complex analyses and high-performance computing tools (e.g. preemptible nodes or VM instances). Being smart about caching has saved me *many* lost hours and it could do the same for you.
@@ -471,7 +471,7 @@ system.time({
 #> Generating data from scratch for x = 9 ...ok
 #> Generating data from scratch for x = 10 ...ok
 #>    user  system elapsed 
-#>   0.019   0.004  20.631
+#>   0.018   0.010  20.575
 ```
 
 Finally, albeit probably unnecessary, we can also prove to ourselves that we've added the three new cases (i.e. for `8:10`) to our cache directory by comparing to what we had previously.

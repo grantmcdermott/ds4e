@@ -2,8 +2,6 @@
 
 # Functions: Introductory concepts {#funcs-intro}
  
-*Note: This will be the first of several lectures on programming. Today, we'll cover the basics of function writing and functional programming (especially as it applies to iteration). My goal is to provide a solid foundation through a bunch of conceptually simple examples, which will allow us to tackle more complex problems later on.*
-
 ## Software requirements
 
 ### R packages 
@@ -11,7 +9,7 @@
 - New: **pbapply**
 - Already used: **tidyverse**, **data.table** 
 
-We'll be sticking mostly with base R functions today, but I also want to show you a few extra features and considerations for our main data wrangling packages. As per usual, run the following code chunk to install (if necessary) and load everything.
+We'll be sticking mostly with base R functions int hsi chapter. But I also want to show you a few extra features and considerations for our main data wrangling packages. As per usual, run the following code chunk to install (if necessary) and load everything.
 
 
 ```r
@@ -79,7 +77,7 @@ Great, it works. Note that for this simple example we could have written everyth
 
 ### Specifying return values
 
-Notice that we didn't specify a return value for our function. This will work in many cases because R's default behaviour is to automatically return the final object that you created within the function. However, this won't always be the case. Opinions on this differ, but my own recommendation is that you get into the habit of assigning the return object(s) explicitly with `return()``. Let's modify our function to do exactly that.
+Notice that we didn't specify a return value for our function. This will work in many cases because R's default behaviour is to automatically return the final object that you created within the function. However, this won't always be the case. Opinions on this differ, but my own recommendation is that you get into the habit of assigning the return object(s) explicitly with `return()`. Let's modify our function to do exactly that.
 
 
 ```r
@@ -367,7 +365,7 @@ data.table(x = 1:10)[, grp := fcase(x <= 3, "small",
 
 ## Iteration
 
-Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate --- or *map* --- over a set of inputs.^[Our focus today will only be on sequential iteration, but we'll return to parallel iteration in the lecture after next.] By far the most common way to iterate across different programming languages is *for* loops. Indeed, we already saw some examples of *for* loops back in the shell lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95)). However, while R certainly accepts standard *for* loops, I'm going to advocate that you adopt what is known as a "functional programming" approach to writing loops. Let's dive into the reasons why and how these approaches differ.
+Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate --- or *map* --- over a set of inputs.^[Our focus in this chapter will only be on sequential iteration. We'll explore parallel iteration in a few chapters.] By far the most common way to iterate across different programming languages is *for* loops. Indeed, we already saw some examples of *for* loops back in the shell lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95)). However, while R certainly accepts standard *for* loops, I'm going to advocate that you adopt what is known as a "functional programming" approach to writing loops. Let's dive into the reasons why and how these approaches differ.
 
 ### Vectorisation
 
@@ -426,7 +424,7 @@ Unfortunately, basic *for* loops in R also come with some downsides. Historicall
 
 ### Functional programming
 
-The concept of functional programming (FP) is arguably the most important thing that you can take away from today's lecture. In his excellent book, *Advanced R*, [Hadley Wickham](http://adv-r.had.co.nz/Functional-programming.html) explains the core idea as follows.
+The concept of functional programming (FP) is arguably the most important thing that you can take away from this chapter. In his excellent book, *Advanced R*, [Hadley Wickham](http://adv-r.had.co.nz/Functional-programming.html) explains the core idea as follows.
 
 > R, at its heart, is a functional programming (FP) language. This means that it provides many tools for the creation and manipulation of functions. In particular, R has what’s known as first class functions. You can do anything with functions that you can do with vectors: you can assign them to variables, store them in lists, pass them as arguments to other functions, create them inside functions, and even return them as the result of a function. 
 
@@ -619,7 +617,7 @@ map(1:10, function(i) { ## only need to swap `lapply` for `map`
 #> 1  10   J
 ```
 
-Given these similarities, I won't spend much time on **purrr**. Although, I do think it could be the optimal entry point for many you when it comes to programming and iteration. You have already learned the syntax, so it should be very easy to switch over. However, one additional thing I wanted to flag for today is that `map()` also comes with its own variants, which are useful for returning objects of a desired type. For example, we can use `purrr::map_df()` to return a data frame.
+Given these similarities, I won't spend much time on **purrr**. Although, I do think it could be the optimal entry point for many you when it comes to programming and iteration. You have already learned the syntax, so it should be very easy to switch over. However, one additional thing I wanted to flag for now is the fact that `map()` also comes with its own variants, which are useful for returning objects of a desired type. For example, we can use `purrr::map_df()` to return a data frame.
 
 
 ```r
@@ -842,10 +840,10 @@ parent_func(input_df2)
 
 ## Further resources
 
-In the next two lectures, we'll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, I hope that today has given you solid grasp of the fundamentals. I highly encourage you to start writing some of your own functions. You will be doing this a *lot* as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:
+In the next two lectures, we'll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, I hope that this chapter has given you solid grasp of the fundamentals. I highly encourage you to start writing some of your own functions. You will be doing this a *lot* as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:
 
 - Garrett Grolemund and Hadley Wickham's [*<b>R for Data Science</b>*](http://r4ds.had.co.nz) book --- esp. chapters [19 ("Functions)")](http://r4ds.had.co.nz/functions.html) and [21 ("Iteration)")](http://r4ds.had.co.nz/iteration.html) --- covers much of the same ground as we have here, with particular emphasis on the **purrr** package for iteration.
-- If you're looking for an in-depth treatment, then I can highly recommend Hadley's [*<b>Advanced R</b>*](https://adv-r.hadley.nz) (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on today, including more on his (and R's) philosophy regarding functional programming (see [Section ||](https://adv-r.hadley.nz/fp.html)). 
+- If you're looking for an in-depth treatment, then I can highly recommend Hadley's [*<b>Advanced R</b>*](https://adv-r.hadley.nz) (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on in this chapter, including more on his (and R's) philosophy regarding functional programming (see [Section ||](https://adv-r.hadley.nz/fp.html)). 
 - If you're in the market for a more concise overview of the different `*apply()` functions, then I recommend [this blog post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/) by Neil Saunders.
 - On the other end of the scale, Jenny Bryan (all hail) has created a fairly epic [purrr tutorial](https://jennybc.github.io/purrr-tutorial) mini-website. (Bonus: She goes into more depth about working with lists and list columns.)
 
