@@ -380,9 +380,9 @@ Third, notice that the returned object is a *list*. The `lapply()` function can 
 
 Okay, but what if you don't want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) Like most social scientists, I imagine, my preferred data structure is a data frame. So, I typically want to bind the different list elements into a single data frame. There are three simple ways to do this:
 
-- Base R: `do.call("rbind")`
-- dplyr: `bind_rows()`
-- data.table: `rbindlist()`
+- **Base R**: `do.call("rbind")`
+- **dplyr**: `bind_rows()`
+- **data.table**: `rbindlist()`
 
 Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with `do.call("rbind")`.) Is performance paramount? (If yes, then go with `data.table::rbindlist()`). But for the most part I think any of them will do. As an example, here's a slightly modified version of our previous function that now yields a data frame:
 
@@ -492,33 +492,38 @@ multi_func(1, 6)
 
 Great, it works. Now let's imagine that we want to iterate over various levels of both `x` and `y`. There are two basics approaches that we can follow to achieve this: 
 
-1. Use `base::mapply()` or `purrr::pmap()`.
+1. Use `base::mapply()`/`base::Map()` or `purrr::pmap()`.
 2. Use a data frame of input combinations. 
 
 I'll quickly review both approaches, continuing with the `multi_func()` function that we just created above.
 
-#### Use `mapply()` or `pmap()`
+#### Use `mapply()`/`Map()` or `pmap()`
 
-Both base R --- through `mapply()` --- and purrr --- through `pmap` --- can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I'll demonstrate using both versions below.
+Both **base** R --- through `mapply()`/`Map()` --- and **purrr** --- through `pmap` --- can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I'll demonstrate using both versions below.
 
 First, `base::mapply()`:
 ```{r mapply, dependson=multi_func}
-## Note that the inputs are now moved to the *end* of the call. 
-## Also, mapply() is based on sapply(), so we also have to tell it not to 
-## simplify if we want to keep the list structure.
+## Note that the inputs are now moved to the *end* of the call. Also, mapply() 
+## is based on sapply(), so we also have to tell it not to simplify if we want 
+## to keep the list structure.
 mapply(
   multi_func,
   x = 1:5,         ## Our "x" vector input
   y = 6:10,        ## Our "y" vector input
   SIMPLIFY = FALSE ## Tell it not to simplify to keep the list structure
   ) %>%
-  bind_rows()
+  do.call("rbind", .)
 ```
+
+> **Note:** If you don't feel like typing `SIMPLIFY = FALSE`, then `Map()` is a light wrapper around `mapply()` that does this automatically. Try it yourself by slightly editing the above function to use `Map()` instead of `mapply()`.
 
 Second, `purrr::pmap()`:
 ```{r pmap, dependson=multi_func}
-## Note that the inputs are combined in a list.
-pmap_df(list(x=1:5, y=6:10), multi_func)
+## Note that the function inputs are combined in a list and come first.
+pmap_df(
+  list(x = 1:5, y = 6:10), 
+  multi_func
+  )
 ```
 
 
@@ -546,9 +551,8 @@ parent_func =
         ## Extract the `x` and `y` values from row "n" of the data frame
         x = input_df$x[n]
         y = input_df$y[n]
-        ## Use the extracted values
-        d = multi_func(x, y)
-        return(d)
+        ## Apply our function on the the extracted values
+        multi_func(x, y)
       })
     return(d)
     }
