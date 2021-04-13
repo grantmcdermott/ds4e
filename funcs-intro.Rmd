@@ -376,19 +376,26 @@ Second, notice how little the basic syntax changed when switching over from `for
 
 Third, notice that the returned object is a *list*. The `lapply()` function can take various input types as arguments --- vectors, data frames, lists --- but always returns a list, where each element of the returned list is the result from one iteration of the loop. (So now you know where the "l" in "**l**apply" comes from.) 
 
-Okay, but what if you don't want the output in list form? There several options here.^[For example, we could pipe the output to `unlist()` if you wanted a vector. Or you could use use `sapply()` instead, which I'll cover shortly.] However, the method that I use most commonly is to bind the different list elements into a single data frame with either `dplyr::bind_rows()` or `data.table::rbindlist()`. For example, here's a a slightly modified version of our function that now yields a data frame:
+#### Aside: Binding and simplifying lists
+
+Okay, but what if you don't want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) Like most social scientists, I imagine, my preferred data structure is a data frame. So, I typically want to bind the different list elements into a single data frame. There are three simple ways to do this:
+
+- Base R: `do.call("rbind")`
+- dplyr: `bind_rows()`
+- data.table: `rbindlist()`
+
+Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with `do.call("rbind")`.) Is performance paramount? (If yes, then go with `data.table::rbindlist()`). But for the most part I think any of them will do. As an example, here's a slightly modified version of our previous function that now yields a data frame:
 
 ```{r bind_rows_ex}
-lapply(1:10, function(i) {
-  d = data.frame(num = i, let = LETTERS[i])
-  return(d)
-  }) %>%
-  bind_rows()
+lapply(1:10, function(i) data.frame(num = i, let = LETTERS[i])) %>%
+  # do.call("rbind", .)      ## Also works
+  # data.table::rbindlist()  ## Ditto
+  dplyr::bind_rows()
 ```
 
-Taking a step back, while the default list-return behaviour may not sound ideal at first, I've found that I use `lapply()` more frequently than any of the other `apply` family members. A key reason is that my functions normally return multiple objects of different type (which makes lists the only sensible format)... or a single data frame (which is where `dplyr::bind_rows()` or `data.table::rbindlist()` come in). 
+Taking a step back --- and while the default list-return behaviour may not sound ideal at first --- I find that I use `lapply()` more frequently than any of the other `apply` family members. A key reason is that my functions often return multiple objects of different type (which makes lists the only sensible format). Or, they return a single data frame (which is where `do.call("rbind")` and co. enter the picture). 
 
-Another option that would work well in the this particular case is `sapply()`, which stands for "**s**implify apply". This is essentially a wrapper around `lapply` that tries to return simplified output that matches the input type. If you feed the function a vector, it will try to return a vector, etc.
+For what it's worth, another option that would work well in the present particular case is `sapply()`. This stands for "**s**implify apply" and is essentially a wrapper around `lapply` that tries to return simplified output that matches the input type. So, it will try to return a vector if you it a vector, etc. For example:
 
 ```{r sapply_ex}
 sapply(1:10, function(i) LETTERS[i]) 
