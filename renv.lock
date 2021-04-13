@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.4",
+    "Version": "4.0.5",
     "Repositories": [
       {
         "Name": "RSPM",
@@ -216,6 +216,13 @@
       "Repository": "RSPM",
       "Hash": "ebaa97ac99cc2daf04e77eecc7b781d7"
     },
+    "codetools": {
+      "Package": "codetools",
+      "Version": "0.2-18",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "019388fc48e48b3da0d3a76ff94608a8"
+    },
     "colorspace": {
       "Package": "colorspace",
       "Version": "2.0-0",
@@ -391,6 +398,20 @@
       "Repository": "RSPM",
       "Hash": "44594a07a42e5f91fac9f93fda6d0109"
     },
+    "future": {
+      "Package": "future",
+      "Version": "1.21.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "f25fad6bee82b7ab01f055e2d813b96f"
+    },
+    "future.apply": {
+      "Package": "future.apply",
+      "Version": "1.7.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "7fb0dc1961807da107ab2078366052bd"
+    },
     "gdtools": {
       "Package": "gdtools",
       "Version": "0.2.3",
@@ -432,6 +453,13 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "f3aefccc1cc50de6338146b62f115de8"
+    },
+    "globals": {
+      "Package": "globals",
+      "Version": "0.14.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "eca8023ed5ca6372479ebb9b3207f5ae"
     },
     "glue": {
       "Package": "glue",
@@ -622,6 +650,13 @@
       "Repository": "RSPM",
       "Hash": "3471fb65971f1a7b2d4ae7848cf2db8d"
     },
+    "listenv": {
+      "Package": "listenv",
+      "Version": "0.8.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "0bde42ee282efb18c7c4e63822f5b4f7"
+    },
     "lubridate": {
       "Package": "lubridate",
       "Version": "1.7.10",
@@ -738,6 +773,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b37932b67288bc62bb81686b2f337a7d"
+    },
+    "parallelly": {
+      "Package": "parallelly",
+      "Version": "1.24.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "3d77980bde8c8fe48dc0c24dcb014b39"
     },
     "pbapply": {
       "Package": "pbapply",

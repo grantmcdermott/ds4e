@@ -13,6 +13,7 @@ rmd_files: [
   # Programming section
   "funcs-intro.Rmd",
   "funcs-adv.Rmd",
+  "parallel.Rmd",
   
   # Analysis section
   "spatial.Rmd",
