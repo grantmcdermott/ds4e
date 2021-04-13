@@ -42,10 +42,11 @@
 <li class="book-part">Programming</li>
 <li><a class="" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
 <li><a class="active" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -348,14 +349,14 @@
   <span class="va">m1</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.042   0.000  20.730</span></code></pre></div>
+<span class="co">#&gt;   0.035   0.001  20.673</span></code></pre></div>
 <p>As expected this took 20 seconds because of the enforced two second wait during each iteration. Now, we try calling the function a second time — iterating over the exact same inputs and saving to a new <code>m2</code> object — to see if caching makes a difference…</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m2</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.002   0.000   0.002</span></code></pre></div>
+<span class="co">#&gt;   0.001   0.000   0.001</span></code></pre></div>
 <p>And does it ever! We’re down to a fraction of a second, since we didn’t need to run at all again. Rather, we simply recalled the previously saved (i.e. memoised) results. And just to prove that we’re really saving meaningful output, here is a comparison of the two data frames, as well as the printed output of <code>m2</code>.</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span><span class="op">)</span>
@@ -378,7 +379,7 @@
   <span class="va">m3</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.005   0.000  10.215</span></code></pre></div>
+<span class="co">#&gt;   0.006   0.000  10.291</span></code></pre></div>
 <p>As expected, this only took (5 <span class="math inline">\(\times\)</span> 2 = ) 10 seconds to generate the new results from scratch, with the previous results being called up from the cache. You can think of preceding example as approximating a real-life scenario, where your program crashes or halts midway through its run, yet you don’t need to restart all the way at the beginning. These kinds of interruptions happen more frequently than you might expect, especially if you’re working with complex analyses and high-performance computing tools (e.g. preemptible nodes or VM instances). Being smart about caching has saved me <em>many</em> lost hours and it could do the same for you.</p>
 <div id="caching-across-r-sessions" class="section level3" number="3.4.1">
 <h3>
@@ -436,18 +437,18 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m5</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square_verbose</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; Generating data from scratch for x = 1 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 2 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 3 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 4 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 5 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 6 ...ok</span>
-<span class="co">#&gt; Generating data from scratch for x = 7 ...ok</span>
+<span class="co">#&gt; Loading cached data for x = 1 </span>
+<span class="co">#&gt; Loading cached data for x = 2 </span>
+<span class="co">#&gt; Loading cached data for x = 3 </span>
+<span class="co">#&gt; Loading cached data for x = 4 </span>
+<span class="co">#&gt; Loading cached data for x = 5 </span>
+<span class="co">#&gt; Loading cached data for x = 6 </span>
+<span class="co">#&gt; Loading cached data for x = 7 </span>
 <span class="co">#&gt; Generating data from scratch for x = 8 ...ok</span>
 <span class="co">#&gt; Generating data from scratch for x = 9 ...ok</span>
 <span class="co">#&gt; Generating data from scratch for x = 10 ...ok</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.018   0.010  20.575</span></code></pre></div>
+<span class="co">#&gt;   0.013   0.003   6.192</span></code></pre></div>
 <p>Finally, albeit probably unnecessary, we can also prove to ourselves that we’ve added the three new cases (i.e. for <code>8:10</code>) to our cache directory by comparing to what we had previously.</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span>, <span class="va">cached_files</span><span class="op">)</span>
@@ -466,12 +467,9 @@
 </div>
 </div>
 
-
-
-
   <div class="chapter-nav">
 <div class="prev"><a href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></div>
-<div class="next"><a href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></div>
+<div class="next"><a href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -517,7 +515,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-03-30.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-13.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

@@ -264,7 +264,7 @@ The base R `ifelse()` function normally works great and I use it all the time. H
 ```r
 today = function(...) ifelse(..., Sys.Date(), Sys.Date()-1)
 today(TRUE)
-#> [1] 18715
+#> [1] 18730
 ```
 
 You are no doubt surprised to find that our function returns a number instead of a date. This is because `ifelse()` automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: `as.Date(today(TRUE), origin = "1970-01-01")`. 
@@ -279,7 +279,7 @@ First, `dplyr::if_else()`:
 ```r
 today2 = function(...) dplyr::if_else(..., Sys.Date(), Sys.Date()-1)
 today2(TRUE)
-#> [1] "2021-03-29"
+#> [1] "2021-04-13"
 ```
 
 Second, `data.table::fifelse()`:
@@ -288,7 +288,7 @@ Second, `data.table::fifelse()`:
 ```r
 today3 = function(...) data.table::fifelse(..., Sys.Date(), Sys.Date()-1)
 today3(TRUE)
-#> [1] "2021-03-29"
+#> [1] "2021-04-13"
 ```
 
 ### *case when* (nested ifelse)

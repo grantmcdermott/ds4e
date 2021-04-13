@@ -42,10 +42,11 @@
 <li class="book-part">Programming</li>
 <li><a class="active" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
 <li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -272,7 +273,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] 18715</span></code></pre></div>
+<span class="co">#&gt; [1] 18730</span></code></pre></div>
 <p>You are no doubt surprised to find that our function returns a number instead of a date. This is because <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date(today(TRUE), origin = "1970-01-01")</a></code>.</p>
 <blockquote>
 <p><strong>Aside:</strong> The “dot-dot-dot” argument (<code>...</code>) that I’ve used above is a convenient shortcut that allows users to enter unspecified arguments into a function. This is beyond the scope of our current lecture, but can prove to be an incredibly useful and flexible programming strategy. I highly encourage you to look at the <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">relevant section</a> of <em>Advanced R</em> to get a better idea.</p>
@@ -282,12 +283,12 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today2</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] "2021-03-29"</span></code></pre></div>
+<span class="co">#&gt; [1] "2021-04-13"</span></code></pre></div>
 <p>Second, <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">data.table::fifelse()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today3</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today3</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] "2021-03-29"</span></code></pre></div>
+<span class="co">#&gt; [1] "2021-04-13"</span></code></pre></div>
 </div>
 </div>
 <div id="case-when-nested-ifelse" class="section level3" number="2.4.2">
@@ -841,7 +842,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-03-30.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-13.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

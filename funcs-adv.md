@@ -341,7 +341,7 @@ system.time({
   m1 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.042   0.000  20.730
+#>   0.035   0.001  20.673
 ```
 
 As expected this took 20 seconds because of the enforced two second wait during each iteration. Now, we try calling the function a second time --- iterating over the exact same inputs and saving to a new `m2` object --- to see if caching makes a difference...
@@ -352,7 +352,7 @@ system.time({
   m2 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.002   0.000   0.002
+#>   0.001   0.000   0.001
 ```
 
 And does it ever! We're down to a fraction of a second, since we didn't need to run at all again. Rather, we simply recalled the previously saved (i.e. memoised) results. And just to prove that we're really saving meaningful output, here is a comparison of the two data frames, as well as the printed output of `m2`.
@@ -383,7 +383,7 @@ system.time({
   m3 = map_df(1:15, mem_square)
 })
 #>    user  system elapsed 
-#>   0.005   0.000  10.215
+#>   0.006   0.000  10.291
 ```
 
 As expected, this only took (5 $\times$ 2 = ) 10 seconds to generate the new results from scratch, with the previous results being called up from the cache. You can think of preceding example as approximating a real-life scenario, where your program crashes or halts midway through its run, yet you don't need to restart all the way at the beginning. These kinds of interruptions happen more frequently than you might expect, especially if you're working with complex analyses and high-performance computing tools (e.g. preemptible nodes or VM instances). Being smart about caching has saved me *many* lost hours and it could do the same for you.
@@ -460,18 +460,18 @@ And here's an example of the verbose function in action. The output is probably 
 system.time({
   m5 = map_df(1:10, mem_square_verbose)
 })
-#> Generating data from scratch for x = 1 ...ok
-#> Generating data from scratch for x = 2 ...ok
-#> Generating data from scratch for x = 3 ...ok
-#> Generating data from scratch for x = 4 ...ok
-#> Generating data from scratch for x = 5 ...ok
-#> Generating data from scratch for x = 6 ...ok
-#> Generating data from scratch for x = 7 ...ok
+#> Loading cached data for x = 1 
+#> Loading cached data for x = 2 
+#> Loading cached data for x = 3 
+#> Loading cached data for x = 4 
+#> Loading cached data for x = 5 
+#> Loading cached data for x = 6 
+#> Loading cached data for x = 7 
 #> Generating data from scratch for x = 8 ...ok
 #> Generating data from scratch for x = 9 ...ok
 #> Generating data from scratch for x = 10 ...ok
 #>    user  system elapsed 
-#>   0.018   0.010  20.575
+#>   0.013   0.003   6.192
 ```
 
 Finally, albeit probably unnecessary, we can also prove to ourselves that we've added the three new cases (i.e. for `8:10`) to our cache directory by comparing to what we had previously.

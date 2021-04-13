@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>4 Spatial analysis | Data Science for Economists and Other Animals</title>
+<title>5 Spatial analysis | Data Science for Economists and Other Animals</title>
 <meta name="author" content="Grant McDermott and Ed Rubin">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.7.4/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
@@ -42,10 +42,11 @@
 <li class="book-part">Programming</li>
 <li><a class="" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
 <li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="active" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="active" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -53,17 +54,17 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="spatial-analysis" class="section level1" number="4">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="spatial-analysis" class="section level1" number="5">
 <h1>
-<span class="header-section-number">4</span> Spatial analysis<a class="anchor" aria-label="anchor" href="#spatial-analysis"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5</span> Spatial analysis<a class="anchor" aria-label="anchor" href="#spatial-analysis"><i class="fas fa-link"></i></a>
 </h1>
-<div id="requirements" class="section level2" number="4.1">
+<div id="requirements" class="section level2" number="5.1">
 <h2>
-<span class="header-section-number">4.1</span> Requirements<a class="anchor" aria-label="anchor" href="#requirements"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1</span> Requirements<a class="anchor" aria-label="anchor" href="#requirements"><i class="fas fa-link"></i></a>
 </h2>
-<div id="external-libraries-requirements-vary-by-os" class="section level3" number="4.1.1">
+<div id="external-libraries-requirements-vary-by-os" class="section level3" number="5.1.1">
 <h3>
-<span class="header-section-number">4.1.1</span> External libraries (requirements vary by OS)<a class="anchor" aria-label="anchor" href="#external-libraries-requirements-vary-by-os"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.1</span> External libraries (requirements vary by OS)<a class="anchor" aria-label="anchor" href="#external-libraries-requirements-vary-by-os"><i class="fas fa-link"></i></a>
 </h3>
 <p>We’re going to be doing all our spatial analysis and plotting today in R. Behind the scenes, R provides bindings to powerful open-source GIS libraries. These include the <a href="http://www.gdal.org/">Geospatial Data Abstraction Library (GDAL)</a> and <a href="https://trac.osgeo.org/geos/">Interface to Geometry Engine Open Source (GEOS)</a> API suite, as well as access to projection and transformation operations from the <a href="https://proj.org">PROJ library</a>. You needn’t worry about all this, but for the fact that you <em>may</em> need to install some of these external libraries first. The requirements vary by OS:</p>
 <ul>
@@ -75,9 +76,9 @@
 <strong>Windows:</strong> Same as Mac, you should be good to go unless you’re installing from source. In which case, see <a href="https://github.com/r-spatial/sf#windows">here</a>.</li>
 </ul>
 </div>
-<div id="r-packages-2" class="section level3" number="4.1.2">
+<div id="r-packages-3" class="section level3" number="5.1.2">
 <h3>
-<span class="header-section-number">4.1.2</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.2</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages-3"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>New: <strong>sf</strong>, <strong>rgeos</strong>, <strong>lwgeom</strong>, <strong>maps</strong>, <strong>mapdata</strong>, <strong>spData</strong>, <strong>tigris</strong>, <strong>tidycensus</strong>, <strong>leaflet</strong>, <strong>mapview</strong>, <strong>tmap</strong>, <strong>tmaptools</strong>
@@ -86,25 +87,25 @@
 </li>
 </ul>
 <p>Truth be told, you only need a handful of the above libraries to do 95% of the spatial work that you’re likely to encounter. But R’s spatial ecosystem and support is extremely rich, so I’ll try to walk through a number of specific use-cases in this lecture. Run the following code chunk to install (if necessary) and load everything.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Load and install the packages that we'll be using today</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/trinker/pacman">"pacman"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span>
 <span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">sf</span>, <span class="va">rgeos</span>, <span class="va">tidyverse</span>, <span class="va">data.table</span>, <span class="va">hrbrthemes</span>, <span class="va">lwgeom</span>, <span class="va">rnaturalearth</span>, <span class="va">maps</span>, <span class="va">mapdata</span>, <span class="va">spData</span>, <span class="va">tigris</span>, <span class="va">tidycensus</span>, <span class="va">leaflet</span>, <span class="va">mapview</span>, <span class="va">tmap</span>, <span class="va">tmaptools</span><span class="op">)</span>
 <span class="co">## My preferred ggplot2 plotting theme (optional)</span>
 <span class="fu">theme_set</span><span class="op">(</span><span class="fu">hrbrthemes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/hrbrthemes/man/theme_ipsum.html">theme_ipsum</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="census-api-key" class="section level3" number="4.1.3">
+<div id="census-api-key" class="section level3" number="5.1.3">
 <h3>
-<span class="header-section-number">4.1.3</span> Census API key<a class="anchor" aria-label="anchor" href="#census-api-key"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.3</span> Census API key<a class="anchor" aria-label="anchor" href="#census-api-key"><i class="fas fa-link"></i></a>
 </h3>
 <p>Finally, we’ll be accessing some data from the US Census Bureau through the <a href="https://walkerke.github.io/tidycensus/">tidycensus package</a>. This will require a Census API key, which you can request <a href="https://api.census.gov/data/key_signup.html">here</a>. Once that’s done, you can set it using the <code><a href="https://rdrr.io/pkg/tidycensus/man/census_api_key.html">tidycensus::census_api_key()</a></code> function. I recommend using the “install = TRUE” option to save your key for future usage. See the function’s help file for more information.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">tidycensus</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidycensus/man/census_api_key.html">census_api_key</a></span><span class="op">(</span><span class="st">"PLACE_YOUR_API_KEY_HERE"</span>, install <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="introduction-crs-and-map-projections" class="section level2" number="4.2">
+<div id="introduction-crs-and-map-projections" class="section level2" number="5.2">
 <h2>
-<span class="header-section-number">4.2</span> Introduction: CRS and map projections<a class="anchor" aria-label="anchor" href="#introduction-crs-and-map-projections"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.2</span> Introduction: CRS and map projections<a class="anchor" aria-label="anchor" href="#introduction-crs-and-map-projections"><i class="fas fa-link"></i></a>
 </h2>
 <p>Student presentation time.</p>
 <p>If you’re reading this after the fact, I recommend <a href="https://geocompr.robinlovelace.net/spatial-class.html#crs-intro">these</a> <a href="https://proj.org/usage/quickstart.html">two</a> helpful resources. The very short version is that spatial data, like all coordinate-based systems, only make sense relative to some fixed point. That fixed point is what the Coordinate Reference Systems, or <strong>CRS</strong>, is trying to set. In R, we can define the CRS in one of two ways:</p>
@@ -120,19 +121,19 @@
 <div class="inline-figure"><img src="pics/spatial/mercator-distortion.gif" width="100%" style="display: block; margin: auto;"></div>
 <p><strong>Bottom line:</strong> You should always aim to choose a projection that best represents your specific area of study. I’ll also show you how you can “re-orient” your projection to a specific latitude and longitude using the PROJ syntax. But first I’m obliged to share this <a href="https://xkcd.com/977/">XKCD summary</a>. (Do yourself a favour and click on the link.)</p>
 </div>
-<div id="simple-features-and-the-sf-package" class="section level2" number="4.3">
+<div id="simple-features-and-the-sf-package" class="section level2" number="5.3">
 <h2>
-<span class="header-section-number">4.3</span> Simple Features and the <strong>sf</strong> package<a class="anchor" aria-label="anchor" href="#simple-features-and-the-sf-package"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3</span> Simple Features and the <strong>sf</strong> package<a class="anchor" aria-label="anchor" href="#simple-features-and-the-sf-package"><i class="fas fa-link"></i></a>
 </h2>
 <p>R has long provided excellent support for spatial analysis and plotting (primarily through the <strong>sp</strong>, <strong>rgdal</strong>, <strong>rgeos</strong>, and <strong>raster</strong> packages). However, until recently, the complex structure of spatial data necessitated a set of equally complex spatial objects in R. I won’t go into details, but a spatial object (say, a <a href="https://cran.r-project.org/web/packages/sp/vignettes/intro_sp.pdf">SpatialPolygonsDataFrame</a>) was typically comprised of several “layers” — much like a list — with each layer containing a variety of “slots.” While this approach did (and still does) work perfectly well, the convoluted structure provided some barriers to entry for newcomers. It also made it very difficult to incorporate spatial data into the tidyverse ecosystem that we’re familiar with. Luckily, all this has changed thanks to the advent of the <strong>sf</strong> package (<a href="https://r-spatial.github.io/sf/">link</a>).</p>
-<p>The “sf” stands for <a href="https://en.wikipedia.org/wiki/Simple_Features"><strong>s</strong>imple <strong>f</strong>eatures</a>, which is a simple (ahem) standard for representing the spatial geometries of real-world objects on a computer.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;See the &lt;a href="https://r-spatial.github.io/sf/articles/sf1.html"&gt;first&lt;/a&gt; of the excellent &lt;strong&gt;sf&lt;/strong&gt; vignettes for more details.&lt;/p&gt;'><sup>16</sup></a> These objects — i.e. “features” — could include a tree, a building, a country’s border, or the entire globe. The point is that they are characterised by a common set of rules, defining everything from how they are stored on our computer to which geometrical operations can be applied them. Of greater importance for our purposes, however, is the fact that <strong>sf</strong> represents these features in R as <em>data frames</em>. This means that all of our data wrangling skills from previous lectures can be applied to spatial data; say nothing of the specialized spatial functions that we’ll cover next.</p>
-<div id="reading-in-spatial-data" class="section level3" number="4.3.1">
+<p>The “sf” stands for <a href="https://en.wikipedia.org/wiki/Simple_Features"><strong>s</strong>imple <strong>f</strong>eatures</a>, which is a simple (ahem) standard for representing the spatial geometries of real-world objects on a computer.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;See the &lt;a href="https://r-spatial.github.io/sf/articles/sf1.html"&gt;first&lt;/a&gt; of the excellent &lt;strong&gt;sf&lt;/strong&gt; vignettes for more details.&lt;/p&gt;'><sup>26</sup></a> These objects — i.e. “features” — could include a tree, a building, a country’s border, or the entire globe. The point is that they are characterised by a common set of rules, defining everything from how they are stored on our computer to which geometrical operations can be applied them. Of greater importance for our purposes, however, is the fact that <strong>sf</strong> represents these features in R as <em>data frames</em>. This means that all of our data wrangling skills from previous lectures can be applied to spatial data; say nothing of the specialized spatial functions that we’ll cover next.</p>
+<div id="reading-in-spatial-data" class="section level3" number="5.3.1">
 <h3>
-<span class="header-section-number">4.3.1</span> Reading in spatial data<a class="anchor" aria-label="anchor" href="#reading-in-spatial-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.1</span> Reading in spatial data<a class="anchor" aria-label="anchor" href="#reading-in-spatial-data"><i class="fas fa-link"></i></a>
 </h3>
-<p>Somewhat confusingly, most of the functions in the <strong>sf</strong> package start with the prefix <code>st_</code>. This stands for <em><b>s</b>patial and <b>t</b>emporal</em> and a basic command of this package is easy enough once you remember that you’re probably looking for <code>st_SOMETHING()</code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;I rather wish they’d gone with a &lt;code&gt;sf_&lt;/code&gt; prefix myself — or at least created aliases for it — but the package developers are apparently following &lt;a href="https://github.com/r-spatial/sf/issues/140#issuecomment-270029715"&gt;standard naming conventions from PostGIS&lt;/a&gt;.&lt;/p&gt;'><sup>17</sup></a></p>
+<p>Somewhat confusingly, most of the functions in the <strong>sf</strong> package start with the prefix <code>st_</code>. This stands for <em><b>s</b>patial and <b>t</b>emporal</em> and a basic command of this package is easy enough once you remember that you’re probably looking for <code>st_SOMETHING()</code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;I rather wish they’d gone with a &lt;code&gt;sf_&lt;/code&gt; prefix myself — or at least created aliases for it — but the package developers are apparently following &lt;a href="https://github.com/r-spatial/sf/issues/140#issuecomment-270029715"&gt;standard naming conventions from PostGIS&lt;/a&gt;.&lt;/p&gt;'><sup>27</sup></a></p>
 <p>Let’s demonstrate by reading in the North Carolina counties shapefile that comes bundled with <strong>sf</strong>. As you might have guessed, we’re going to use the <code>st_read()</code> command and <strong>sf</strong> package will handle all the heavy lifting behind the scenes.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(sf) ## Already loaded</span>
 
 <span class="co">## Location of our shapefile (here: bundled together with the sf package)</span>
@@ -141,12 +142,12 @@
 <span class="co">## Read the shapefile into R</span>
 <span class="va">nc</span> <span class="op">=</span> <span class="fu">st_read</span><span class="op">(</span><span class="va">file_loc</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="simple-features-as-data-frames" class="section level3" number="4.3.2">
+<div id="simple-features-as-data-frames" class="section level3" number="5.3.2">
 <h3>
-<span class="header-section-number">4.3.2</span> Simple Features as data frames<a class="anchor" aria-label="anchor" href="#simple-features-as-data-frames"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.2</span> Simple Features as data frames<a class="anchor" aria-label="anchor" href="#simple-features-as-data-frames"><i class="fas fa-link"></i></a>
 </h3>
 <p>Let’s print out the <code>nc</code> object that we just created and take a look at its structure.</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span>
 <span class="co">#&gt; Simple feature collection with 100 features and 14 fields</span>
 <span class="co">#&gt; geometry type:  MULTIPOLYGON</span>
@@ -176,14 +177,14 @@
 <span class="co">#&gt; 8      254   594     2     371 MULTIPOLYGON (((-76.56251 3...</span>
 <span class="co">#&gt; 9      748  1190     2     844 MULTIPOLYGON (((-78.30876 3...</span>
 <span class="co">#&gt; 10     160  2038     5     176 MULTIPOLYGON (((-80.02567 3...</span></code></pre></div>
-<p>Now we can see the explicit data frame structure that was I talking about earlier. The object has the familiar tibble-style output that we’re used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type (“MULTIPOLYGON”) and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the <code>geometry</code> column right at the end of the data frame. This geometry column is how <strong>sf</strong> package achieves much of its magic: It stores the geometries of each row element in its own list column.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;For example, we could print out the coordinates needed to plot the first element in our data frame, Ashe county, by typing &lt;code&gt;nc$geometry[[1]]&lt;/code&gt;. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, &lt;code&gt;str(as(nc, "Spatial"))&lt;/code&gt;.&lt;/p&gt;'><sup>18</sup></a> Since all we really care about are the key feature attributes — county name, FIPS code, population size, etc. — we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite <strong>tidyverse</strong> operations and syntax (including the pipe operator <code><a href="https://rstudio.github.io/bslib//reference/pipe.html">%&gt;%</a></code>) can be applied to spatial data. Let’s review some examples, starting with plotting.</p>
+<p>Now we can see the explicit data frame structure that was I talking about earlier. The object has the familiar tibble-style output that we’re used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type (“MULTIPOLYGON”) and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the <code>geometry</code> column right at the end of the data frame. This geometry column is how <strong>sf</strong> package achieves much of its magic: It stores the geometries of each row element in its own list column.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;For example, we could print out the coordinates needed to plot the first element in our data frame, Ashe county, by typing &lt;code&gt;nc$geometry[[1]]&lt;/code&gt;. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, &lt;code&gt;str(as(nc, "Spatial"))&lt;/code&gt;.&lt;/p&gt;'><sup>28</sup></a> Since all we really care about are the key feature attributes — county name, FIPS code, population size, etc. — we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite <strong>tidyverse</strong> operations and syntax (including the pipe operator <code><a href="https://rstudio.github.io/bslib//reference/pipe.html">%&gt;%</a></code>) can be applied to spatial data. Let’s review some examples, starting with plotting.</p>
 </div>
-<div id="plotting-and-projection-with-ggplot2" class="section level3" number="4.3.3">
+<div id="plotting-and-projection-with-ggplot2" class="section level3" number="5.3.3">
 <h3>
-<span class="header-section-number">4.3.3</span> Plotting and projection with <strong>ggplot2</strong><a class="anchor" aria-label="anchor" href="#plotting-and-projection-with-ggplot2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.3</span> Plotting and projection with <strong>ggplot2</strong><a class="anchor" aria-label="anchor" href="#plotting-and-projection-with-ggplot2"><i class="fas fa-link"></i></a>
 </h3>
-<p>Plotting <strong>sf</strong> objects is incredibly easy thanks to the package’s integration with both base R <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> and <strong>ggplot2</strong>. I’m going to focus on the latter here, but feel free to experiment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Plotting &lt;strong&gt;sf&lt;/strong&gt; objects with the base &lt;code&gt;plot&lt;/code&gt; function is generally faster. However, I feel that you give up a lot of control and intuition by moving away from the layered, “graphics of grammar” approach of &lt;strong&gt;ggplot2&lt;/strong&gt;.&lt;/p&gt;"><sup>19</sup></a> The key geom to remember is <code>geom_sf()</code>. For example:</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<p>Plotting <strong>sf</strong> objects is incredibly easy thanks to the package’s integration with both base R <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> and <strong>ggplot2</strong>. I’m going to focus on the latter here, but feel free to experiment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Plotting &lt;strong&gt;sf&lt;/strong&gt; objects with the base &lt;code&gt;plot&lt;/code&gt; function is generally faster. However, I feel that you give up a lot of control and intuition by moving away from the layered, “graphics of grammar” approach of &lt;strong&gt;ggplot2&lt;/strong&gt;.&lt;/p&gt;"><sup>29</sup></a> The key geom to remember is <code>geom_sf()</code>. For example:</p>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(tidyverse) ## Already loaded</span>
 
 <span class="va">nc_plot</span> <span class="op">=</span> 
@@ -195,7 +196,7 @@
 <span class="va">nc_plot</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>To reproject an <strong>sf</strong> object to a different CRS, we can use <code><a href="https://r-spatial.github.io/sf/reference/st_transform.html">sf::st_transform()</a></code>.</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">%&gt;%</span>
   <span class="fu">st_transform</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"+proj=moll"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## Reprojecting to a Mollweide CRS</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="co">## Saving vertical space</span>
@@ -211,24 +212,24 @@
 <span class="co">#&gt; 1      10  1364     0      19 MULTIPOLYGON (((-7145982 43...</span>
 <span class="co">#&gt; 2      10   542     3      12 MULTIPOLYGON (((-7118092 43...</span></code></pre></div>
 <p>Or, we can specify a common projection directly in the ggplot call using <code>coord_sf()</code>. This is often the most convenient approach when you are combining multiple <strong>sf</strong> data frames in the same plot.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_plot</span> <span class="op">+</span>
   <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"+proj=moll"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Mollweide projection"</span><span class="op">)</span> </code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_mollweide_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Note that we used a PROJ string to define the CRS reprojection above. But we could easily use an EPSG code instead. For example, here’s the <a href="https://epsg.io/32119">NC state plane</a> projection.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_plot</span> <span class="op">+</span>
   <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">32119</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"NC state plane"</span><span class="op">)</span> </code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_stateline_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="data-wrangling-with-dplyr-and-tidyr" class="section level3" number="4.3.4">
+<div id="data-wrangling-with-dplyr-and-tidyr" class="section level3" number="5.3.4">
 <h3>
-<span class="header-section-number">4.3.4</span> Data wrangling with <strong>dplyr</strong> and <strong>tidyr</strong><a class="anchor" aria-label="anchor" href="#data-wrangling-with-dplyr-and-tidyr"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.4</span> Data wrangling with <strong>dplyr</strong> and <strong>tidyr</strong><a class="anchor" aria-label="anchor" href="#data-wrangling-with-dplyr-and-tidyr"><i class="fas fa-link"></i></a>
 </h3>
 <p>As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to <strong>sf</strong> objects. For example, the standard <strong>dplyr</strong> verbs like <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, <code>mutate()</code> and <code>select()</code> all work:</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Camden"</span>, <span class="st">"Durham"</span>, <span class="st">"Northampton"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>AREA_1000 <span class="op">=</span> <span class="va">AREA</span><span class="op">*</span><span class="fl">1000</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -247,8 +248,8 @@
 <span class="co">#&gt; 2   286     0     115   350     2     139 MULTIPOLYGON (((-76.00897 3...</span>
 <span class="co">#&gt; 3  7970    16    3732 10432    22    4948 MULTIPOLYGON (((-79.01814 3...</span></code></pre></div>
 <p>You can also perform <code>group_by()</code> and <code>summarise()</code> operations as per normal (see <a href="http://strimas.com/r/tidy-sf/">here</a> for a nice example). Furthermore, the <strong>dplyr</strong> family of <a href="https://dplyr.tidyverse.org/reference/join.html">join functions</a> also work, which can be especially handy when combining different datasets by (say) FIPS code or some other <em>attribute</em>. However, this presumes that only one of the objects has a specialized geometry column. In other words, it works when you are joining an <strong>sf</strong> object with a normal data frame. In cases where you want to join two <strong>sf</strong> objects based on their <em>geometries</em>, there’s a specialized <code>st_join()</code> function. I provide an example of this latter operation in the section on <a href="spatial-analysis.html#geometric">geometric operations</a> below.</p>
-<p>And, just to show that we’ve got the bases covered, you can also implement your favourite <strong>tidyr</strong> verbs. For example, we can <code><a href="https://tidyr.tidyverse.org/reference/gather.html">tidyr::gather()</a></code> the data to long format, which is useful for facetted plotting.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In case you’re wondering: the newer &lt;code&gt;tidyr::pivot_*&lt;/code&gt; functions &lt;a href="https://github.com/r-spatial/sf/pull/1151"&gt;do not&lt;/a&gt; yet work with &lt;strong&gt;sf&lt;/strong&gt; objects.&lt;/p&gt;'><sup>20</sup></a> Here I demonstrate using the “BIR74” and “BIR79” columns (i.e. the number of births in each county in 1974 and 1979, respectively).</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<p>And, just to show that we’ve got the bases covered, you can also implement your favourite <strong>tidyr</strong> verbs. For example, we can <code><a href="https://tidyr.tidyverse.org/reference/gather.html">tidyr::gather()</a></code> the data to long format, which is useful for facetted plotting.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In case you’re wondering: the newer &lt;code&gt;tidyr::pivot_*&lt;/code&gt; functions &lt;a href="https://github.com/r-spatial/sf/pull/1151"&gt;do not&lt;/a&gt; yet work with &lt;strong&gt;sf&lt;/strong&gt; objects.&lt;/p&gt;'><sup>30</sup></a> Here I demonstrate using the “BIR74” and “BIR79” columns (i.e. the number of births in each county in 1974 and 1979, respectively).</p>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span>county <span class="op">=</span> <span class="va">NAME</span>, <span class="va">BIR74</span>, <span class="va">BIR79</span>, <span class="op">-</span><span class="va">geometry</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">gather</span><span class="op">(</span><span class="va">year</span>, <span class="va">births</span>, <span class="va">BIR74</span>, <span class="va">BIR79</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -260,17 +261,17 @@
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Births by North Carolina county"</span><span class="op">)</span> </code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_tidyr-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="geometric" class="section level3" number="4.3.5">
+<div id="geometric" class="section level3" number="5.3.5">
 <h3>
-<span class="header-section-number">4.3.5</span> Specialized geometric operations<a class="anchor" aria-label="anchor" href="#geometric"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.5</span> Specialized geometric operations<a class="anchor" aria-label="anchor" href="#geometric"><i class="fas fa-link"></i></a>
 </h3>
 <p>Alongside all the tidyverse functionality, the <strong>sf</strong> package comes with a full suite of geometrical operations. You should take a look at at the <a href="https://r-spatial.github.io/sf/articles/sf3.html#geometrical-operations">third <strong>sf</strong> vignette</a> or the <a href="https://geocompr.robinlovelace.net/geometric-operations.html#geo-vec"><em>Geocomputation with R</em></a> book to get a complete overview. However, here are a few examples to get you started:</p>
-<div id="unary-operations" class="section level4" number="4.3.5.1">
+<div id="unary-operations" class="section level4" number="5.3.5.1">
 <h4>
-<span class="header-section-number">4.3.5.1</span> Unary operations<a class="anchor" aria-label="anchor" href="#unary-operations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.5.1</span> Unary operations<a class="anchor" aria-label="anchor" href="#unary-operations"><i class="fas fa-link"></i></a>
 </h4>
 <p>So-called <em>unary</em> operations are applied to a single object. For instance, you can “melt” sub-elements of an <strong>sf</strong> object (e.g. counties) into larger elements (e.g. states) using <code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html">sf::st_union()</a></code>:</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">%&gt;%</span> 
   <span class="fu">st_union</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -279,12 +280,12 @@
 <span class="co">#&gt; although coordinates are longitude/latitude, st_union assumes that they are planar</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_union-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Or, you can get the <code>st_area()</code>, <code>st_centroid()</code>, <code>st_boundary()</code>, <code>st_buffer()</code>, etc. of an object using the appropriate command. For example:</p>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc</span> <span class="op">%&gt;%</span> <span class="fu">st_area</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span> <span class="co">## Only show the area of the first five counties to save space.</span>
 <span class="co">#&gt; Units: [m^2]</span>
 <span class="co">#&gt; [1] 1137388604  611077263 1423489919  694546292 1520740530</span></code></pre></div>
 <p>And:</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_centroid</span> <span class="op">=</span> <span class="fu">st_centroid</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>
 
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> <span class="op">+</span>
@@ -296,12 +297,12 @@
     <span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_centroid-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="binary-operations" class="section level4" number="4.3.5.2">
+<div id="binary-operations" class="section level4" number="5.3.5.2">
 <h4>
-<span class="header-section-number">4.3.5.2</span> Binary operations<a class="anchor" aria-label="anchor" href="#binary-operations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.5.2</span> Binary operations<a class="anchor" aria-label="anchor" href="#binary-operations"><i class="fas fa-link"></i></a>
 </h4>
 <p>Another set of so-called <em>binary</em> operations can be applied to multiple objects. So, we can get things like the distance between two spatial objects using <code><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">sf::st_distance()</a></code>. In the below example, I’m going to get the distance from Ashe county to Brunswich county, as well as itself. The latter is just a silly addition to show that we can easily make multiple pairwise comparisons, even when the distance from one element to another is zero.</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ashe_brunswick</span> <span class="op">=</span> <span class="va">nc</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ashe"</span>, <span class="st">"Brunswick"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">brunswick</span> <span class="op">=</span> <span class="va">nc</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">NAME</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Brunswick"</span><span class="op">)</span><span class="op">)</span>
 
@@ -325,13 +326,13 @@
   <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/nc_distance-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="binary-logical-operations" class="section level4" number="4.3.5.3">
+<div id="binary-logical-operations" class="section level4" number="5.3.5.3">
 <h4>
-<span class="header-section-number">4.3.5.3</span> Binary logical operations<a class="anchor" aria-label="anchor" href="#binary-logical-operations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.5.3</span> Binary logical operations<a class="anchor" aria-label="anchor" href="#binary-logical-operations"><i class="fas fa-link"></i></a>
 </h4>
 <p>A sub-genre of binary geometric operations falls into the category of logic rules — typically characterising the way that geometries relate in space. (Do they overlap, etc.)</p>
 <p>For example, we can calculate the intersection of different spatial objects using <code><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">sf::st_intersection()</a></code>. For this next example, I’m going to use two new spatial objects: 1) A regional map of France from the <strong>maps</strong> package and 2) part of the Seine river network (including its Marne and Yonne tributaries) from the <strong>spData</strong> package. Don’t worry too much about the process used for loading these datasets; I’ll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which adminstrative regions are intersected by the river network. Start by plotting all of the data to get a visual sense of the overlap:</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Get the data</span>
 <span class="va">france</span> <span class="op">=</span> <span class="fu">st_as_sf</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span><span class="st">'france'</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"seine"</span>, package <span class="op">=</span> <span class="st">"spData"</span><span class="op">)</span>
@@ -348,7 +349,7 @@
     <span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/france-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Now let’s limit it to the intersected regions:</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seine</span> <span class="op">=</span> <span class="fu">st_transform</span><span class="op">(</span><span class="va">seine</span>, crs <span class="op">=</span> <span class="fu">st_crs</span><span class="op">(</span><span class="va">france</span><span class="op">)</span><span class="op">)</span>
 <span class="va">france_intersected</span> <span class="op">=</span> <span class="fu">st_intersection</span><span class="op">(</span><span class="va">france</span>, <span class="va">seine</span><span class="op">)</span>
 <span class="va">france_intersected</span>
@@ -370,7 +371,7 @@
 <span class="co">#&gt; 14.1             Marne Seine LINESTRING (3.868337 48.522...</span>
 <span class="co">#&gt; 15           Val-Doise Seine LINESTRING (2.286567 48.954...</span></code></pre></div>
 <p>Note that <code>st_intersection()</code> only preserves <em>exact</em> points of overlap. As in, this is the exact path that the rivers follow within these regions. We can see this more explicitly in map form:</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">france_intersected</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_sf</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.8</span>, <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">ID</span>, col <span class="op">=</span> <span class="va">ID</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -381,7 +382,7 @@
   <span class="fu">theme</span><span class="op">(</span>legend.title <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/france_intersected_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>If we instead wanted to plot the subsample of intersected provinces (i.e. keeping their full geometries), we have a couple options. We could filter the <code>france</code> object by matching its region IDs with the <code>france_intersected</code> object. However, a more direct option is to use the <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">sf::st_join()</a></code> function which matches objects based on overlapping (i.e. intersecting) geometries:</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">st_join</span><span class="op">(</span><span class="va">france</span>, <span class="va">seine</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## Get rid of regions with no overlap</span>
   <span class="fu">distinct</span><span class="op">(</span><span class="va">ID</span>, .keep_all <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## Some regions are duplicated b/c two branches of the river network flow through them </span>
@@ -393,16 +394,16 @@
 <p>That’s about as much <strong>sf</strong> functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R “swag.” However, I’ll try to slip in a few more <strong>sf</strong>-specific operations along the way.</p>
 </div>
 </div>
-<div id="aside-sf-and-data.table" class="section level3" number="4.3.6">
+<div id="aside-sf-and-data.table" class="section level3" number="5.3.6">
 <h3>
-<span class="header-section-number">4.3.6</span> Aside: <strong>sf</strong> and <strong>data.table</strong><a class="anchor" aria-label="anchor" href="#aside-sf-and-data.table"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.6</span> Aside: <strong>sf</strong> and <strong>data.table</strong><a class="anchor" aria-label="anchor" href="#aside-sf-and-data.table"><i class="fas fa-link"></i></a>
 </h3>
 <p><strong>sf</strong> objects are designed to integrate with a <strong>tidyverse</strong> workflow. They can also be made to work a <strong>data.table</strong> workflow too, but the integration is not as slick. This is a <a href="https://github.com/Rdatatable/data.table/issues/2273">known issue</a> and I’ll only just highlight a few very brief considerations.</p>
 <p>You can convert an <strong>sf</strong> object into a data.table. But note that the key geometry column appears to lose its attributes.</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(data.table) ## Already loaded</span>
 
-<span class="va">nc_dt</span> <span class="op">=</span> <span class="fu">as.data.table</span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>
+<span class="va">nc_dt</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html">as.data.table</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">nc_dt</span><span class="op">)</span>
 <span class="co">#&gt;     AREA PERIMETER CNTY_ CNTY_ID        NAME  FIPS FIPSNO CRESS_ID BIR74 SID74</span>
 <span class="co">#&gt; 1: 0.114     1.442  1825    1825        Ashe 37009  37009        5  1091     1</span>
@@ -419,7 +420,7 @@
 <span class="co">#&gt; 5:    1066  1606     3    1197  &lt;XY[1]&gt;</span>
 <span class="co">#&gt; 6:     954  1838     5    1237  &lt;XY[1]&gt;</span></code></pre></div>
 <p>The good news is that all of this information is still there. It’s just hidden from display.</p>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_dt</span><span class="op">$</span><span class="va">geometry</span>
 <span class="co">#&gt; Geometry set for 100 features </span>
 <span class="co">#&gt; geometry type:  MULTIPOLYGON</span>
@@ -434,7 +435,7 @@
 <span class="co">#&gt; MULTIPOLYGON (((-77.21767 36.24098, -77.23461 3...</span></code></pre></div>
 <p>What’s the upshot? Well, basically it means that you have to refer to this “geometry” column explicitly whenever you implement a spatial operation. For example, here’s a repeat of the <code>st_union()</code> operation that we saw earlier. Note that I explicitly refer to the “geometry” column both for the <code>st_union()</code> operation (which, moreover, takes place in the
 “j” data.table slot) and when assigning the aesthetics for the <code>ggplot()</code> call.</p>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nc_dt</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">st_union</span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="co">## Explicitly refer to 'geometry' col</span>
     <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>        <span class="co">## And here again for the aes()</span>
     <span class="fu">geom_sf</span><span class="op">(</span>fill<span class="op">=</span><span class="cn">NA</span>, col<span class="op">=</span><span class="st">"black"</span><span class="op">)</span> <span class="op">+</span>
@@ -442,19 +443,19 @@
          subtitle <span class="op">=</span> <span class="st">"This time brought to you by data.table"</span><span class="op">)</span> 
 <span class="co">#&gt; although coordinates are longitude/latitude, st_union assumes that they are planar</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/ncd_dt3-1.png" width="672" style="display: block; margin: auto;"></div>
-<p>Of course, it’s also possible to efficiently convert between the two classes — e.g. with <code>as.data.table()</code> and <code>st_as_sf()</code> — depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.</p>
+<p>Of course, it’s also possible to efficiently convert between the two classes — e.g. with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html">as.data.table()</a></code> and <code>st_as_sf()</code> — depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.</p>
 </div>
 </div>
-<div id="where-to-get-map-data" class="section level2" number="4.4">
+<div id="where-to-get-map-data" class="section level2" number="5.4">
 <h2>
-<span class="header-section-number">4.4</span> Where to get map data<a class="anchor" aria-label="anchor" href="#where-to-get-map-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4</span> Where to get map data<a class="anchor" aria-label="anchor" href="#where-to-get-map-data"><i class="fas fa-link"></i></a>
 </h2>
-<p>As our first North Carolina examples demonstrate, you can easily import external shapefiles, KML files, etc., into R. Just use the generic <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">sf::st_read()</a></code> function on any of these formats and the <strong>sf</strong> package will take care of the rest. However, we’ve also seen with the France example that you might not even need an external shapefile. Indeed, R provides access to a large number of base maps — e.g. countries of the world, US states and counties, etc. — through the <strong>maps</strong>, (higher resolution) <strong>mapdata</strong> and <strong>spData</strong> packages, as well as a whole ecosystem of more specialized GIS libraries.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The list of specialised maps packages is far too long for me to cover here. You can get &lt;a href="https://github.com/ropensci/mregions"&gt;marine regions&lt;/a&gt;, &lt;a href="https://github.com/ropenscilabs/rwdpa"&gt;protected areas&lt;/a&gt;, &lt;a href="https://github.com/chrisvwn/Rnightlights"&gt;nightlights&lt;/a&gt;, …, etc., etc.&lt;/p&gt;'><sup>21</sup></a> To convert these maps into “<strong>sf</strong>-friendly” data frame format, we can use the <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">sf::st_as_sf()</a></code> function as per the below examples.</p>
-<div id="example-1-the-world" class="section level3" number="4.4.1">
+<p>As our first North Carolina examples demonstrate, you can easily import external shapefiles, KML files, etc., into R. Just use the generic <code><a href="https://r-spatial.github.io/sf/reference/st_read.html">sf::st_read()</a></code> function on any of these formats and the <strong>sf</strong> package will take care of the rest. However, we’ve also seen with the France example that you might not even need an external shapefile. Indeed, R provides access to a large number of base maps — e.g. countries of the world, US states and counties, etc. — through the <strong>maps</strong>, (higher resolution) <strong>mapdata</strong> and <strong>spData</strong> packages, as well as a whole ecosystem of more specialized GIS libraries.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The list of specialised maps packages is far too long for me to cover here. You can get &lt;a href="https://github.com/ropensci/mregions"&gt;marine regions&lt;/a&gt;, &lt;a href="https://github.com/ropenscilabs/rwdpa"&gt;protected areas&lt;/a&gt;, &lt;a href="https://github.com/chrisvwn/Rnightlights"&gt;nightlights&lt;/a&gt;, …, etc., etc.&lt;/p&gt;'><sup>31</sup></a> To convert these maps into “<strong>sf</strong>-friendly” data frame format, we can use the <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html">sf::st_as_sf()</a></code> function as per the below examples.</p>
+<div id="example-1-the-world" class="section level3" number="5.4.1">
 <h3>
-<span class="header-section-number">4.4.1</span> Example 1: The World<a class="anchor" aria-label="anchor" href="#example-1-the-world"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.1</span> Example 1: The World<a class="anchor" aria-label="anchor" href="#example-1-the-world"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(maps) ## Already loaded</span>
 
 <span class="va">world</span> <span class="op">=</span> <span class="fu">st_as_sf</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span><span class="st">"world"</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
@@ -469,22 +470,22 @@
 <span class="va">world_map</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/world1-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>All of the usual <strong>sf</strong> functions and transformations can then be applied. For example, we can reproject the above world map onto the <a href="https://proj.org/operations/projections/laea.html">Lambert Azimuthal Equal Area</a> projection (and further orientate it at the South Pole) as follows.</p>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world_map</span> <span class="op">+</span>
   <span class="fu">coord_sf</span><span class="op">(</span>crs <span class="op">=</span> <span class="st">"+proj=laea +y_0=0 +lon_0=155 +lat_0=-90"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>subtitle <span class="op">=</span> <span class="st">"Lambert Azimuthal Equal Area projection"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/world2-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="several-digressions-on-projection-considerations" class="section level3" number="4.4.2">
+<div id="several-digressions-on-projection-considerations" class="section level3" number="5.4.2">
 <h3>
-<span class="header-section-number">4.4.2</span> Several digressions on projection considerations<a class="anchor" aria-label="anchor" href="#several-digressions-on-projection-considerations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.2</span> Several digressions on projection considerations<a class="anchor" aria-label="anchor" href="#several-digressions-on-projection-considerations"><i class="fas fa-link"></i></a>
 </h3>
-<div id="winkel-tripel-projection" class="section level4" number="4.4.2.1">
+<div id="winkel-tripel-projection" class="section level4" number="5.4.2.1">
 <h4>
-<span class="header-section-number">4.4.2.1</span> Winkel tripel projection<a class="anchor" aria-label="anchor" href="#winkel-tripel-projection"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.2.1</span> Winkel tripel projection<a class="anchor" aria-label="anchor" href="#winkel-tripel-projection"><i class="fas fa-link"></i></a>
 </h4>
 <p>As we’ve already seen, most map projections work great “out of the box” with <strong>sf</strong>. One niggling and notable exception is the <a href="https://en.wikipedia.org/wiki/Winkel_tripel_projection">Winkel tripel projection</a>. This is the preferred global map projection of <em>National Geographic</em> and requires a bit more work to get it to play nicely with <strong>sf</strong> and <strong>ggplot2</strong> (as detailed in <a href="https://github.com/r-spatial/sf/issues/509">this thread</a>). Here’s a quick example of how to do it:</p>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(lwgeom) ## Already loaded</span>
 
 <span class="va">wintr_proj</span> <span class="op">=</span> <span class="st">"+proj=wintri +datum=WGS84 +no_defs +over"</span>
@@ -504,12 +505,12 @@
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"The world"</span>, subtitle <span class="op">=</span> <span class="st">"Winkel tripel projection"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/wintri-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="equal-earth-projection" class="section level4" number="4.4.2.2">
+<div id="equal-earth-projection" class="section level4" number="5.4.2.2">
 <h4>
-<span class="header-section-number">4.4.2.2</span> Equal Earth projection<a class="anchor" aria-label="anchor" href="#equal-earth-projection"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.2.2</span> Equal Earth projection<a class="anchor" aria-label="anchor" href="#equal-earth-projection"><i class="fas fa-link"></i></a>
 </h4>
 <p>The latest and greatest projection, however, is the “<a href="http://equal-earth.com">Equal Earth</a>” projection. This <em>does</em> work well out of the box, in part due to the <code>ne_countries</code> dataset that comes bundled with the <strong>rnaturalearth</strong> package (<a href="https://github.com/ropensci/rnaturalearth">link</a>). I’ll explain that second part of the previous sentence in moment. But first let’s see the Equal Earth projection in action.</p>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(rnaturalearth) ## Already loaded</span>
 
 <span class="va">countries</span> <span class="op">=</span> 
@@ -522,12 +523,12 @@
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"The world"</span>, subtitle <span class="op">=</span> <span class="st">"Equal Earth projection"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/equal_earth-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="pacfic-centered-maps-and-other-polygon-mishaps" class="section level4" number="4.4.2.3">
+<div id="pacfic-centered-maps-and-other-polygon-mishaps" class="section level4" number="5.4.2.3">
 <h4>
-<span class="header-section-number">4.4.2.3</span> Pacfic-centered maps and other polygon mishaps<a class="anchor" aria-label="anchor" href="#pacfic-centered-maps-and-other-polygon-mishaps"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.2.3</span> Pacfic-centered maps and other polygon mishaps<a class="anchor" aria-label="anchor" href="#pacfic-centered-maps-and-other-polygon-mishaps"><i class="fas fa-link"></i></a>
 </h4>
 <p>As noted, the <code><a href="https://rdrr.io/pkg/rnaturalearth/man/ne_countries.html">rnaturalearth::ne_countries</a></code> spatial data frame is important for correctly displaying the Equal Earth projection. On the face of it, this looks pretty similar to our <code><a href="https://rdrr.io/pkg/maps/man/world.html">maps::world</a></code> spatial data frame from earlier. They both contain polygons of all the countries in the world and appear to have similar default projections. However, some underlying nuances in how those polygons are constructed allows us avoid some undesirable visual artefacts that arise when reprojecting to the Equal Earth projection. Consider:</p>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world</span> <span class="op">%&gt;%</span>
   <span class="fu">st_transform</span><span class="op">(</span><span class="fl">8857</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## Transform to equal earth projection</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -537,12 +538,12 @@
 <p>These types of visual artefacts are particularly common for Pacific-centered maps and, in that case, arise from polygons extending over the Greenwich prime meridian. It’s a suprisingly finicky problem to solve. Even the <strong>rnaturalearth</strong> doesn’t do a good job. Luckily, Nate Miller has you covered with an <a href="https://github.com/natemiller/mapping">excellent guide</a> to set you on the right track.</p>
 </div>
 </div>
-<div id="example-2-a-single-country-i.e.-norway" class="section level3" number="4.4.3">
+<div id="example-2-a-single-country-i.e.-norway" class="section level3" number="5.4.3">
 <h3>
-<span class="header-section-number">4.4.3</span> Example 2: A single country (i.e. Norway)<a class="anchor" aria-label="anchor" href="#example-2-a-single-country-i.e.-norway"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4.3</span> Example 2: A single country (i.e. Norway)<a class="anchor" aria-label="anchor" href="#example-2-a-single-country-i.e.-norway"><i class="fas fa-link"></i></a>
 </h3>
 <p>The <strong>maps</strong> and <strong>mapdata</strong> packages have detailed county- and province-level data for several individual nations. We’ve already seen this with France, but it includes the USA, New Zealand and several other nations. However, we can still use it to extract a specific country’s border using some intuitive syntax. For example, we could plot a base map of Norway as follows.</p>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norway</span> <span class="op">=</span> <span class="fu">st_as_sf</span><span class="op">(</span><span class="fu">map</span><span class="op">(</span><span class="st">"world"</span>, <span class="st">"norway"</span>, plot <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co">## For a hi-resolution map (if you *really* want to see all the fjords):</span>
@@ -553,7 +554,7 @@
   <span class="fu">geom_sf</span><span class="op">(</span>fill<span class="op">=</span><span class="st">"black"</span>, col<span class="op">=</span><span class="cn">NA</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/norway-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Hmmm. Looks okay, but I don’t really want to include non-mainland territories like Svalbaard (to the north) and the Faroe Islands (to the east). This gives me the chance to show off another handy function, <code><a href="https://r-spatial.github.io/sf/reference/st_crop.html">sf::st_crop()</a></code>, which I’ll use to crop our <strong>sf</strong> object to a specific extent (i.e. rectangle). While I am at, we could also improve the projection. The Norwegian Mapping Authority recommends the ETRS89 / UTM projection, for which we can easily obtain the equivalent EPSG code (i.e. 25832) from <a href="https://epsg.io/25832">this website</a>.</p>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norway</span> <span class="op">%&gt;%</span>
   <span class="fu">st_crop</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>xmin<span class="op">=</span><span class="fl">0</span>, xmax<span class="op">=</span><span class="fl">35</span>, ymin<span class="op">=</span><span class="fl">0</span>, ymax<span class="op">=</span><span class="fl">72</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">st_transform</span><span class="op">(</span>crs <span class="op">=</span> <span class="fl">25832</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -564,20 +565,20 @@
 <blockquote>
 <p><strong>Aside:</strong> I recommend detaching the <strong>maps</strong> package once you’re finished using it, since it avoids potential namespace conflicts with <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map</a></code>.</p>
 </blockquote>
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/detach.html">detach</a></span><span class="op">(</span><span class="va">package</span><span class="op">:</span><span class="va">maps</span><span class="op">)</span> <span class="co">## To avoid potential purrr::map() conflicts</span></code></pre></div>
 </div>
 </div>
-<div id="census" class="section level2" number="4.5">
+<div id="census" class="section level2" number="5.5">
 <h2>
-<span class="header-section-number">4.5</span> BONUS 1: US Census data with <strong>tidycensus</strong> and <strong>tigris</strong><a class="anchor" aria-label="anchor" href="#census"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.5</span> BONUS 1: US Census data with <strong>tidycensus</strong> and <strong>tigris</strong><a class="anchor" aria-label="anchor" href="#census"><i class="fas fa-link"></i></a>
 </h2>
 <blockquote>
 <p><strong>Note:</strong> Before continuing with this section, you will first need to <a href="https://api.census.gov/data/key_signup.html">request an API key</a> from the Census.</p>
 </blockquote>
 <p>Working with Census data has traditionally quite a pain. You need to register on the website, then download data from various years or geographies separately, merge these individual files, etc. Thankfully, this too has recently become much easier thanks to the Census API and — for R at least — the <strong>tidycensus</strong> (<a href="https://walker-data.com/tidycensus/">link</a>) and <strong>tigris</strong> (<a href="https://github.com/walkerke/tigris">link</a>) packages from <a href="http://walkerke.github.io/">Kyle Walker</a> (a UO alum). This next section will closely follow a <a href="http://walkerke.github.io/2017/06/comparing-metros/">tutorial</a> on his website.</p>
 <p>We start by loading the packages and setting our Census API key. Note that I’m not actually running the below chunk, since I expect you to fill in your own Census key. You only have to run this function once.</p>
-<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(tidycensus) ## Already loaded</span>
 <span class="co"># library(tigris) ## Already loaded</span>
 
@@ -591,7 +592,7 @@
 <span class="co">## do that is with the `usethis::edit_r_profile()` function.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>tigris_use_cache<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>Let’s say that our goal is to provide a snapshot of Census rental estimates across different cities in the Pacific Northwest. We start by downloading tract-level rental data for Oregon and Washington using the <code><a href="https://rdrr.io/pkg/tidycensus/man/get_acs.html">tidycensus::get_acs()</a></code> function. Note that you’ll need to look up the correct ID variable (in this case: “DP04_0134”).</p>
-<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rent</span> <span class="op">=</span> 
   <span class="fu">tidycensus</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidycensus/man/get_acs.html">get_acs</a></span><span class="op">(</span>
     geography <span class="op">=</span> <span class="st">"tract"</span>, variables <span class="op">=</span> <span class="st">"DP04_0134"</span>,
@@ -618,7 +619,7 @@
 #&gt; 10 53021… Census Trac… DP04_01…      550   189 (((-119.0936 46.28581, -119.0934…
 #&gt; # … with 2,282 more rows</code></pre>
 <p>This returns an <strong>sf</strong> object, which we can plot directly.</p>
-<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rent</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_sf</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">estimate</span>, color <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
@@ -632,7 +633,7 @@
 <div class="inline-figure"><img src="spatial_files/figure-html/rent_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>Hmmm, looks like you want to avoid renting in Seattle if possible…</p>
 <p>The above map provides rental information for pretty much all of the Pacific Northwest. Perhaps we’re not interested in such a broad swatch of geography. What if we’d rather get a sense of rents within some smaller and well-defined metropolitan areas? Well, we’d need some detailed geographic data for starters, say from the <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html">TIGER/Line shapefiles</a> collection. The good news is that the <strong>tigris</strong> package has you covered here. For example, let’s say we want to narrow down our focus and compare rents across three Oregon metros: Portland (and surrounds), Corvallis, and Eugene.</p>
-<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">or_metros</span> <span class="op">=</span> 
   <span class="fu">tigris</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tigris/man/core_based_statistical_areas.html">core_based_statistical_areas</a></span><span class="op">(</span>cb <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># filter(GEOID %in% c("21660", "18700", "38900")) %&gt;% ## Could use GEOIDs directly if you know them </span>
@@ -640,7 +641,7 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"OR"</span>, <span class="va">NAME</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## Filter out Portland, ME</span>
   <span class="fu">select</span><span class="op">(</span>metro_name <span class="op">=</span> <span class="va">NAME</span><span class="op">)</span></code></pre></div>
 <p>Now we do a spatial join on our two data sets using the <code><a href="https://r-spatial.github.io/sf/reference/st_join.html">sf::st_join()</a></code> function.</p>
-<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">or_rent</span> <span class="op">=</span> 
   <span class="fu">st_join</span><span class="op">(</span>
     <span class="va">rent</span>, 
@@ -668,7 +669,7 @@
 <span class="co">#&gt; 10 53011… Censu… DP04_01…     1074    76 (((-122.6716 45.62722, -12… Portland-V…</span>
 <span class="co">#&gt; # … with 585 more rows</span></code></pre></div>
 <p>One useful way to summarize this data and compare across metros is with a histogram. Note that “regular” <strong>ggplot2</strong> geoms and functions play perfectly nicely with <strong>sf</strong> objects (i.e. we aren’t limited to <code>geom_sf()</code>).</p>
-<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">or_rent</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">estimate</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_histogram</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
@@ -676,13 +677,13 @@
 <div class="inline-figure"><img src="spatial_files/figure-html/or_rent_plot-1.png" width="672" style="display: block; margin: auto;"></div>
 <p>That’s a quick taste of working with <strong>tidycensus</strong> (and <strong>tigris</strong>). In truth, the package can do a lot more than I’ve shown you here. For example, you can also use it to download a variety of other Census microdata such as PUMS, which is much more detailed. See the <strong>tidycensus</strong> <a href="https://walker-data.com/tidycensus/">website</a> for more information.</p>
 </div>
-<div id="bonus-2-interactive-maps" class="section level2" number="4.6">
+<div id="bonus-2-interactive-maps" class="section level2" number="5.6">
 <h2>
-<span class="header-section-number">4.6</span> BONUS 2: Interactive maps<a class="anchor" aria-label="anchor" href="#bonus-2-interactive-maps"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.6</span> BONUS 2: Interactive maps<a class="anchor" aria-label="anchor" href="#bonus-2-interactive-maps"><i class="fas fa-link"></i></a>
 </h2>
-<p>Now that you’ve grasped the basic properties of <strong>sf</strong> objects and how to plot them using <strong>ggplot2</strong>, its time to scale up with interactive maps.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The ability to easily plot interactive maps from R is one of the main reasons that I switched all of my public presentations from PDFs to R Markdown-driven HMTL.&lt;/p&gt;"><sup>22</sup></a> You have several package options here. But I think the best are <strong>leaflet</strong> (<a href="https://rstudio.github.io/leaflet/">link</a>) and friends, or <strong>plotly</strong> (<a href="https://github.com/ropensci/plotly">link</a>). We’ve already covered the latter in a previous lecture, so I’ll simply redirect interested parties to <a href="https://plotly-r.com/maps.html">this link</a> for some map-related examples examples. To expand on the former in more depth, <a href="https://leafletjs.com/">leaflet.js</a> is a lightweight JavaScript library for interactive mapping that has become extremely popular in recent years. You would have seen it being used across all the major news media publications (<em>New York Times</em>, <em>Washington Post</em>, <em>The Economist</em>, etc.). The good people at RStudio have kindly packaged a version of <strong>leaflet</strong> for R, which basically acts as a wrapper to the underlying JavaScript library.</p>
+<p>Now that you’ve grasped the basic properties of <strong>sf</strong> objects and how to plot them using <strong>ggplot2</strong>, its time to scale up with interactive maps.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The ability to easily plot interactive maps from R is one of the main reasons that I switched all of my public presentations from PDFs to R Markdown-driven HMTL.&lt;/p&gt;"><sup>32</sup></a> You have several package options here. But I think the best are <strong>leaflet</strong> (<a href="https://rstudio.github.io/leaflet/">link</a>) and friends, or <strong>plotly</strong> (<a href="https://github.com/ropensci/plotly">link</a>). We’ve already covered the latter in a previous lecture, so I’ll simply redirect interested parties to <a href="https://plotly-r.com/maps.html">this link</a> for some map-related examples examples. To expand on the former in more depth, <a href="https://leafletjs.com/">leaflet.js</a> is a lightweight JavaScript library for interactive mapping that has become extremely popular in recent years. You would have seen it being used across all the major news media publications (<em>New York Times</em>, <em>Washington Post</em>, <em>The Economist</em>, etc.). The good people at RStudio have kindly packaged a version of <strong>leaflet</strong> for R, which basically acts as a wrapper to the underlying JavaScript library.</p>
 <p>The <strong>leaflet</strong> syntax is a little different to what you’ve seen thus far and I strongly encourage you to visit the package’s <a href="https://rstudio.github.io/leaflet/">excellent website</a> for the full set of options. However, a key basic principle that it shares with <strong>ggplot2</strong> is that you <em>build your plot in layers</em>. Here’s an example adapted from <a href="https://juliasilge.com/blog/using-tidycensus/">Julia Silge</a>, which builds on the <strong>tidycensus</strong> package that we saw above. This time, our goal is to plot county-level population densities for Oregon as a whole and produce some helpful popup text if a user clicks on a particular county. First, we download the data using <strong>tidycensus</strong> and inspect the resulting data frame.</p>
-<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(tidycensus) ## Already loaded</span>
 
 <span class="va">oregon</span> <span class="op">=</span> 
@@ -720,7 +721,7 @@
 #&gt; 9  MULTIPOLYGON (((-121.8495 4...
 #&gt; 10 MULTIPOLYGON (((-124.1503 4...</code></pre>
 <p>So, the popup text of interest is held within the “NAME” and “estimate” columns. I’ll use a bit of regular expression work to extract the county name from the “NAME” column (i.e. without the state) and then build up the map layer by layer. Note that the <strong>leaflet</strong> syntax requires that I prepend variables names with a tilde (<code><a href="https://rdrr.io/r/base/tilde.html">~</a></code>) when I refer to them in the plot building process. This tilde operates in much the same way as the asthetics (<code>aes()</code>) function does in <strong>ggplot2</strong>. One other thing to note is that I need to define a colour palette — which I’ll call <code>col_pal</code> here — separately from the main plot. This is a bit of an inconvenience if you’re used to the fully-integrated <strong>ggplot2</strong> API, but only a small one.</p>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(leaflet) ## Already loaded</span>
 
 <span class="va">col_pal</span> <span class="op">=</span> <span class="fu">colorQuantile</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"viridis"</span>, domain <span class="op">=</span> <span class="va">oregon</span><span class="op">$</span><span class="va">estimate</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
@@ -746,7 +747,7 @@
     <span class="op">)</span></code></pre></div>
 <p>No suprises here. The bulk of Oregon’s population is situated just west of the Cascades, in cities connected along the I-5.</p>
 <p>A particularly useful feature of interactive maps is not being limited by scale or granularity, so you can really dig in to specific areas and neighbourhoods. Here’s an example using home values from Lane County.</p>
-<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lane</span> <span class="op">=</span> 
   <span class="fu">get_acs</span><span class="op">(</span>
     geography <span class="op">=</span> <span class="st">"tract"</span>, variables <span class="op">=</span> <span class="st">"B25077_001"</span>, 
@@ -754,7 +755,7 @@
     <span class="op">)</span>
 <span class="co">#&gt; Getting data from the 2015-2019 5-year ACS</span>
 <span class="co">#&gt; Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</span></code></pre></div>
-<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lane_pal</span> <span class="op">=</span> <span class="fu">colorNumeric</span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"plasma"</span>, domain <span class="op">=</span> <span class="va">lane</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span>
 
 <span class="va">lane</span> <span class="op">%&gt;%</span>
@@ -779,19 +780,19 @@
     opacity <span class="op">=</span> <span class="fl">1</span>
     <span class="op">)</span></code></pre></div>
 <p>Having tried to convince you of the conceptual similarities between building maps with either <strong>leaflet</strong> or <strong>ggplot2</strong> — layering etc. — there’s no denying that the syntax does take some getting used to. If you only plan to spin up the occasional interactive map, that cognitive overhead might be more effort than it’s worth. The good news is that R spatial community has created the <strong>mapview</strong> package (<a href="https://r-spatial.github.io/mapview/">link</a>) for very quickly generating interactive maps. Behind the scenes, it uses <strong>leaflet</strong> to power everything, alongside some sensible defaults. Here’s a quick example that recreates our Lane county home value map from above.</p>
-<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(mapview) ## Already loaded</span>
 
 <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html">mapview</a></span><span class="op">(</span><span class="va">lane</span>, zcol <span class="op">=</span> <span class="st">"estimate"</span>, 
                  layer.name <span class="op">=</span> <span class="st">'Median home values&lt;br&gt;Lane County, OR'</span><span class="op">)</span></code></pre></div>
-<p>Super easy, no? While it doesn’t offer quite the same flexibility as the native <strong>leaflet</strong> syntax, <strong>mapview</strong> is a great way to get decent interactive maps up and running with minimal effort.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;I also want to flag the companion &lt;strong&gt;mapedit&lt;/strong&gt; package (&lt;a href="https://github.com/r-spatial/mapedit"&gt;link&lt;/a&gt;), which lets you &lt;em&gt;edit&lt;/em&gt; maps interactively by hand (e.g. redrawing polygons). I’ve used it for some of my projects and it works very well.&lt;/p&gt;'><sup>23</sup></a></p>
+<p>Super easy, no? While it doesn’t offer quite the same flexibility as the native <strong>leaflet</strong> syntax, <strong>mapview</strong> is a great way to get decent interactive maps up and running with minimal effort.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;I also want to flag the companion &lt;strong&gt;mapedit&lt;/strong&gt; package (&lt;a href="https://github.com/r-spatial/mapedit"&gt;link&lt;/a&gt;), which lets you &lt;em&gt;edit&lt;/em&gt; maps interactively by hand (e.g. redrawing polygons). I’ve used it for some of my projects and it works very well.&lt;/p&gt;'><sup>33</sup></a></p>
 </div>
-<div id="bonus-3-other-map-plotting-options-plot-tmap-etc." class="section level2" number="4.7">
+<div id="bonus-3-other-map-plotting-options-plot-tmap-etc." class="section level2" number="5.7">
 <h2>
-<span class="header-section-number">4.7</span> BONUS 3: Other map plotting options (<strong>plot</strong>, <strong>tmap</strong>, etc.)<a class="anchor" aria-label="anchor" href="#bonus-3-other-map-plotting-options-plot-tmap-etc."><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.7</span> BONUS 3: Other map plotting options (<strong>plot</strong>, <strong>tmap</strong>, etc.)<a class="anchor" aria-label="anchor" href="#bonus-3-other-map-plotting-options-plot-tmap-etc."><i class="fas fa-link"></i></a>
 </h2>
 <p>While I think that <strong>ggplot2</strong> (together with <strong>sf</strong>) and <strong>leaflet</strong> are the best value bet for map plotting in R — especially for relative newcomers that have been inculcated into the tidyverse ecosystem — it should be said that there are many other options available to you. The base R <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function is <em>very</em> powerful and handles all manner of spatial objects. (It is also very fast.) The package that I’ll highlight briefly in closing, however, is <strong>tmap</strong> (<a href="https://mtennekes.github.io/tmap/index.html">link</a>). The focus of <strong>tmap</strong> is <em>thematic maps</em> that are “production ready.” The package is extremely flexible and can accept various spatial objects and output various map types (including interactive). Moreover, the syntax should look very familar to us, since it is inspired by <code>ggplot2</code>’s layered graphics of grammar approach. Here’s an example of a great looking map taken from the <strong>tmap</strong> <a href="https://mtennekes.github.io/tmap/index.html">homepage</a>.</p>
-<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(tmap) ## Already loaded</span>
 <span class="co"># library(tmaptools) ## Already loaded</span>
 
@@ -827,9 +828,9 @@
     <span class="op">)</span> </code></pre></div>
 <div class="inline-figure"><img src="spatial_files/figure-html/tmap-1.png" width="672" style="display: block; margin: auto;"></div>
 </div>
-<div id="further-reading" class="section level2" number="4.8">
+<div id="further-reading" class="section level2" number="5.8">
 <h2>
-<span class="header-section-number">4.8</span> Further reading<a class="anchor" aria-label="anchor" href="#further-reading"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.8</span> Further reading<a class="anchor" aria-label="anchor" href="#further-reading"><i class="fas fa-link"></i></a>
 </h2>
 <p>You could easily spend a whole semester (or degree!) on spatial analysis and, more broadly, geocomputation. I’ve simply tried to give you as much useful information as can reasonably be contained in one lecture. Here are some resources for further reading and study:</p>
 <ul>
@@ -847,41 +848,41 @@
 
 
   <div class="chapter-nav">
-<div class="prev"><a href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></div>
-<div class="next"><a href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></div>
+<div class="prev"><a href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></div>
+<div class="next"><a href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#spatial-analysis"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="nav-link" href="#spatial-analysis"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li>
-<a class="nav-link" href="#requirements"><span class="header-section-number">4.1</span> Requirements</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#external-libraries-requirements-vary-by-os"><span class="header-section-number">4.1.1</span> External libraries (requirements vary by OS)</a></li>
-<li><a class="nav-link" href="#r-packages-2"><span class="header-section-number">4.1.2</span> R packages</a></li>
-<li><a class="nav-link" href="#census-api-key"><span class="header-section-number">4.1.3</span> Census API key</a></li>
+<a class="nav-link" href="#requirements"><span class="header-section-number">5.1</span> Requirements</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#external-libraries-requirements-vary-by-os"><span class="header-section-number">5.1.1</span> External libraries (requirements vary by OS)</a></li>
+<li><a class="nav-link" href="#r-packages-3"><span class="header-section-number">5.1.2</span> R packages</a></li>
+<li><a class="nav-link" href="#census-api-key"><span class="header-section-number">5.1.3</span> Census API key</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#introduction-crs-and-map-projections"><span class="header-section-number">4.2</span> Introduction: CRS and map projections</a></li>
+<li><a class="nav-link" href="#introduction-crs-and-map-projections"><span class="header-section-number">5.2</span> Introduction: CRS and map projections</a></li>
 <li>
-<a class="nav-link" href="#simple-features-and-the-sf-package"><span class="header-section-number">4.3</span> Simple Features and the sf package</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#reading-in-spatial-data"><span class="header-section-number">4.3.1</span> Reading in spatial data</a></li>
-<li><a class="nav-link" href="#simple-features-as-data-frames"><span class="header-section-number">4.3.2</span> Simple Features as data frames</a></li>
-<li><a class="nav-link" href="#plotting-and-projection-with-ggplot2"><span class="header-section-number">4.3.3</span> Plotting and projection with ggplot2</a></li>
-<li><a class="nav-link" href="#data-wrangling-with-dplyr-and-tidyr"><span class="header-section-number">4.3.4</span> Data wrangling with dplyr and tidyr</a></li>
-<li><a class="nav-link" href="#geometric"><span class="header-section-number">4.3.5</span> Specialized geometric operations</a></li>
-<li><a class="nav-link" href="#aside-sf-and-data.table"><span class="header-section-number">4.3.6</span> Aside: sf and data.table</a></li>
+<a class="nav-link" href="#simple-features-and-the-sf-package"><span class="header-section-number">5.3</span> Simple Features and the sf package</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#reading-in-spatial-data"><span class="header-section-number">5.3.1</span> Reading in spatial data</a></li>
+<li><a class="nav-link" href="#simple-features-as-data-frames"><span class="header-section-number">5.3.2</span> Simple Features as data frames</a></li>
+<li><a class="nav-link" href="#plotting-and-projection-with-ggplot2"><span class="header-section-number">5.3.3</span> Plotting and projection with ggplot2</a></li>
+<li><a class="nav-link" href="#data-wrangling-with-dplyr-and-tidyr"><span class="header-section-number">5.3.4</span> Data wrangling with dplyr and tidyr</a></li>
+<li><a class="nav-link" href="#geometric"><span class="header-section-number">5.3.5</span> Specialized geometric operations</a></li>
+<li><a class="nav-link" href="#aside-sf-and-data.table"><span class="header-section-number">5.3.6</span> Aside: sf and data.table</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#where-to-get-map-data"><span class="header-section-number">4.4</span> Where to get map data</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#example-1-the-world"><span class="header-section-number">4.4.1</span> Example 1: The World</a></li>
-<li><a class="nav-link" href="#several-digressions-on-projection-considerations"><span class="header-section-number">4.4.2</span> Several digressions on projection considerations</a></li>
-<li><a class="nav-link" href="#example-2-a-single-country-i.e.-norway"><span class="header-section-number">4.4.3</span> Example 2: A single country (i.e. Norway)</a></li>
+<a class="nav-link" href="#where-to-get-map-data"><span class="header-section-number">5.4</span> Where to get map data</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#example-1-the-world"><span class="header-section-number">5.4.1</span> Example 1: The World</a></li>
+<li><a class="nav-link" href="#several-digressions-on-projection-considerations"><span class="header-section-number">5.4.2</span> Several digressions on projection considerations</a></li>
+<li><a class="nav-link" href="#example-2-a-single-country-i.e.-norway"><span class="header-section-number">5.4.3</span> Example 2: A single country (i.e. Norway)</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#census"><span class="header-section-number">4.5</span> BONUS 1: US Census data with tidycensus and tigris</a></li>
-<li><a class="nav-link" href="#bonus-2-interactive-maps"><span class="header-section-number">4.6</span> BONUS 2: Interactive maps</a></li>
-<li><a class="nav-link" href="#bonus-3-other-map-plotting-options-plot-tmap-etc."><span class="header-section-number">4.7</span> BONUS 3: Other map plotting options (plot, tmap, etc.)</a></li>
-<li><a class="nav-link" href="#further-reading"><span class="header-section-number">4.8</span> Further reading</a></li>
+<li><a class="nav-link" href="#census"><span class="header-section-number">5.5</span> BONUS 1: US Census data with tidycensus and tigris</a></li>
+<li><a class="nav-link" href="#bonus-2-interactive-maps"><span class="header-section-number">5.6</span> BONUS 2: Interactive maps</a></li>
+<li><a class="nav-link" href="#bonus-3-other-map-plotting-options-plot-tmap-etc."><span class="header-section-number">5.7</span> BONUS 3: Other map plotting options (plot, tmap, etc.)</a></li>
+<li><a class="nav-link" href="#further-reading"><span class="header-section-number">5.8</span> Further reading</a></li>
 </ul>
 
       <div class="book-extra">
@@ -899,7 +900,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-03-30.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-13.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
