@@ -1,17 +1,5 @@
 # Parallel programming {#parallel}
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
-## Next hook based on this SO answer: https://stackoverflow.com/a/39025054
-knitr::knit_hooks$set(
-  prompt = function(before, options, envir) {
-    options(
-      prompt = if (options$engine %in% c('sh','bash')) '$ ' else 'R> ',
-      continue = if (options$engine %in% c('sh','bash')) '$ ' else '+ '
-      )
-    })
-```
-
 ## Software requirements
 
 ### R packages 
@@ -22,7 +10,7 @@ knitr::knit_hooks$set(
 The code chunk below will install (if necessary) and load all of these packages for you. Note that the **parallel** package is bundled together with the base R installation and should already be on your system. I'm also going to call the `future::plan()` function and set the resolution to "multisession". Don't worry what this means right now --- I'll explain in due course --- just think of it as a convenient way to set our desired parallel programming behaviour for the rest of this document.
 
 ```{r, cache=FALSE, message=FALSE, warning=FALSE}
-## Load and install the packages that we'll be using today
+## Load and install the packages that we'll be using in this chapter
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tictoc, parallel, pbapply, future, future.apply, tidyverse, 
                hrbrthemes, furrr, RhpcBLASctl, memoise, here)
@@ -36,24 +24,20 @@ plan(multisession)
 
 ## Prologue
 
-A few lectures back, we talked about the huge difference that some relatively new packages have made to spatial analysis in R. Complex spatial operations that previously necessitated equally complex spatial objects have been superseded by much simpler and more intuitive tools. If that wasn't good enough, these new tools are also faster. We are going to see something very similar today. Parallel programming is a big and complex topic, with many potential pitfalls. However, software innovations and some amazing new(ish) packages have made it *much* easier and safer to program in parallel.^[I should emphasise that the R-core team has provided excellent support for parallel programming for over a decade. But there's no question in my mind that the barriers to entry have recently been lowered.] 
-
-With that in mind, I'm going to structure today's lecture back-to-front. In particular, I'm going to start with some motivating examples. My primary goal is to demonstrate both the ease and immediate payoff of "going parallel". Only after convincing you of these facts will we get into some of the technical details that were abstracted away behind the scenes. The latter part of the lecture will go over parallel programming in more general terms (i.e. not R-specific) and highlight potential pitfalls that you should be aware of.
+Parallel programming is a big and complex topic, with many potential pitfalls. However, software innovations and some amazing new(ish) packages have made it *much* easier and safer to program in parallel.^[R has provided excellent support for parallel programming for over a decade. But there's no question in my mind that the barriers to entry have recently been lowered.] With that in mind, I'm going to structure this chapter back-to-front. In particular, I'm going to start with some motivating examples. My primary goal is to demonstrate both the ease and immediate payoff of "going parallel". Only after convincing you of these facts will we get into some of the technical details that were abstracted away behind the scenes. The latter part of the lecture will go over parallel programming in more general terms (i.e. not R-specific) and highlight potential pitfalls that you should be aware of.
 
 Ready? Let's go.
 
-## Example 1
+## Example 1: slow_square
 
 Our first motivating example is going to involve the same `slow_square()` function that we saw in the previous lecture:
 
 ```{r slow_square}
-# library(tidyverse) ## Already loaded
-
 ## Emulate slow function
 slow_square = 
   function(x = 1) {
     x_sq = x^2 
-    d = tibble(value = x, value_squared = x_sq)
+    d = data.frame(value = x, value_squared = x_sq)
     Sys.sleep(2)
     return(d)
     }
@@ -65,20 +49,24 @@ Let's iterate over this function using the standard `lapply()` method that we're
 # library(tictoc) ## Already loaded
 
 tic()
-serial_ex = lapply(1:12, slow_square) %>% bind_rows()
-toc()
+serial_ex = lapply(1:12, slow_square)
+toc(log = TRUE)
 ```
 
-As expected, the iteration took about `r parallel::detectCores()*2` seconds to run because of the enforced break after every sequential iteration (i.e. `Sys.sleep(2)`). On the other hand, this means that we can easily speed things up by iterating in *parallel*.
+```{r serial_ex_timing, echo = FALSE}
+t_s_ex = as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]])))
+```
 
-Before continuing, it's worth pointing out that our abilty to go parallel hinges on the number of CPU cores available to us. The simplest way to obtain this information from R is with the `parallel::detectCores()` function:
+As expected, the iteration took about `r round(t_s_ex, 0)` seconds to run because of the enforced break after every sequential iteration (i.e. `Sys.sleep(2)`). On the other hand, this means that we can easily speed things up by iterating in *parallel*.
+
+Before continuing, it's worth pointing out that our ability to go parallel hinges on the number of CPU cores available to us. The simplest way to obtain this information from R is with the `parallel::detectCores()` function:
 
 ```{r cache=F}
 # future::availableCores() ## Another option
 detectCores()
 ```
 
-So, I have `r parallel::detectCores()` cores to play with on my laptop.^[A Dell Precision 5530 running Arch Linux, if you're interested.] Adjust expectations for you own system accordingly.
+So, I have `r parallel::detectCores()` cores to play with on this machine.^[~~A Dell Precision 5530 running Arch Linux, if you're interested.~~A cloud-based virtual machine provided by GitHub, which what we use to build this book.] Adjust expectations for you own system accordingly.
 
 Okay, back to our example. I'm going to implement the parallel iteration using the **future.apply** package ([link](https://cran.r-project.org/web/packages/future.apply/index.html)) --- more on this later. Note that the parameters of the problem are otherwise unchanged.
 
@@ -87,7 +75,7 @@ Okay, back to our example. I'm going to implement the parallel iteration using t
 # plan(multisession)     ## Already set above
 
 tic()
-future_ex = future_lapply(1:12, slow_square) %>% bind_rows()
+future_ex = future_lapply(1:12, slow_square)
 toc(log = TRUE)
 ```
 
@@ -95,7 +83,7 @@ toc(log = TRUE)
 t_f_ex = as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]])))
 ```
 
-Look at at that: A `r round(parallel::detectCores()*2/t_f_ex, 0)`× speedup! Even more impressively, consider how little the syntax changed. I basically just had to tell R that I wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend my `lapply()` call (i.e. <code>**future_**lapply()</code>). 
+Look at at that: A `r round(s_f_x/t_f_ex, 0)`× speedup! Even more impressively, consider how little the syntax changed. I basically just had to tell R that I wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend my `lapply()` call (i.e. <code>**future_**lapply()</code>). 
 
 Let's confirm that the output is the same.
 
@@ -116,54 +104,54 @@ toc()
 
 How easy was that? We hardly had to change our original code and didn't have to pay a cent for all that extra performance.^[Not to flog a dead horse, but as I pointed out in the very [first lecture](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html#26) of this course: Have you seen the price of a [Stata/MP](https://www.stata.com/statamp/) license recently? Not to mention the fact that you effectively pay *per* core...] Congratulate yourself on already being such an expert at parallel programming.
 
-```{r liz_high_five, echo = FALSE}
+```{r liz_high_five, echo = FALSE, out.width = 100%}
 if (knitr::is_html_output()){
   knitr::include_graphics('pics/parallel/liz-high-five.gif')
 }
 ```
 
 
-## Example 2
+## Example 2: Bootstrapping
 
 Our second motivating example will involve a more realistic and slightly more computationally-intensive case: Bootstrapping coefficient values for hypothesis testing.^[It's an aside, but I'm strongly of the opinion that simulation methods like bootstrapping provide a far more intuitive way to understand statistics. Don't believe me? Watch John Rausser's fantastic talk: "[*Statistics Without The Agonizing Pain*](https://www.youtube.com/watch?v=5Dnw46eC-0o)". Seriously, watch it.] I'll also spend a bit more time talking about the packages we're using and what they're doing.
 
-Start by creating a fake data set (`our_data`) and specifying a bootstrapping function (`bootstrp()`). This function will draw a sample of 10,000 observations from the the data set (with replacement), fit a regression, and then extract the coefficient on the `x` variable. Note that this coefficient should be around 2 according to our simulation setup.
+Start by creating a fake dataset (`d`), where we "know" that the relationship between our x and y variables. We'll then specify a bootstrapping function (`bootstrap()`) that will draw a random sample of 1,000 observations from the fake dataset (with replacement), fit a regression, and then extract the coefficient on the x variable.
 
-```{r bootstrp}
+```{r bootstrap}
 ## Set seed (for reproducibility)
 set.seed(1234)
 # Set sample size
 n = 1e6
 
 ## Generate a large data frame of fake data for a regression
-our_data = 
-  tibble(x = rnorm(n), e = rnorm(n)) %>%
-  mutate(y = 3 + 2*x + e)
+d = data.frame(x = rnorm(n), e = rnorm(n))
+## Outcome variable. Note that the x coefficient is 2.
+d$y = 3 + 2*d$x + d$e
 
-## Function that draws a sample of 10,000 observations, runs a regression and
-## extracts the coefficient value on the x variable (should be around 2).
-bootstrp = 
+## Function that draws a sample observations from the fake dataset, then runs a 
+## regression and extracts the coefficient value on the x variable.
+bootstrap = 
   function(i) {
-  ## Sample the data
-  sample_data = sample_n(our_data, size = 1e4, replace = TRUE)
-  ## Run the regression on our sampled data and extract the extract the x
-  ## coefficient.
-  x_coef = lm(y ~ x, data = sample_data)$coef[2]
+  ## Sample 1,000 rows of our fake dataset
+  dsamp = d[sample.int(1e3, replace = TRUE), ]
+  ## Run a regression on the sampled data, then extract the extract the x
+  ## coefficient (should be around 2).
+  x_coef = lm(y ~ x, dsamp)$coef['x']
   ## Return value
-  return(tibble(x_coef = x_coef))
+  return(data.frame(sim = i, x_coef = x_coef))
   }
 ```
 
 ### Serial implementation (for comparison)
 
-Let's implement the function in serial first to get a benchmark for comparison.
+Let's implement the bootstrap procedure in serial to get a benchmark for comparison. Note that we'll repeat the function (i.e. simulation) 10,000 times to build up a decent estimate of the parameter distribution; which, again, we know should be around 2.
 
 ```{r sim_serial}
 set.seed(123L) ## Optional to ensure that the results are the same
 
 ## 10,000-iteration simulation
 tic()
-sim_serial = lapply(1:1e4, bootstrp) %>% bind_rows()
+sim_serial = lapply(1:1e4, bootstrap)
 toc(log = TRUE)
 ```
 
@@ -171,9 +159,13 @@ toc(log = TRUE)
 t_s = round(as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]]))), 0)
 ```
 
-So that took about `r t_s` seconds on my system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of my system monitor, showing that only one core was being used during this serial version.
+So that took about `r t_s` seconds on this system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of my system monitor, showing that only one core was being used during this serial version.
 
-![](pics/parallel/serial.png)
+> **Note:** My local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.
+
+```{r serial_png, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("pics/parallel/serial.png")
+```
 
 ### Parallel implemention using the **future** ecosystem
 
@@ -185,14 +177,14 @@ Here's Henrik [describing](https://cran.r-project.org/web/packages/future/vignet
 
 As I've tried to emphasise, **future** is relatively new on the scene. It is certainly not the first or only way to implement parallel processes in R. However, I think that it provides a simple and unified framework that makes it the preeminent choice. What's more, the same commands that we use here will carry over very neatly to more complicated settings involving high-performance computing clusters. We'll experience this first hand when we get to the big data section of the course.
 
-You've probably also noted that keep referring to the "future ecosystem". This is because **future** provides the framework for other packages to implement parallel versions of their functions. The two that I am focusing on today are
+You've probably also noted that keep referring to the "future ecosystem". This is because **future** provides the framework for other packages to implement parallel versions of their functions. The two that we'll focus on here are:
 
 1. the **future.apply** package ([link](https://cran.r-project.org/web/packages/future.apply/index.html)), also by Henrik, and
 2. the **furrr** package ([link](https://davisvaughan.github.io/furrr/index.html)), an implementation for **purrr** by [Davis Vaughan](https://twitter.com/dvaughan32).
 
 In both cases, we start by setting the plan for resolving the future evaluation (here: `plan(multisession)`). We then call our functions --- which involve minor modifications of their serial equivalents --- and let future magic take care of everything else.
 
-#### 1) future.apply
+#### future.apply
 
 Here's the `future.apply::future_lapply()` parallel implementation. Note that I'm adding the `future.seed=123L` option to ensure that the results are the same. While not strictly necessary, it's always a good idea to set a random seed with simulations for the sake of reproducibility.
 
@@ -202,11 +194,23 @@ Here's the `future.apply::future_lapply()` parallel implementation. Note that I'
 
 ## 10,000-iteration simulation
 tic()
-sim_future = future_lapply(1:1e4, bootstrp, future.seed=123L) %>% bind_rows()
+sim_future = future_lapply(1:1e4, bootstrap, future.seed=123L)
 toc()
 ```
 
-#### 2) furrr
+Remember from our previous programming chapters that `lapply` returns a list (in this case: a list of 10,000 single row data frames). So we would have have to bind these elements together in a single, large data frame if that's what we wanted. For example,
+
+```{r sim_future_bind}
+## Bind into single data frame
+sim_future = do.call("rbind", sim_future)
+# sim_future = dplyr::bind_rows("rbind", sim_future)       ## Another option
+# sim_future = data.table::rbindlist("rbind", sim_future)  ## Another option
+
+head(sim_future)
+```
+
+
+#### furrr
 
 And here's the `furrr::future_map_dfr()` implementation. Similar to the above, note that I'm only adding the `.options=future_options(seed=123L)` option to ensure that the output is exactly the same.
 
@@ -216,15 +220,21 @@ And here's the `furrr::future_map_dfr()` implementation. Similar to the above, n
 
 ## 10,000-iteration simulation
 tic()
-sim_furrr = future_map_dfr(1:1e4, bootstrp, .options = furrr_options(seed=123L))
+sim_furrr = future_map_dfr(1:1e4, bootstrap, .options = furrr_options(seed=123L))
 toc()
+
+head(sim_furrr)
 ```
 
 ### Results
 
-As expected, we dramatically cut down on total computation time by going parallel. Note, however, that the parallel improvements for this example didn't scale linearly with the number of cores on my system (i.e. `r parallel::detectCores()`). The reason has to do with the *overhead* of running the parallel implementations --- a topic that I cover in more depth toward the bottom of this document. Again, for the record, here is a screenshot showing that all of my cores were now being used during these parallel implementations.
+As expected, we dramatically cut down on total computation time by going parallel. Depending on your system, you may note that the parallel improvements for this example didn't scale linearly with the number of cores. The reason has to do with the *overhead* of running the parallel implementations --- a topic that I cover in more depth toward the bottom of this document. Again, for the record, here is a screenshot showing that all of my cores were now being used during these parallel implementations.
 
-![](pics/parallel/parallel.png)
+> **Note:** My local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.
+
+```{r parallel_png, echo=FALSE, out.width = "100%"}
+knitr::include_graphics("pics/parallel/parallel.png")
+```
 
 While it wasn't exactly hard work, I think we deserve to see the results of our bootstrapping exercise in nice plot form. I'll use the `sim_furrr` results data frame for this, although it doesn't matter since they're all the same thanks to our our random seed. As you can see, the estimated coefficient values are tightly clustered around our simulated mean of 2.
 
@@ -254,7 +264,7 @@ set.seed(123) ## Optional to ensure results are exactly the same.
 
 ## 10,000-iteration simulation
 tic()
-sim_pblapply = pblapply(1:1e4, bootstrp, cl = parallel::detectCores()) %>% bind_rows()
+sim_pblapply = pblapply(1:1e4, bootstrp, cl = parallel::detectCores())
 toc()
 ```
 
@@ -273,14 +283,14 @@ I'll start by clearing up some terminology.
 - **Socket:** The physical connection on your computer that houses the processor. Most work and home computers --- even very high-end ones --- only have one socket and, thus, one processor. However, they can have multiple cores. Speaking of which...
 - **Core:** The part of the processor that actually performs the computation. Back in the day, processors were limited to a single core. However, most modern processors now house multiple cores. Each of these cores can perform entirely separate and independent computational processes.
 - **Process:** A single instance of a running task or program (R, Dropbox, etc). A single core can only run one process at a time. However, it may give the appearance of doing more than that by efficiently scheduling between them. Speaking of which...
-- **Thread:** A component or subset of a process that can, inter alia, share memory and resources with other threads. We'll return to this idea as it applies to *hyperthreading* in a few paragraphs.
+- **Thread:** A component or subset of a process that can, *inter alia*, share memory and resources with other threads. We'll return to this idea as it applies to *hyperthreading* in a few paragraphs.
 - **Cluster:** A collection of objects that are capable of hosting cores. This could range from a single socket (on your home computer) to an array of servers (on a high-performance computing network).
 
 You may wondering where the much-referenced **CPU** (i.e. central processing unit) fits into all of this. Truth be told, the meaning of CPU has evolved with the advent of new technology like multicore processors. For the purposes of this lecture I will use the following definition: 
 
 $$\text{No. of CPUs} = \text{No. of sockets} \times \text{No. of physcial cores} \times \text{No. of threads per core}$$
 
-If nothing else, this is consistent with the way that my Linux system records information about CPU architecure via the [lscpu](https://linux.die.net/man/1/lscpu) shell command: 
+If nothing else, this is consistent with the way that my Linux system records information about CPU architecture via the [lscpu](https://linux.die.net/man/1/lscpu) shell command: 
 
 ```{bash lscpu, error=T, prompt=T}
 ## Only works on Linux
@@ -306,7 +316,7 @@ get_num_cores() ## No. of physical cores only
 
 As I keep saying, it's now incredibly easy to run parallel programs in R. The truth is that it has actually been easy to do so for a long time, but the implementation used to vary by operating system. In particular, simple parallel implementations that worked perfectly well on Linux or Mac didn't work on Windows (which required a lot more overhead). For example, take a look at the [help documentation](https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html) for the `parallel::mclapply()` function, which has been around since 2011. If you did so, you would see a warning that `mclapply()` *"relies on forking and hence is not available on Windows"*.
 
-Now, we clearly didn't encounter any OS-specific problems when we ran the parallel versions of our motivating examples above. The same code worked for everyone, including anyone using Windows. ~~*Loud booing.*~~ What was happening behind the scenes is that the **future** packages automatically handled any complications for us. The parallel functions were being executed in a way that was optimised for each person's OS and R environment.
+Now, we clearly didn't encounter any OS-specific problems when we ran the parallel versions of our motivating examples above. The same code worked for everyone, including anyone using Windows. ~~*Loud booing.*~~ What was happening behind the scenes is that the **future** packages automatically handled any complications for us. The parallel functions were being executed in a way that was optimized for each person's OS and R environment.
 
 But what is "forking" and why does it matter what OS I am using anyway? Those are good questions that relate to the method of parallelization (i.e. type of cluster) that your system supports. The short version is that there are basically two ways that code can be parallelized:
 
@@ -323,7 +333,7 @@ Forking                                           PSOCKs
 
 The general rule of thumb is PSOCKs are safer and more universal than forking. This makes them a good default, even if they do come with a potential performance/memory penalty. And, indeed, this is exactly what we did by selecting the **`plan(multisession)`** resolution strategy. So, now you know where that choice came from.
 
-At the same time, however, I recommend that you consider forking if it is available to you (i.e. you're on Linux or Mac) and you want to maximise performance. In these cases, the solution requires two simple tweaks: 
+At the same time, however, I recommend that you consider forking if it is available to you (i.e. you're on Linux or Mac) and you want to maximize performance. In these cases, the solution requires two simple tweaks: 
 
 1. Change your resolution plan to **`plan(multicore)`**, and
 2. Run your R script from the terminal using, say, `$ Rscript -e 'rmarkdown::render("mydoc.Rmd", "all")'` or `$ Rscript myfile.R`.
@@ -334,7 +344,7 @@ Here's a very simple illustration, using the same setup as Example 1 from earlie
 plan(multicore) ## NB: Only works on Unix!
 
 tic()
-future_ex_mc = future_lapply(1:12, slow_square) %>% bind_rows()
+future_ex_mc = future_lapply(1:12, slow_square)
 toc(log = TRUE)
 ```
 
@@ -342,7 +352,7 @@ toc(log = TRUE)
 t_f_ex_mc = as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]])))
 ```
 
-The upshot is that the forking version (i.e. `plan(multicore)`) is about `r round(t_f_ex/t_f_ex_mc, 1)`× faster than the PSOCK equivalent (i.e. `plan(multisession)`). But remember: _Caveat emptor_.
+Here we see that invoking the forked parallel backend (i.e. `plan(multicore)`) is indeed faster than the PSOCK equivalent (i.e. `plan(multisession)`). But remember: _Caveat emptor_.
 
 For more on forks vs PSOCKS, take a look at the [relevant section](https://github.com/HenrikBengtsson/future#asynchronous-futures) of the **future** README.
 
@@ -352,31 +362,27 @@ Thus far we have only been concerned with *explicit* parallelization. As in, we 
 
 ### BLAS/LAPACK
 
-Did you ever wonder how R and other programming languages perform their calculations? For example, how does R actually do things like vector addition, or scalar and matrix multiplication? The answer is [**BLAS**](http://www.netlib.org/blas/) (**B**asic **L**inear **A**lgebra **S**uprograms). BLAS are a collection of low-level routines that provide standard building blocks for performing basic vector and matrix operations. These routines are then incoporated in related libraries like [**LAPACK**](http://www.netlib.org/lapack/) (**L**inear **A**lgebra **Pack**age), which provide their own routines for solving systems of linear equations and linear least squares, calculating eigenvalues, etc. In other words, BLAS and LAPACK provide the linear algebra framework that supports virtually all of statistical and computational programming 
+Did you ever wonder how R and other programming languages perform their calculations? For example, how does R actually do things like vector addition, or scalar and matrix multiplication? The answer is [**BLAS**](http://www.netlib.org/blas/) (**B**asic **L**inear **A**lgebra **S**uprograms). BLAS are a collection of low-level routines that provide standard building blocks for performing basic vector and matrix operations. These routines are then incorporated in related libraries like [**LAPACK**](http://www.netlib.org/lapack/) (**L**inear **A**lgebra **Pack**age), which provide their own routines for solving systems of linear equations and linear least squares, calculating eigenvalues, etc. In other words, BLAS and LAPACK provide the linear algebra framework that supports virtually all of statistical and computational programming 
 
-R ships with its own BLAS/LAPACK libraries by default. These libraries place a premium on stablility (e.g. common user experience across operating systems). While the default works well enough, you can get *significant* speedups by switching to more optimized libraries such as the [Intel Math Kernel Library (MKL)](https://software.intel.com/en-us/mkl) or [OpenBLAS](https://www.openblas.net/). Among other things, these optimised BLAS libraries support multi-threading. So now you are using all your available computer power to, say, solve a matrix.
+R ships with its own BLAS/LAPACK libraries by default. These libraries place a premium on stability (e.g. common user experience across operating systems). While the default works well enough, you can get *significant* speedups by switching to more optimized libraries such as the [Intel Math Kernel Library (MKL)](https://software.intel.com/en-us/mkl) or [OpenBLAS](https://www.openblas.net/). Among other things, these optimized BLAS libraries support multi-threading. So now you are using all your available computer power to, say, solve a matrix.
 
-You can use the `sessionInfo()` command to see which BLAS/LAPACK library you are using. For example, I am using OpenBLAS on this computer:
-
-```{r blas_info}
-sessionInfo()[c("BLAS", "LAPACK")]
-```
+You can use the `sessionInfo()` command to see which BLAS/LAPACK library you are using.
 
 ### Beware resource competition
 
-While this all sounds great --- and I certainly recommend taking a look at MKL or OpenBLAS --- there is a potential downside. In particular, you risk competing with yourself for computational resources (i.e. memory) if you mix explicit and implicit parallel calls. For instance, if you run explicit multicore functions from within R on a system that has been configured with an optimised BLAS. As [Dirk Eddelbuettel](http://dirk.eddelbuettel.com/) succintly puts it in [this Stack Overflow thread](https://stackoverflow.com/a/18291826):
+While this all sounds great --- and I certainly recommend taking a look at MKL or OpenBLAS --- there is a potential downside. In particular, you risk competing with yourself for computational resources (i.e. memory) if you mix explicit and implicit parallel calls. For instance, if you run explicit multicore functions from within R on a system that has been configured with an optimized BLAS. As [Dirk Eddelbuettel](http://dirk.eddelbuettel.com/) succinctly puts it in [this Stack Overflow thread](https://stackoverflow.com/a/18291826):
 
 > There is one situation you want to avoid: (1) spreading a task over all _N_ cores and (2) having each core work on the task using something like OpenBLAS or MKL with all cores. Because now you have an _N_ by _N_ contention: each of the N task wants to farm its linear algebra work out to all _N_ cores.
 
-Now, I want to emphasise that this conflict rarely matters in my own experience. I use optimised BLAS libraries and run explicit parallel calls all the time in my R scripts. Despite this, I have hardly ever run into a problem. Moreover, when these slowdowns have occured, I've found the effect to be relatively modest.^[The major cost appears to be the unnecessary duplication of objects in memory.] Still, I have read of cases where the effect can be quite dramatic (e.g. [here](https://stat.ethz.ch/pipermail/r-sig-hpc/2014-February/001846.html)) and so I wanted you to be aware of it all the same.
+Now, I want to emphasise that this conflict rarely matters in my own experience. I use optimized BLAS libraries and run explicit parallel calls all the time in my R scripts. Despite this, I have hardly ever run into a problem. Moreover, when these slowdowns have occurred, I've found the effect to be relatively modest.^[The major cost appears to be the unnecessary duplication of objects in memory.] Still, I have read of cases where the effect can be quite dramatic (e.g. [here](https://stat.ethz.ch/pipermail/r-sig-hpc/2014-February/001846.html)) and so I wanted you to be aware of it all the same.
 
-Luckily, there's also an easy and relatively costless solution: Simply turn off BLAS multi-threading. It turns out this has a negligible impact on performance, since most of the gains from optimised BLAS are actually coming from improved math vectorisation, not multi-threading. (See [this post](https://blog.revolutionanalytics.com/2015/10/edge-cases-in-using-the-intel-mkl-and-parallel-programming.html) for a detailed discussion.) You can turn off BLAS multi-threading for the current R session via the `RhpcBLASctl::blas_set_num_threads()` function. For example, I sometimes include the following line at the top of an R script:
+Luckily, there's also an easy and relatively costless solution: Simply turn off BLAS multi-threading. It turns out this has a negligible impact on performance, since most of the gains from optimized BLAS are actually coming from improved math vectorisation, not multi-threading. (See [this post](https://blog.revolutionanalytics.com/2015/10/edge-cases-in-using-the-intel-mkl-and-parallel-programming.html) for a detailed discussion.) You can turn off BLAS multi-threading for the current R session via the `RhpcBLASctl::blas_set_num_threads()` function. For example, I sometimes include the following line at the top of an R script:
 ```{r eval=F}
 # blas_get_num_procs() ## If you want to find the existing number of BLAS threads
 RhpcBLASctl::blas_set_num_threads(1) ## Set BLAS threads to 1 (i.e. turn off multithreading)
 ```
 
-Since this is only in effect for the current R session, BLAS multithreading will be restored when I restart R.^[I could also reinstate the original behaviour in the same session by running `blas_set_num_threads(parallel::detectCores())`. You can turn off multithreading as the default mode by altering the configuration file when you first build/install your preferred BLAS library. However, that's both complicated and unnecessarily restrictive in my view.] 
+Since this is only in effect for the current R session, BLAS multithreading will be restored when I restart R.^[I could also reinstate the original behaviour in the same session by running `blas_set_num_threads(parallel::detectCores())`.] You can turn off BLAS multithreading as the default mode by setting an appropriate environment variable. We'll revisit this in the chapter(s) on Google Compute Engine.
 
 ### Library source code
 
@@ -387,7 +393,7 @@ library(data.table, warn.conflicts = FALSE)
 ```
 
 ```
-## data.table 1.13.6 using 6 threads (see ?getDTthreads).  Latest news: r-datatable.com
+#> data.table 1.14.0 using 6 threads (see ?getDTthreads).  Latest news: r-datatable.com
 ```
 
 If you follow the suggestion and look at the `?getDTthreads` help documentation, you'll find an informative (and reassuring) discussion of its approach here:
@@ -421,7 +427,7 @@ expand.grid(num_cores=1:2048, par_prop=c(0.5,0.75,0.9,0.95)) %>%
     title = "Amdahl's law",
     x = "No. of cores", y = "Theoretical speedup"
     ) +
-  guides(colour = guide_legend(reverse=T))
+  guides(colour = guide_legend(reverse=TRUE))
 ```
 
 ### How many cores should I use?
@@ -440,15 +446,15 @@ Random number generation (RNG) can become problematic in parallel computations (
 
 ### Parallel regression
 
-A number of regression packages in R are optimised to run in parallel. For example, the superb **fixest** package ([link](https://lrberge.github.io/fixest/)) that we saw in the lecture on regression analysis will automatically invoke multicore capabilities when fitting high dimensional fixed effects models. The many Bayesian packages in R are also all capable of --- and, indeed, expected to --- fit regression models by running their MCMC chains in parallel. For example, **RStan** ([link](https://mc-stan.org/rstan/articles/rstan.html#running-multiple-chains-in-parallel)). Finally, you may be interested in the **partools** package ([link](https://cran.r-project.org/web/packages/partools/index.html)), which provides convenient aliases for running a variety of statistical models and algorithms in parallel.
+A number of regression packages in R are optimized to run in parallel. For example, the superb **fixest** package ([link](https://lrberge.github.io/fixest/)) that we saw in the lecture on regression analysis will automatically invoke multicore capabilities when fitting high dimensional fixed effects models. The many Bayesian packages in R are also all capable of --- and, indeed, expected to --- fit regression models by running their MCMC chains in parallel. For example, **RStan** ([link](https://mc-stan.org/rstan/articles/rstan.html#running-multiple-chains-in-parallel)). Finally, you may be interested in the **partools** package ([link](https://cran.r-project.org/web/packages/partools/index.html)), which provides convenient aliases for running a variety of statistical models and algorithms in parallel.
 
 ### CPUs vs GPUs
 
-Graphical Processing Units, or GPUs, are specialised chipsets that were originaly built to perform the heavy lifting associated with rendering graphics. It's important to realise that not all computers have GPUs. Most laptops come with so-called [integrated graphics](https://www.laptopmag.com/articles/intel-hd-graphics-comparison), which basically means that the same processor is performing both regular and graphic-rendering tasks. However, gaming and other high-end laptops (and many desktop computers) include a dedicated GPU card. For example, the Dell Precision 5530 that I'm writing these lecture notes on has a [hybrid graphics](https://wiki.archlinux.org/index.php/hybrid_graphics) setup with two cards: 1) an integrated Intel GPU (UHD 630) and 2) a discrete NVIDIA Quadro P2000.
+Graphical Processing Units, or GPUs, are specialised chipsets that were originally built to perform the heavy lifting associated with rendering graphics. It's important to realise that not all computers have GPUs. Most laptops come with so-called [integrated graphics](https://www.laptopmag.com/articles/intel-hd-graphics-comparison), which basically means that the same processor is performing both regular and graphic-rendering tasks. However, gaming and other high-end laptops (and many desktop computers) include a dedicated GPU card. For example, the Dell Precision 5530 that I'm writing these lecture notes on has a [hybrid graphics](https://wiki.archlinux.org/index.php/hybrid_graphics) setup with two cards: 1) an integrated Intel GPU (UHD 630) and 2) a discrete NVIDIA Quadro P2000.
 
 So why am I telling you this? Well, it turns out that GPUs also excel at non-graphic computation tasks. The same processing power needed to perform the millions of parallel calculations for rendering 3-D games or architectural software, can be put to use on scientific problems. How exactly this was discovered involves an interesting backstory of supercomputers being built with Playstations. (Google it.) But the short version is that modern GPUs comprise *thousands* of cores that can be run in parallel. Or, as my colleague [David Evans](http://econevans.com/) once memorably described it to me: "GPUs are basically just really, really good at doing linear algebra."
 
-Still, that's about as much as I want to say about GPUs for now. Installing and maintaining a working GPU setup for scientific purposes is a much more complex task. (And, frankly, overkill for the vast majority of econometric or data science needs.) We may revisit the topic when we get to the machine learning section of the course in a few weeks.^[Advanced machine learning techniques like [deep learning](https://blog.rstudio.com/2018/09/12/getting-started-with-deep-learning-in-r/) are particularly performance-dependent on GPUs.] Thus, and while the general concepts carry over, everything that we've covered today is limited to CPUs.
+Still, that's about as much as I want to say about GPUs for now. Installing and maintaining a working GPU setup for scientific purposes is a much more complex task. (And, frankly, overkill for the vast majority of econometric or data science needs.) We may revisit the topic when we get to the machine learning section of the course in a few weeks.^[Advanced machine learning techniques like [deep learning](https://blog.rstudio.com/2018/09/12/getting-started-with-deep-learning-in-r/) are particularly performance-dependent on GPUs.] Thus, and while the general concepts carry over, everything that we've covered in this chapter is limited to CPUs.
 
 ### Monitoring multicore performance
 
