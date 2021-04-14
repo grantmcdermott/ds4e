@@ -88,7 +88,7 @@ Look at at that: A `r round(t_s_ex/t_f_ex, 0)`× speedup! Even more impressively
 Let's confirm that the output is the same.
 
 ```{r all_equal_ex}
-all_equal(serial_ex, future_ex)
+all.equal(serial_ex, future_ex)
 ```
 
 For those of you who prefer the `purrr::map()` family of functions for iteration and are feeling left out; don't worry. The **furrr** package ([link](https://davisvaughan.github.io/furrr/index.html)) has you covered. Once again, the syntax for these parallel functions will be very little changed from their serial versions. We simply have to tell R that we want to run things in parallel with `plan(multisession)` and then slightly amend our map call to <code>**future_**map_df**r**()</code>.^[In this particular case, the extra "r" at the end tells future to concatenate the data frames from each iteration by *rows*.]
@@ -264,7 +264,7 @@ set.seed(123) ## Optional to ensure results are exactly the same.
 
 ## 10,000-iteration simulation
 tic()
-sim_pblapply = pblapply(1:1e4, bootstrp, cl = parallel::detectCores())
+sim_pblapply = pblapply(1:1e4, bootstrap, cl = parallel::detectCores())
 toc()
 ```
 
