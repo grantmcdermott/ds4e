@@ -470,13 +470,29 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>First, check your “Environment” pane in RStudio. Do you see an object called “i” in the Global Environment? (The answer should be“no.”) Again, this is because of R’s lexical scoping rules, which mean that any object created and invoked by a function is evaluated in a sandboxed environment outside of your global environment.</p>
 <p>Second, notice how little the basic syntax changed when switching over from <code>for()</code> to <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>. Yes, there are some differences, but the essential structure remains the same: We first provide the iteration list (<code>1:10</code>) and then specify the desired function or operation (<code>LETTERS[i]</code>).</p>
 <p>Third, notice that the returned object is a <em>list</em>. The <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> function can take various input types as arguments — vectors, data frames, lists — but always returns a list, where each element of the returned list is the result from one iteration of the loop. (So now you know where the “l” in “<strong>l</strong>apply” comes from.)</p>
-<p>Okay, but what if you don’t want the output in list form? There several options here.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;For example, we could pipe the output to &lt;code&gt;unlist()&lt;/code&gt; if you wanted a vector. Or you could use use &lt;code&gt;sapply()&lt;/code&gt; instead, which I’ll cover shortly.&lt;/p&gt;"><sup>10</sup></a> However, the method that I use most commonly is to bind the different list elements into a single data frame with either <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows()</a></code> or <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code>. For example, here’s a a slightly modified version of our function that now yields a data frame:</p>
+</div>
+<div id="aside-binding-and-simplifying-lists" class="section level4" number="2.5.3.2">
+<h4>
+<span class="header-section-number">2.5.3.2</span> Aside: Binding and simplifying lists<a class="anchor" aria-label="anchor" href="#aside-binding-and-simplifying-lists"><i class="fas fa-link"></i></a>
+</h4>
+<p>Okay, but what if you don’t want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) Like most social scientists, I imagine, my preferred data structure is a data frame. So, I typically want to bind the different list elements into a single data frame. There are three simple ways to do this:</p>
+<ul>
+<li>
+<strong>Base R</strong>: <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code>
+</li>
+<li>
+<strong>dplyr</strong>: <code>bind_rows()</code>
+</li>
+<li>
+<strong>data.table</strong>: <code>rbindlist()</code>
+</li>
+</ul>
+<p>Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code>.) Is performance paramount? (If yes, then go with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code>). But for the most part I think any of them will do. As an example, here’s a slightly modified version of our previous function that now yields a data frame:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
-  <span class="op">}</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="co"># do.call("rbind", .)      ## Also works</span>
+  <span class="co"># data.table::rbindlist()  ## Ditto</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;    num let</span>
 <span class="co">#&gt; 1    1   A</span>
 <span class="co">#&gt; 2    2   B</span>
@@ -488,14 +504,14 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 8    8   H</span>
 <span class="co">#&gt; 9    9   I</span>
 <span class="co">#&gt; 10  10   J</span></code></pre></div>
-<p>Taking a step back, while the default list-return behaviour may not sound ideal at first, I’ve found that I use <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> more frequently than any of the other <code>apply</code> family members. A key reason is that my functions normally return multiple objects of different type (which makes lists the only sensible format)… or a single data frame (which is where <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows()</a></code> or <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code> come in).</p>
-<p>Another option that would work well in the this particular case is <code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>, which stands for “<strong>s</strong>implify apply.” This is essentially a wrapper around <code>lapply</code> that tries to return simplified output that matches the input type. If you feed the function a vector, it will try to return a vector, etc.</p>
+<p>Taking a step back — and while the default list-return behaviour may not sound ideal at first — I find that I use <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> more frequently than any of the other <code>apply</code> family members. A key reason is that my functions often return multiple objects of different type (which makes lists the only sensible format). Or, they return a single data frame (which is where <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code> and co. enter the picture).</p>
+<p>For what it’s worth, another option that would work well in the present particular case is <code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>. This stands for “<strong>s</strong>implify apply” and is essentially a wrapper around <code>lapply</code> that tries to return simplified output that matches the input type. So, it will try to return a vector if you it a vector, etc. For example:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> 
 <span class="co">#&gt;  [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J"</span></code></pre></div>
-<div id="aside-progress-bars" class="section level5" number="2.5.3.1.1">
+<div id="aside-progress-bars" class="section level5" number="2.5.3.2.1">
 <h5>
-<span class="header-section-number">2.5.3.1.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5.3.2.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
 </h5>
 <p>Who doesn’t like progress bars? Personally, I find it incredibly helpful to see how a function is progressing, or get a sense of how much longer I can expect to wait before completion.</p>
 <p>Along those lines, I’m a big fan of the <a href="https://github.com/psolymos/pbapply"><strong>pbapply</strong></a> package, which is a lightweight wrapper around the <code>*apply</code> functions that adds a progress bar. <code>pbapply</code> offers versions for all of the <code>*apply</code> family, but the one that I use the most is (unsurprisingly) <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html">pbapply::pblapply()</a></code>.</p>
@@ -524,11 +540,11 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>There’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. I won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
 </div>
 </div>
-<div id="purrr-package" class="section level4" number="2.5.3.2">
+<div id="purrr-package" class="section level4" number="2.5.3.3">
 <h4>
-<span class="header-section-number">2.5.3.2</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5.3.3</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
 </h4>
-<p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>11</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
+<p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>10</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">map</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> <span class="co">## only need to swap `lapply` for `map`</span>
   <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
@@ -650,37 +666,43 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 1 1 6 7</span></code></pre></div>
 <p>Great, it works. Now let’s imagine that we want to iterate over various levels of both <code>x</code> and <code>y</code>. There are two basics approaches that we can follow to achieve this:</p>
 <ol style="list-style-type: decimal">
-<li>Use <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>.</li>
+<li>Use <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">base::Map()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>.</li>
 <li>Use a data frame of input combinations.</li>
 </ol>
 <p>I’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
-<div id="use-mapply-or-pmap" class="section level4" number="2.5.5.1">
+<div id="use-mapplymap-or-pmap" class="section level4" number="2.5.5.1">
 <h4>
-<span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapply-or-pmap"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code>/<code>Map()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapplymap-or-pmap"><i class="fas fa-link"></i></a>
 </h4>
-<p>Both base R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code> — and purrr — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I’ll demonstrate using both versions below.</p>
+<p>Both <strong>base</strong> R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> — and <strong>purrr</strong> — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I’ll demonstrate using both versions below.</p>
 <p>First, <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## Note that the inputs are now moved to the *end* of the call. </span>
-<span class="co">## Also, mapply() is based on sapply(), so we also have to tell it not to </span>
-<span class="co">## simplify if we want to keep the list structure.</span>
+<code class="sourceCode R"><span class="co">## Note that the inputs are now moved to the *end* of the call. Also, mapply() </span>
+<span class="co">## is based on sapply(), so we also have to tell it not to simplify if we want </span>
+<span class="co">## to keep the list structure.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mapply.html">mapply</a></span><span class="op">(</span>
   <span class="va">multi_func</span>,
   x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,         <span class="co">## Our "x" vector input</span>
   y <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span>,        <span class="co">## Our "y" vector input</span>
   SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span> <span class="co">## Tell it not to simplify to keep the list structure</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">bind_rows</span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="st">"rbind"</span>, <span class="va">.</span><span class="op">)</span>
 <span class="co">#&gt;   x  y        z</span>
 <span class="co">#&gt; 1 1  6 7.000000</span>
 <span class="co">#&gt; 2 2  7 6.363961</span>
 <span class="co">#&gt; 3 3  8 6.350853</span>
 <span class="co">#&gt; 4 4  9 6.500000</span>
 <span class="co">#&gt; 5 5 10 6.708204</span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> If you don’t feel like typing <code>SIMPLIFY = FALSE</code>, then <code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> is a light wrapper around <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code> that does this automatically. Try it yourself by slightly editing the above function to use <code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> instead of <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>.</p>
+</blockquote>
 <p>Second, <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## Note that the inputs are combined in a list.</span>
-<span class="fu">pmap_df</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y<span class="op">=</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, <span class="va">multi_func</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co">## Note that the function inputs are combined in a list and come first.</span>
+<span class="fu">pmap_df</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, y <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, 
+  <span class="va">multi_func</span>
+  <span class="op">)</span>
 <span class="co">#&gt;   x  y        z</span>
 <span class="co">#&gt; 1 1  6 7.000000</span>
 <span class="co">#&gt; 2 2  7 6.363961</span>
@@ -696,7 +718,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>It basically boils down to the fact that I feel this gives me more control over my functions and inputs.</p>
 <ul>
 <li>I don’t have to worry about accidentally feeding separate inputs of different lengths. Try running the above functions with an <code>x</code> vector input of <code>1:10</code>, for example. (Leave everything else unchanged.) <code>pmap()</code> will at least fail to iterate and give you a helpful message, but <code>mapply</code> will actually complete with totally misaligned columns. Putting everything in a (rectangular) data frame forces you to ensure the equal length of inputs <em>a priori</em>.</li>
-<li>Similarly, I often need to run a function over all possible combinations of different inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;A convenient way to do this is with &lt;code&gt;base::expand.grid()&lt;/code&gt; — or the equivalent &lt;code&gt;tidyr::expand_grid()&lt;/code&gt; and &lt;code&gt;data.table:CJ()&lt;/code&gt; functions — which automatically generate a data frame of all combinations.&lt;/p&gt;"><sup>12</sup></a> So it’s convenient for me to use this data frame as an input directly in my function.</li>
+<li>Similarly, I often need to run a function over all possible combinations of different inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;A convenient way to do this is with &lt;code&gt;base::expand.grid()&lt;/code&gt; — or the equivalent &lt;code&gt;tidyr::expand_grid()&lt;/code&gt; and &lt;code&gt;data.table:CJ()&lt;/code&gt; functions — which automatically generate a data frame of all combinations.&lt;/p&gt;"><sup>11</sup></a> So it’s convenient for me to use this data frame as an input directly in my function.</li>
 <li>In my view, it’s just simpler and cleaner to keep things down to a single input. This will be harder to see in the simple example that I’m going to present next. But I’ve found that it can make a big difference with complicated functions that have a lot of nesting (i.e. functions of functions) and/or parallelization.</li>
 </ul>
 <p>Those justifications aside, let’s see how this might work with an example. Consider the following function:</p>
@@ -712,9 +734,8 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
         <span class="co">## Extract the `x` and `y` values from row "n" of the data frame</span>
         <span class="va">x</span> <span class="op">=</span> <span class="va">input_df</span><span class="op">$</span><span class="va">x</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>
         <span class="va">y</span> <span class="op">=</span> <span class="va">input_df</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">n</span><span class="op">]</span>
-        <span class="co">## Use the extracted values</span>
-        <span class="va">d</span> <span class="op">=</span> <span class="fu">multi_func</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
-        <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
+        <span class="co">## Apply our function on the the extracted values</span>
+        <span class="fu">multi_func</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>
       <span class="op">}</span><span class="op">)</span>
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
     <span class="op">}</span></code></pre></div>
@@ -842,7 +863,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-13.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-14.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

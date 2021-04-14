@@ -499,15 +499,22 @@ Second, notice how little the basic syntax changed when switching over from `for
 
 Third, notice that the returned object is a *list*. The `lapply()` function can take various input types as arguments --- vectors, data frames, lists --- but always returns a list, where each element of the returned list is the result from one iteration of the loop. (So now you know where the "l" in "**l**apply" comes from.) 
 
-Okay, but what if you don't want the output in list form? There several options here.^[For example, we could pipe the output to `unlist()` if you wanted a vector. Or you could use use `sapply()` instead, which I'll cover shortly.] However, the method that I use most commonly is to bind the different list elements into a single data frame with either `dplyr::bind_rows()` or `data.table::rbindlist()`. For example, here's a a slightly modified version of our function that now yields a data frame:
+#### Aside: Binding and simplifying lists
+
+Okay, but what if you don't want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) Like most social scientists, I imagine, my preferred data structure is a data frame. So, I typically want to bind the different list elements into a single data frame. There are three simple ways to do this:
+
+- **Base R**: `do.call("rbind")`
+- **dplyr**: `bind_rows()`
+- **data.table**: `rbindlist()`
+
+Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with `do.call("rbind")`.) Is performance paramount? (If yes, then go with `data.table::rbindlist()`). But for the most part I think any of them will do. As an example, here's a slightly modified version of our previous function that now yields a data frame:
 
 
 ```r
-lapply(1:10, function(i) {
-  d = data.frame(num = i, let = LETTERS[i])
-  return(d)
-  }) %>%
-  bind_rows()
+lapply(1:10, function(i) data.frame(num = i, let = LETTERS[i])) %>%
+  # do.call("rbind", .)      ## Also works
+  # data.table::rbindlist()  ## Ditto
+  dplyr::bind_rows()
 #>    num let
 #> 1    1   A
 #> 2    2   B
@@ -521,9 +528,9 @@ lapply(1:10, function(i) {
 #> 10  10   J
 ```
 
-Taking a step back, while the default list-return behaviour may not sound ideal at first, I've found that I use `lapply()` more frequently than any of the other `apply` family members. A key reason is that my functions normally return multiple objects of different type (which makes lists the only sensible format)... or a single data frame (which is where `dplyr::bind_rows()` or `data.table::rbindlist()` come in). 
+Taking a step back --- and while the default list-return behaviour may not sound ideal at first --- I find that I use `lapply()` more frequently than any of the other `apply` family members. A key reason is that my functions often return multiple objects of different type (which makes lists the only sensible format). Or, they return a single data frame (which is where `do.call("rbind")` and co. enter the picture). 
 
-Another option that would work well in the this particular case is `sapply()`, which stands for "**s**implify apply". This is essentially a wrapper around `lapply` that tries to return simplified output that matches the input type. If you feed the function a vector, it will try to return a vector, etc.
+For what it's worth, another option that would work well in the present particular case is `sapply()`. This stands for "**s**implify apply" and is essentially a wrapper around `lapply` that tries to return simplified output that matches the input type. So, it will try to return a vector if you it a vector, etc. For example:
 
 
 ```r
@@ -709,28 +716,28 @@ multi_func(1, 6)
 
 Great, it works. Now let's imagine that we want to iterate over various levels of both `x` and `y`. There are two basics approaches that we can follow to achieve this: 
 
-1. Use `base::mapply()` or `purrr::pmap()`.
+1. Use `base::mapply()`/`base::Map()` or `purrr::pmap()`.
 2. Use a data frame of input combinations. 
 
 I'll quickly review both approaches, continuing with the `multi_func()` function that we just created above.
 
-#### Use `mapply()` or `pmap()`
+#### Use `mapply()`/`Map()` or `pmap()`
 
-Both base R --- through `mapply()` --- and purrr --- through `pmap` --- can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I'll demonstrate using both versions below.
+Both **base** R --- through `mapply()`/`Map()` --- and **purrr** --- through `pmap` --- can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I'll demonstrate using both versions below.
 
 First, `base::mapply()`:
 
 ```r
-## Note that the inputs are now moved to the *end* of the call. 
-## Also, mapply() is based on sapply(), so we also have to tell it not to 
-## simplify if we want to keep the list structure.
+## Note that the inputs are now moved to the *end* of the call. Also, mapply() 
+## is based on sapply(), so we also have to tell it not to simplify if we want 
+## to keep the list structure.
 mapply(
   multi_func,
   x = 1:5,         ## Our "x" vector input
   y = 6:10,        ## Our "y" vector input
   SIMPLIFY = FALSE ## Tell it not to simplify to keep the list structure
   ) %>%
-  bind_rows()
+  do.call("rbind", .)
 #>   x  y        z
 #> 1 1  6 7.000000
 #> 2 2  7 6.363961
@@ -739,11 +746,16 @@ mapply(
 #> 5 5 10 6.708204
 ```
 
+> **Note:** If you don't feel like typing `SIMPLIFY = FALSE`, then `Map()` is a light wrapper around `mapply()` that does this automatically. Try it yourself by slightly editing the above function to use `Map()` instead of `mapply()`.
+
 Second, `purrr::pmap()`:
 
 ```r
-## Note that the inputs are combined in a list.
-pmap_df(list(x=1:5, y=6:10), multi_func)
+## Note that the function inputs are combined in a list and come first.
+pmap_df(
+  list(x = 1:5, y = 6:10), 
+  multi_func
+  )
 #>   x  y        z
 #> 1 1  6 7.000000
 #> 2 2  7 6.363961
@@ -778,9 +790,8 @@ parent_func =
         ## Extract the `x` and `y` values from row "n" of the data frame
         x = input_df$x[n]
         y = input_df$y[n]
-        ## Use the extracted values
-        d = multi_func(x, y)
-        return(d)
+        ## Apply our function on the the extracted values
+        multi_func(x, y)
       })
     return(d)
     }

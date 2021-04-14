@@ -1,7 +1,7 @@
 --- 
 title: "Data Science for Economists and Other Animals"
 author: "Grant McDermott and Ed Rubin"
-date: "2021-04-13"
+date: "2021-04-14"
 site: bookdown::bookdown_site
 url: 'https\://grantmcdermott/ds4e'
 github-repo: grantmcdermott/ds4e

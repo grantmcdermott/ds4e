@@ -16,11 +16,12 @@ vectorisation
 for-loops
 functional-programming
 lapply-and-co.
+aside-binding-and-simplifying-lists
 aside-progress-bars
 purrr-package
 create-and-iterate-over-named-functions
 iterate-over-multiple-inputs
-use-mapply-or-pmap
+use-mapplymap-or-pmap
 using-a-data-frame-of-input-combinations
 further-resources
 bonus-accessing-function-source-code
@@ -45,8 +46,8 @@ parallel
 software-requirements-2
 r-packages-2
 prologue
-example-1
-example-2
+example-1-slow_square
+example-2-bootstrapping
 serial-implementation-for-comparison
 parallel-implemention-using-the-future-ecosystem
 future.apply
