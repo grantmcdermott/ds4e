@@ -83,7 +83,7 @@ toc(log = TRUE)
 t_f_ex = as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]])))
 ```
 
-Look at at that: A `r round(s_f_x/t_f_ex, 0)`× speedup! Even more impressively, consider how little the syntax changed. I basically just had to tell R that I wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend my `lapply()` call (i.e. <code>**future_**lapply()</code>). 
+Look at at that: A `r round(t_s_ex/t_f_ex, 0)`× speedup! Even more impressively, consider how little the syntax changed. I basically just had to tell R that I wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend my `lapply()` call (i.e. <code>**future_**lapply()</code>). 
 
 Let's confirm that the output is the same.
 
