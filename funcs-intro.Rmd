@@ -145,14 +145,13 @@ square()  ## Will take the default value of 1.
 square(2) ## Now takes the explicit value that we give it.
 ```
 
-
-We'll return the issue of specifying default values (and handling invalid inputs) in the next lecture on function debugging. 
+We'll return to the issues of specifying default values, handling invalid inputs, and general debugging in Section \@ref(debugging). 
 
 ### Aside: Environments and lexical scoping
 
 Before continuing, take a second to note that none of the intermediate objects that we created inside the above functions (`x_sq`, `df`, etc.) have made their way into your global environment.^[Look in the "Environment" pane of your RStudio session.] R has a set of so-called [*lexical scoping*](https://adv-r.hadley.nz/functions.html#lexical-scoping) rules, which  govern where it stores and evaluates the values of different objects. Without going into too much depth, the practical implication of lexical scoping is that functions operate in a quasi-sandboxed [*environment*](https://adv-r.hadley.nz/environments.html). They don't return or use objects in the global environment unless they are forced to (e.g. with a `return()` command). Similarly, a function will only look to outside environments (e.g. a level "up") to find an object if it doesn't see the object named within itself.
 
-We'll explore the ideas of separate environments and lexical scoping a bit further when we get to the [Functional programming] section below. We'll also go into more depth during the next lecture on debugging.
+We'll revisit the ideas of distinct object environments and lexical scoping when we get to functional programming in Section \@ref(functional-programming) below, and then again in Section \@ref(debugging).
 
 ## Control flow
 
@@ -160,7 +159,7 @@ Now that we've got a good sense of the basic function syntax, it's time to learn
 
 ### if and ifelse
 
-We've already encountered conditional statements like `if()` and `ifelse()` numerous times in the course thus far.^[E.g Conditional mutation in the tidyverse lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38).] However, let's see how they can work in our own bespoke functions by slightly modifying our `square` function. This time, instead of specifying a default input value of 1 in the function argument itself, we'll specify a value of `NULL`. Then we'll use an `if()` statement to reassign this default to one.
+We've already encountered conditional statements like `if()` and `ifelse()` numerous times in the book thus far.^[E.g Conditional mutation in the tidyverse (see [here](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38).] However, let's see how they can work in our own bespoke functions by slightly modifying our `square` function. This time, instead of specifying a default input value of 1 in the function argument itself, we'll specify a value of `NULL`. Then we'll use an `if()` statement to reassign this default to one.
 
 ```{r cf1}
 square = 
@@ -294,17 +293,21 @@ data.table(x = 1:10)[, grp := fcase(x <= 3, "small",
 
 ## Iteration
 
-Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate --- or *map* --- over a set of inputs.^[Our focus in this chapter will only be on sequential iteration. We'll explore parallel iteration in a few chapters.] By far the most common way to iterate across different programming languages is *for* loops. Indeed, we already saw some examples of *for* loops back in the shell lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95)). However, while R certainly accepts standard *for* loops, I'm going to advocate that you adopt what is known as a "functional programming" approach to writing loops. Let's dive into the reasons why and how these approaches differ.
+Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate --- or *map* --- over a set of inputs.^[Our focus in this chapter will only be on sequential iteration. We'll explore parallel iteration in a few chapters.] By far the most common way to iterate across different programming languages is *for* loops. Indeed, we already saw some examples of *for* loops back in the shell lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95)). However, while R certainly accepts standard *for* loops, we're going to advocate that you adopt what is known as a "functional programming" approach to writing loops. Let's dive into the reasons why and how these approaches differ.
 
 ### Vectorisation
 
-The first question you need to ask is: "Do I need to iterate at all?" You may remember from earlier chapters that we spoke about R being *vectorised*. This means that we can apply a function over an entire vector, rather than explicitly iterating over each element.^[Vectorisation is a common feature of high-level programming languages like R and Python. What's really happening with vectorisation is that a loop *is* being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran. To borrow a phrase from Jenny Bryan: "Someone has to write a for loop. It just doesn't have to be you."] Let's demonstrate this property with our `square` function:
+The first question you should be asking yourself is: "Do I need to iterate at all?"
+
+You may remember from earlier chapters that we spoke about R being *vectorised*. This means that we can apply a function over an entire vector all at once, rather than having to iterate explicitly over each element. Vectorisation is a common feature of high-level programming languages like R and Python. What's really happening with vectorisation is that a loop *is* being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran.^[To borrow a phrase from Jenny Bryan: "Someone has to write a for loop. It just doesn't have to be you."] Let's demonstrate this property with our `square` function:
 ```{r vectorisation}
 square(1:5)
 square(c(2, 4))
 ```
 
-So you may not need to worry about explicit iteration at all. That being said, there are certainly cases where you will need to worry about it. Let's explore with some simple examples (some of which are already vectorised) that provide a mental springboard for thinking about more complex cases.
+So, again, you may not need to think about explicit iteration at all. 
+
+That being said, there are certainly cases where you *will* need to think about iteration. For the remainder of this section, we'll explore with some simple examples --- some of which are already vectorised! --- that provide a mental springboard for thinking about more complex cases.
 
 ### *for* loops
 
@@ -326,7 +329,7 @@ for(k in 1:length(kelvin)) {
 fahrenheit
 ```
 
-Unfortunately, basic *for* loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but I've still run into cases where an inconspicuous *for* loop has brought an entire analysis crashing to its knees.^[[Exhibit A](https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160). Trust me: debugging these cases is not much fun.] The bigger problem with *for* loops, however, is that they deviate from the norms and best practices of **functional programming**. 
+Unfortunately, basic *for* loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but we've still run into cases where an inconspicuous *for* loop has brought an entire analysis crashing to its knees.^[[Exhibit A](https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160). Trust us: debugging these cases is not much fun.] The bigger problem with *for* loops, however, is that they deviate from the norms and best practices of **functional programming**. 
 
 ### Functional programming
 
