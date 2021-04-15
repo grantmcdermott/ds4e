@@ -162,7 +162,7 @@ Now that we've got a good sense of the basic function syntax, it's time to learn
 
 ### if and ifelse
 
-We've already encountered conditional statements like `if()` and `ifelse()` numerous times in the course thus far.^[E.g Conditional mutation in the tidyverse lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38).] However, let's see how they can work in our own bespoke functions by slightly modifying our previous square function. This time, instead of specifying a default input value of 1 in the function argument itself, we'll specify a value of `NULL`. Then we'll use an `if()` statement to reassign this default to one.
+We've already encountered conditional statements like `if()` and `ifelse()` numerous times in the course thus far.^[E.g Conditional mutation in the tidyverse lecture (see [here](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38).] However, let's see how they can work in our own bespoke functions by slightly modifying our `square` function. This time, instead of specifying a default input value of 1 in the function argument itself, we'll specify a value of `NULL`. Then we'll use an `if()` statement to reassign this default to one.
 
 ```{r cf1}
 square = 
@@ -300,7 +300,7 @@ Alongside control flow, the most important early programming skill to master is 
 
 ### Vectorisation
 
-The first question you need to ask is: "Do I need to iterate at all?" You may remember from a previous lecture that I spoke about R being *vectorised*. This means that we can apply a function over an entire vector, rather than explicitly iterating over each element.^[Vectorisation is a common feature of high-level programming languages like R and Python. What's really happening with vectorisation is that a loop *is* being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran. To borrow a phrase from Jenny Bryan: "Someone has to write a for loop. It just doesn't have to be you."] Let's demonstrate this property with our `square` function:
+The first question you need to ask is: "Do I need to iterate at all?" You may remember from earlier chapters that we spoke about R being *vectorised*. This means that we can apply a function over an entire vector, rather than explicitly iterating over each element.^[Vectorisation is a common feature of high-level programming languages like R and Python. What's really happening with vectorisation is that a loop *is* being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran. To borrow a phrase from Jenny Bryan: "Someone has to write a for loop. It just doesn't have to be you."] Let's demonstrate this property with our `square` function:
 ```{r vectorisation}
 square(1:5)
 square(c(2, 4))
@@ -579,15 +579,41 @@ parent_func(input_df2)
 
 ## Further resources
 
-In the next two lectures, we'll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, I hope that this chapter has given you solid grasp of the fundamentals. I highly encourage you to start writing some of your own functions. You will be doing this a *lot* as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:
+In Chapters \@ref(funcs-adv) and \@ref(parallel), we'll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, we hope that this chapter has given you solid grasp of the fundamentals. We highly encourage you to start writing some of your own functions. You will be doing this a *lot* as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:
 
 - Garrett Grolemund and Hadley Wickham's [*<b>R for Data Science</b>*](http://r4ds.had.co.nz) book --- esp. chapters [19 ("Functions)")](http://r4ds.had.co.nz/functions.html) and [21 ("Iteration)")](http://r4ds.had.co.nz/iteration.html) --- covers much of the same ground as we have here, with particular emphasis on the **purrr** package for iteration.
 - If you're looking for an in-depth treatment, then I can highly recommend Hadley's [*<b>Advanced R</b>*](https://adv-r.hadley.nz) (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on in this chapter, including more on his (and R's) philosophy regarding functional programming (see [Section ||](https://adv-r.hadley.nz/fp.html)). 
 - If you're in the market for a more concise overview of the different `*apply()` functions, then I recommend [this blog post](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/) by Neil Saunders.
 - On the other end of the scale, Jenny Bryan (all hail) has created a fairly epic [purrr tutorial](https://jennybc.github.io/purrr-tutorial) mini-website. (Bonus: She goes into more depth about working with lists and list columns.)
 
-## Bonus: Accessing function source code
+## Addendum: Inspecting function source code
 
-Looking inside a function is not only important for debugging (i.e. a subject for our next lecture), but it's also a great way to pick up programming tips and tricks. We refer to this as accessing a function's *source code*. For simple functions, accessing the source is a mere matter of typing the function name into your R console (without parentheses) and letting R print the object to screen. Try this yourself with the `num_to_alpha` function that we created earlier, or, say, `dplyr::bind_rows`.
+Looking inside a function is not only important for debugging --- a subject covered in \@ref(debugging) --- but is also a great way to pick up programming tips and tricks. We refer to this as inspecting a function's *source code*. For some functions, viewing the source code is a simple matter of typing the function name into your R console (without the parentheses!) and letting R print the object to screen. Try this yourself with the `num_to_alpha` function that we created earlier. Or, here's the source code for `replace()`, arguably the simplest base R function around:
 
-Unfortunately, the simple print-function-to-screen approach doesn't work once you start getting into functions that have different dispatch methods (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, even if that sometimes requires a bit more legwork. See Joshua Ulrich's StackOverflow Q/A [here](https://stackoverflow.com/a/19226817/4115816), or Jenny Bryan's summary [here](https://github.com/jennybc/access-r-source). Lastly, Jim Hester's [**lookup**](https://github.com/jimhester/lookup) package can do all of the legwork for you if don't feel like dealing with any complications.
+```{r replace_source}
+replace
+```
+
+Unfortunately, the simple print-function-to-screen approach doesn't work once you start getting into functions that have different dispatch "methods" (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, although it does require a bit more legwork. As a quick example, consider what happens if we try to look at the source code for R's generic `summary` function.
+
+```{r summary_source}
+summary
+```
+
+The `UseMethod("summary")` part is telling us that R will invoke different methods for summarising objects, depending on their class. Obviously, this makes sense. We wouldn't expect a data frame to be summarised in the same way as a regression object. To see which methods are available to `summary` in our current R session, we can use the `methods()` function:
+
+```{r summary_methods}
+methods(summary)
+```
+
+Here we see the list of possible summary methods, which all take the form `summary.OBJECTCLASS`.^[As an aside, this insight also provides the key to extending a generic function like `summary()`. We simply need to define a new method for the particular object class that we're interested in (say "foo") using the same syntax form: `summary.foo = ...`.] Accessing the source code of a particular summary method is then a straightforward matter of being explicit about which class you are interested in. For example:
+
+```{r summary_dataframe_source}
+summary.data.frame
+```
+
+Accessing compiled source code (e.g. written in C or Fortran) is a bit more complicated and, frankly, beyond the scope of what we want to show you here. You are already well-equipped to peruse many of the key R functions that you are likely to be using. For a full length treatment of how to access source code of R functions, we recommend any of the three sources:
+
+- Joshua Ulrich's StackOverflow Q/A: https://stackoverflow.com/a/19226817/4115816
+- Jenny Bryan's summary: https://github.com/jennybc/access-r-source
+- Jim Hester's [**lookup**](https://github.com/jimhester/lookup) package, which can do all of the legwork for you if don't feel like dealing with manual complications.
