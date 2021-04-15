@@ -51,7 +51,7 @@ my_short_func = function(ARGUMENTS) OPERATION
 
 Try to give your functions short, pithy names that are informative to both you and anyone else reading your code. This is harder than it sounds, but will pay off down the road.
 
-## A simple example
+## A simple example {#simple-square}
 
 Let's write out a simple example function, which gives the square of an input number.
 

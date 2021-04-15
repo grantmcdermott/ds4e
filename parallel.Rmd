@@ -30,7 +30,7 @@ Ready? Let's go.
 
 ## Example 1: slow_square
 
-Our first motivating example is going to involve the same `slow_square()` function that we saw in the previous lecture:
+Our first motivating example is going to involve the same `slow_square()` function that we created in Section \@ref(caching-memoisation):
 
 ```{r slow_square}
 ## Emulate slow function
@@ -436,9 +436,9 @@ If you look this question up online, you'll find that most people recommend usin
 
 ### Fault tolerance (error catching, caching, etc.)
 
-In my experience, the worst thing about parallel computation is that it is very sensitive to failure in any one of its nodes. An especially frustrating example is the tendency of parallel functions to ignore/hide critical errors up until the very end when they are supposed to return output. ("Oh, so you encountered a critical error several hours ago, but just decided to continue for fun anyway? Thanks!") Luckily, all of the defensive programming tools that we practiced in the [previous lecture](https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.html) --- catching user errors and caching intermediate results --- carry over perfectly to their parallel equivalents. Just make sure that you use a persistent cache.
+In my experience, the worst thing about parallel computation is that it is very sensitive to failure in any one of its nodes. An especially frustrating example is the tendency of parallel functions to ignore/hide critical errors up until the very end when they are supposed to return output. ("Oh, so you encountered a critical error several hours ago, but just decided to continue for fun anyway? Thanks!") Luckily, all of the defensive programming tools that we practiced in Chapter \@ref(funcs-adv) --- catching user errors and caching intermediate results --- carry over perfectly to their parallel equivalents. Just make sure that you use a persistent cache.
 
-**Challenge:** Prove this to yourself by running a parallel version of the cached iteration that we practiced last time. Specifically, you should [recreate](https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.html#Aside_1:_Caching_across_R_sessions) the `mem_square_verbose()` function, which in turn relies on the `mem_square_persistent()` function.^[To clarify: The verbose option simply provides helpful real-time feedback to us. However, the underlying persistent cache location --- provided in this case by `mem_square_persistent()` --- is necessary whenever you want to use a memoised function in the futures framework.] You should then be able to run `future_map_dfr(1:10, mem_square_verbose)` and it will automatically return the previously cached results. After that, try `future_map_dfr(1:24, mem_square_verbose)` and see what happens.
+> **Challenge:** Prove this to yourself by running a parallel version of the cached iteration that we practiced in Section \@ref(caching-memoisation). Specifically, you should recreate the `mem_square_verbose()` function from that section, which in turn relies on the `mem_square_persistent()` function.^[To clarify: The verbose option simply provides helpful real-time feedback to us. However, the underlying persistent cache location --- provided in this case by `mem_square_persistent()` --- is necessary whenever you want to use a memoised function in the futures framework.] You should then be able to run `future_map_dfr(1:10, mem_square_verbose)` and it will automatically return the previously cached results. After that, try `future_map_dfr(1:24, mem_square_verbose)` and see what happens.
 
 ### Random number generation
 
