@@ -600,20 +600,26 @@ Unfortunately, the simple print-function-to-screen approach doesn't work once yo
 summary
 ```
 
-The `UseMethod("summary")` part is telling us that R will invoke different methods for summarising objects, depending on their class. Obviously, this makes sense. We wouldn't expect a data frame to be summarised in the same way as a regression object. To see which methods are available to `summary` in our current R session, we can use the `methods()` function:
+The `UseMethod("summary")` part is telling us that R will invoke different methods for summarising different objects, depending on their class. Obviously, this makes sense. We wouldn't expect a data frame to be summarised in the same way as a regression object. To see which methods are available to `summary` in our current R session, we can use the `methods()` function:
 
 ```{r summary_methods}
 methods(summary)
 ```
 
-Here we see the list of possible summary methods, which all take the form `summary.OBJECTCLASS`.^[As an aside, this insight also provides the key to extending a generic function like `summary()`. We simply need to define a new method for the particular object class that we're interested in (say "foo") using the same syntax form: `summary.foo = ...`.] Accessing the source code of a particular summary method is then a straightforward matter of being explicit about which class you are interested in. For example:
+Here we see the list of possible summary methods, which all take the form `summary.OBJECTCLASS`. Behind the scenes, when we call `summary(x)`, R first determines the class of `x` and then dispatches to the appropriate summary method. If `x` is a data frame, it will invoke `summary.data.frame()`. If `x` is an `lm` object, it will invoke `summary.lm`. And so forth.^[As an aside, this insight also provides the key to extending a generic function like `summary()`. We simply need to define a new method for the particular object class that we're interested in (say "foo") using the same syntax form: `summary.foo = ...`.] Accessing the source code of a particular summary method is then a straightforward matter of being explicit about object class. For example:
 
 ```{r summary_dataframe_source}
 summary.data.frame
 ```
 
-Accessing compiled source code (e.g. written in C or Fortran) is a bit more complicated and, frankly, beyond the scope of what we want to show you here. You are already well-equipped to peruse many of the key R functions that you are likely to be using. For a full length treatment of how to access source code of R functions, we recommend any of the three sources:
+By the way, it's also possible to go the other way around; you can view all of the generic methods associated with a particular object class. For example, there are *lots* of valid methods associated with data frames:
+
+```{r dataframes_methods}
+methods(class = "data.frame") 
+```
+
+In this brief addendum, we've focused on the source code for different dispatch methods. Accessing compiled source code (e.g. written in C or Fortran) is a bit more complicated and, frankly, beyond the scope of what we want to show you here. You are already well-equipped to peruse many of the key R functions that you are likely to be using. For a full length treatment of how to access source code of R functions, we recommend any of the three sources:
 
 - Joshua Ulrich's StackOverflow Q/A: https://stackoverflow.com/a/19226817/4115816
 - Jenny Bryan's summary: https://github.com/jennybc/access-r-source
-- Jim Hester's [**lookup**](https://github.com/jimhester/lookup) package, which can do all of the legwork for you if don't feel like dealing with manual complications.
+- Jim Hester's **lookup** package, which can do all of the legwork for you if don't feel like dealing with manual complications: https://github.com/jimhester/lookup
