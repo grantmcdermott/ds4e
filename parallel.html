@@ -72,22 +72,22 @@
 <li>Already used: <strong>tidyverse</strong>, <strong>data.table</strong>, <strong>pbapply</strong>, <strong>memoise</strong>, <strong>here</strong>, <strong>hrbrthemes</strong>
 </li>
 </ul>
-<p>The code chunk below will install (if necessary) and load all of these packages for you. Note that the <strong>parallel</strong> package is bundled together with the base R installation and should already be on your system. I’m also going to call the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> function and set the resolution to “multisession.” Don’t worry what this means right now — I’ll explain in due course — just think of it as a convenient way to set our desired parallel programming behaviour for the rest of this document.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<p>The code chunk below will install (if necessary) and load all of these packages for you. Note that the <strong>parallel</strong> package is bundled together with the base R installation and should already be on your system. We’re also going to call the <code><a href="https://rdrr.io/pkg/future/man/plan.html">future::plan()</a></code> function and set the resolution to “multisession.” Don’t worry what this means right now; all with be explained in due course. For the moment, simply think of it as a convenient way to set our desired parallel programming behaviour for the rest of this chapter.</p>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Load and install the packages that we'll be using in this chapter</span>
 <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/trinker/pacman">"pacman"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span>
 <span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">tictoc</span>, <span class="va">parallel</span>, <span class="va">pbapply</span>, <span class="va">future</span>, <span class="va">future.apply</span>, <span class="va">tidyverse</span>, 
                <span class="va">hrbrthemes</span>, <span class="va">furrr</span>, <span class="va">RhpcBLASctl</span>, <span class="va">memoise</span>, <span class="va">here</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; The downloaded binary packages are in</span>
-<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpX6IYWS/downloaded_packages</span>
+<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; The downloaded binary packages are in</span>
-<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpX6IYWS/downloaded_packages</span>
+<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; The downloaded binary packages are in</span>
-<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpX6IYWS/downloaded_packages</span>
-<span class="co">## My preferred ggplot2 plotting theme (optional)</span>
+<span class="co">#&gt;  /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages</span>
+<span class="co">## ggplot2 plotting theme (optional)</span>
 <span class="fu">theme_set</span><span class="op">(</span><span class="fu">hrbrthemes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/hrbrthemes/man/theme_ipsum.html">theme_ipsum</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co">## Set future::plan() resolution strategy</span>
@@ -98,15 +98,15 @@
 <h2>
 <span class="header-section-number">4.2</span> Prologue<a class="anchor" aria-label="anchor" href="#prologue"><i class="fas fa-link"></i></a>
 </h2>
-<p>Parallel programming is a big and complex topic, with many potential pitfalls. However, software innovations and some amazing new(ish) packages have made it <em>much</em> easier and safer to program in parallel.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;R has provided excellent support for parallel programming for over a decade. But there’s no question in my mind that the barriers to entry have recently been lowered.&lt;/p&gt;"><sup>15</sup></a> With that in mind, I’m going to structure this chapter back-to-front. In particular, I’m going to start with some motivating examples. My primary goal is to demonstrate both the ease and immediate payoff of “going parallel.” Only after convincing you of these facts will we get into some of the technical details that were abstracted away behind the scenes. The latter part of the lecture will go over parallel programming in more general terms (i.e. not R-specific) and highlight potential pitfalls that you should be aware of.</p>
+<p>Parallel programming is a big and complex topic, with many potential pitfalls. However, software innovations and some amazing new(ish) packages have made it <em>much</em> easier and safer to program in parallel in R.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;To clarify: R has provided excellent support for parallel programming for over a decade. But there’s no question in our minds that the barriers to entry have recently been lowered.&lt;/p&gt;"><sup>17</sup></a> With that in mind, we’re going to structure this chapter back-to-front. In particular, we’ll start with some motivating examples. Our primary goal is to demonstrate both the ease and immediate payoff of “going parallel.” Only after convincing you of these facts will we get into some of the technical details that were abstracted away behind the scenes. The latter part of the chapter will go over parallel programming in more general terms (i.e. not R-specific) and highlight potential pitfalls that you should be aware of.</p>
 <p>Ready? Let’s go.</p>
 </div>
 <div id="example-1-slow_square" class="section level2" number="4.3">
 <h2>
 <span class="header-section-number">4.3</span> Example 1: slow_square<a class="anchor" aria-label="anchor" href="#example-1-slow_square"><i class="fas fa-link"></i></a>
 </h2>
-<p>Our first motivating example is going to involve the same <code>slow_square()</code> function that we saw in the previous lecture:</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<p>Our first motivating example is going to involve the same <code>slow_square()</code> function that we created in Section <a href="funcs-adv.html#caching-memoisation">3.4</a>:</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Emulate slow function</span>
 <span class="va">slow_square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
@@ -115,8 +115,8 @@
     <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
     <span class="op">}</span></code></pre></div>
-<p>Let’s iterate over this function using the standard <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> method that we’re all familiar with by now. Note that this iteration will be executed in <em>serial</em>. I’ll use the <strong>tictoc</strong> package (<a href="https://cran.r-project.org/web/packages/tictoc/">link</a>) to record timing.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<p>Let’s iterate over this function using the standard <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> method that we’re all familiar with by now. Note that this iteration will be executed in <em>serial</em>. We’ll use the <strong>tictoc</strong> package (<a href="https://cran.r-project.org/web/packages/tictoc/">link</a>) to record timing.</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(tictoc) ## Already loaded</span>
 
 <span class="fu">tic</span><span class="op">(</span><span class="op">)</span>
@@ -125,13 +125,13 @@
 <span class="co">#&gt; 24.528 sec elapsed</span></code></pre></div>
 <p>As expected, the iteration took about 25 seconds to run because of the enforced break after every sequential iteration (i.e. <code><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep(2)</a></code>). On the other hand, this means that we can easily speed things up by iterating in <em>parallel</em>.</p>
 <p>Before continuing, it’s worth pointing out that our ability to go parallel hinges on the number of CPU cores available to us. The simplest way to obtain this information from R is with the <code><a href="https://rdrr.io/r/parallel/detectCores.html">parallel::detectCores()</a></code> function:</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># future::availableCores() ## Another option</span>
 <span class="fu">detectCores</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] 3</span></code></pre></div>
-<p>So, I have 3 cores to play with on this machine.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;&lt;del&gt;A Dell Precision 5530 running Arch Linux, if you’re interested.&lt;/del&gt;A cloud-based virtual machine provided by GitHub, which what we use to build this book.&lt;/p&gt;"><sup>16</sup></a> Adjust expectations for you own system accordingly.</p>
-<p>Okay, back to our example. I’m going to implement the parallel iteration using the <strong>future.apply</strong> package (<a href="https://cran.r-project.org/web/packages/future.apply/index.html">link</a>) — more on this later. Note that the parameters of the problem are otherwise unchanged.</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<p>So, we have 3 cores to play with on this machine.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;&lt;del&gt;A Dell Precision 5530 running Arch Linux, if you’re interested.&lt;/del&gt;A cloud-based virtual machine provided by GitHub, which what we use to build this book.&lt;/p&gt;"><sup>18</sup></a> Adjust expectations for you own system accordingly.</p>
+<p>Okay, back to our example. We’re going to implement the parallel iteration using the <strong>future.apply</strong> package (<a href="https://cran.r-project.org/web/packages/future.apply/index.html">link</a>) — more on this later. Note that the parameters of the problem are otherwise unchanged.</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(future.apply)  ## Already loaded</span>
 <span class="co"># plan(multisession)     ## Already set above</span>
 
@@ -139,13 +139,13 @@
 <span class="va">future_ex</span> <span class="op">=</span> <span class="fu">future_lapply</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="va">slow_square</span><span class="op">)</span>
 <span class="fu">toc</span><span class="op">(</span>log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; 8.612 sec elapsed</span></code></pre></div>
-<p>Look at at that: A 1× speedup! Even more impressively, consider how little the syntax changed. I basically just had to tell R that I wanted to implement the iteration in parallel (i.e. <code><strong>plan(multisession)</strong></code>) and slightly amend my <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> call (i.e. <code><strong>future_</strong>lapply()</code>).</p>
+<p>Look at at that: A 1× speedup! Even more impressively, consider how little the syntax changed. We just had to tell R that we wanted to implement the iteration in parallel (i.e. <code><strong>plan(multisession)</strong></code>) and slightly amend our <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> call (i.e. <code><strong>future_</strong>lapply()</code>).</p>
 <p>Let’s confirm that the output is the same.</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">serial_ex</span>, <span class="va">future_ex</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span></code></pre></div>
-<p>For those of you who prefer the <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code> family of functions for iteration and are feeling left out; don’t worry. The <strong>furrr</strong> package (<a href="https://davisvaughan.github.io/furrr/index.html">link</a>) has you covered. Once again, the syntax for these parallel functions will be very little changed from their serial versions. We simply have to tell R that we want to run things in parallel with <code>plan(multisession)</code> and then slightly amend our map call to <code><strong>future_</strong>map_df<strong>r</strong>()</code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In this particular case, the extra “r” at the end tells future to concatenate the data frames from each iteration by &lt;em&gt;rows&lt;/em&gt;.&lt;/p&gt;"><sup>17</sup></a></p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<p>For those of you who prefer the <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code> family of functions for iteration and are feeling left out; don’t worry. The <strong>furrr</strong> package (<a href="https://davisvaughan.github.io/furrr/index.html">link</a>) has you covered. Once again, the syntax for these parallel functions will be very little changed from their serial versions. We simply have to tell R that we want to run things in parallel with <code>plan(multisession)</code> and then slightly amend our map call to <code><strong>future_</strong>map_df<strong>r</strong>()</code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In this particular case, the extra “r” at the end tells future to concatenate the data frames from each iteration by &lt;em&gt;rows&lt;/em&gt;.&lt;/p&gt;"><sup>19</sup></a></p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(furrr)      ## Already loaded</span>
 <span class="co"># plan(multisession)  ## Already set above</span>
 
@@ -153,16 +153,16 @@
 <span class="va">furrr_ex</span> <span class="op">=</span> <span class="fu">future_map_dfr</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span>, <span class="va">slow_square</span><span class="op">)</span>
 <span class="fu">toc</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; 8.303 sec elapsed</span></code></pre></div>
-<p>How easy was that? We hardly had to change our original code and didn’t have to pay a cent for all that extra performance.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Not to flog a dead horse, but as I pointed out in the very &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html#26"&gt;first lecture&lt;/a&gt; of this course: Have you seen the price of a &lt;a href="https://www.stata.com/statamp/"&gt;Stata/MP&lt;/a&gt; license recently? Not to mention the fact that you effectively pay &lt;em&gt;per&lt;/em&gt; core…&lt;/p&gt;'><sup>18</sup></a> Congratulate yourself on already being such an expert at parallel programming.</p>
+<p>How easy was that? We hardly had to change our original code and didn’t have to pay a cent for all that extra performance.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Not to flog a dead horse, but as we pointed out in the very &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html#26"&gt;first lecture&lt;/a&gt; of this course: Have you seen the price of a &lt;a href="https://www.stata.com/statamp/"&gt;Stata/MP&lt;/a&gt; license recently? Not to mention the fact that you effectively pay &lt;em&gt;per&lt;/em&gt; core…&lt;/p&gt;'><sup>20</sup></a> Congratulate yourself on already being such an expert at parallel programming.</p>
 <div class="inline-figure"><img src="pics/parallel/liz-high-five.gif" width="100%" style="display: block; margin: auto;"></div>
 </div>
 <div id="example-2-bootstrapping" class="section level2" number="4.4">
 <h2>
 <span class="header-section-number">4.4</span> Example 2: Bootstrapping<a class="anchor" aria-label="anchor" href="#example-2-bootstrapping"><i class="fas fa-link"></i></a>
 </h2>
-<p>Our second motivating example will involve a more realistic and slightly more computationally-intensive case: Bootstrapping coefficient values for hypothesis testing.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;It’s an aside, but I’m strongly of the opinion that simulation methods like bootstrapping provide a far more intuitive way to understand statistics. Don’t believe me? Watch John Rausser’s fantastic talk: “&lt;a href="https://www.youtube.com/watch?v=5Dnw46eC-0o"&gt;&lt;em&gt;Statistics Without The Agonizing Pain&lt;/em&gt;&lt;/a&gt;.” Seriously, watch it.&lt;/p&gt;'><sup>19</sup></a> I’ll also spend a bit more time talking about the packages we’re using and what they’re doing.</p>
+<p>Our second motivating example will involve a more realistic and slightly more computationally-intensive case: Bootstrapping coefficient values for hypothesis testing.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;It’s an aside, but we’re strongly of the opinion that simulation methods like bootstrapping provide a far more intuitive way to understand statistics. Don’t believe us? Watch John Rausser’s fantastic talk: “&lt;a href="https://www.youtube.com/watch?v=5Dnw46eC-0o"&gt;&lt;em&gt;Statistics Without The Agonizing Pain&lt;/em&gt;&lt;/a&gt;.” Seriously, watch it.&lt;/p&gt;'><sup>21</sup></a> We’ll also spend a bit more time talking about the packages we’re using and what they’re doing.</p>
 <p>Start by creating a fake dataset (<code>d</code>), where we “know” that the relationship between our x and y variables. We’ll then specify a bootstrapping function (<code><a href="https://rstudio.github.io/bslib//reference/deprecated.html">bootstrap()</a></code>) that will draw a random sample of 1,000 observations from the fake dataset (with replacement), fit a regression, and then extract the coefficient on the x variable.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Set seed (for reproducibility)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span>
 <span class="co"># Set sample size</span>
@@ -190,7 +190,7 @@
 <span class="header-section-number">4.4.1</span> Serial implementation (for comparison)<a class="anchor" aria-label="anchor" href="#serial-implementation-for-comparison"><i class="fas fa-link"></i></a>
 </h3>
 <p>Let’s implement the bootstrap procedure in serial to get a benchmark for comparison. Note that we’ll repeat the function (i.e. simulation) 10,000 times to build up a decent estimate of the parameter distribution; which, again, we know should be around 2.</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123L</span><span class="op">)</span> <span class="co">## Optional to ensure that the results are the same</span>
 
 <span class="co">## 10,000-iteration simulation</span>
@@ -198,9 +198,9 @@
 <span class="va">sim_serial</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">1e4</span>, <span class="va">bootstrap</span><span class="op">)</span>
 <span class="fu">toc</span><span class="op">(</span>log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; 17.76 sec elapsed</span></code></pre></div>
-<p>So that took about 25 seconds on this system. Not a huge pain, but let’s see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of my system monitor, showing that only one core was being used during this serial version.</p>
+<p>So that took about 25 seconds on this system. Not a huge pain, but let’s see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of Grant’s system monitor, showing that only one core was being used during this serial version.</p>
 <blockquote>
-<p><strong>Note:</strong> My local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.</p>
+<p><strong>Note:</strong> Grant’s local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.</p>
 </blockquote>
 <div class="inline-figure"><img src="pics/parallel/serial.png" width="100%" style="display: block; margin: auto;"></div>
 </div>
@@ -213,7 +213,7 @@
 <blockquote>
 <p>In programming, a <em>future</em> is an abstraction for a <em>value</em> that may be available at some point in the future. The state of a future can either be unresolved or resolved… Exactly how and when futures are resolved depends on what strategy is used to evaluate them. For instance, a future can be resolved using a sequential strategy, which means it is resolved in the current R session. Other strategies may be to resolve futures asynchronously, for instance, by evaluating expressions in parallel on the current machine or concurrently on a compute cluster.</p>
 </blockquote>
-<p>As I’ve tried to emphasise, <strong>future</strong> is relatively new on the scene. It is certainly not the first or only way to implement parallel processes in R. However, I think that it provides a simple and unified framework that makes it the preeminent choice. What’s more, the same commands that we use here will carry over very neatly to more complicated settings involving high-performance computing clusters. We’ll experience this first hand when we get to the big data section of the course.</p>
+<p>As we’ve tried to emphasise, <strong>future</strong> is relatively new on the scene. It is certainly not the first or only way to implement parallel processes in R. However, <strong>future</strong> provides a simple and unified framework that makes it (in our view) the preeminent choice. What’s more, the same commands that we use here will carry over very neatly to more complicated settings involving high-performance computing clusters. We’ll experience this first hand when we get to the big data section of the book.</p>
 <p>You’ve probably also noted that keep referring to the “future ecosystem.” This is because <strong>future</strong> provides the framework for other packages to implement parallel versions of their functions. The two that we’ll focus on here are:</p>
 <ol style="list-style-type: decimal">
 <li>the <strong>future.apply</strong> package (<a href="https://cran.r-project.org/web/packages/future.apply/index.html">link</a>), also by Henrik, and</li>
@@ -224,8 +224,8 @@
 <h4>
 <span class="header-section-number">4.4.2.1</span> future.apply<a class="anchor" aria-label="anchor" href="#future.apply"><i class="fas fa-link"></i></a>
 </h4>
-<p>Here’s the <code><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future.apply::future_lapply()</a></code> parallel implementation. Note that I’m adding the <code>future.seed=123L</code> option to ensure that the results are the same. While not strictly necessary, it’s always a good idea to set a random seed with simulations for the sake of reproducibility.</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<p>Here’s the <code><a href="https://rdrr.io/pkg/future.apply/man/future_lapply.html">future.apply::future_lapply()</a></code> parallel implementation. Note that we’re adding the <code>future.seed=123L</code> option to ensure that the results are the same. While not strictly necessary, it’s always a good idea to set a random seed with simulations for the sake of reproducibility.</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(future.apply)  ## Already loaded</span>
 <span class="co"># plan(multisession)     ## Already set above</span>
 
@@ -235,7 +235,7 @@
 <span class="fu">toc</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; 6.63 sec elapsed</span></code></pre></div>
 <p>Remember from our previous programming chapters that <code>lapply</code> returns a list (in this case: a list of 10,000 single row data frames). So we would have have to bind these elements together in a single, large data frame if that’s what we wanted. For example,</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Bind into single data frame</span>
 <span class="va">sim_future</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="st">"rbind"</span>, <span class="va">sim_future</span><span class="op">)</span>
 <span class="co"># sim_future = dplyr::bind_rows("rbind", sim_future)       ## Another option</span>
@@ -254,8 +254,8 @@
 <h4>
 <span class="header-section-number">4.4.2.2</span> furrr<a class="anchor" aria-label="anchor" href="#furrr"><i class="fas fa-link"></i></a>
 </h4>
-<p>And here’s the <code><a href="https://rdrr.io/pkg/furrr/man/future_map.html">furrr::future_map_dfr()</a></code> implementation. Similar to the above, note that I’m only adding the <code>.options=future_options(seed=123L)</code> option to ensure that the output is exactly the same.</p>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<p>And here’s the <code><a href="https://rdrr.io/pkg/furrr/man/future_map.html">furrr::future_map_dfr()</a></code> implementation. Similar to the above, note that we’re only adding the <code>.options=future_options(seed=123L)</code> option to ensure that the output is exactly the same.</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(furrr)      ## Already loaded</span>
 <span class="co"># plan(multisession)  ## Already set above</span>
 
@@ -279,13 +279,13 @@
 <h3>
 <span class="header-section-number">4.4.3</span> Results<a class="anchor" aria-label="anchor" href="#results"><i class="fas fa-link"></i></a>
 </h3>
-<p>As expected, we dramatically cut down on total computation time by going parallel. Depending on your system, you may note that the parallel improvements for this example didn’t scale linearly with the number of cores. The reason has to do with the <em>overhead</em> of running the parallel implementations — a topic that I cover in more depth toward the bottom of this document. Again, for the record, here is a screenshot showing that all of my cores were now being used during these parallel implementations.</p>
+<p>As expected, we dramatically cut down on total computation time by going parallel. Depending on your system, you may note that the parallel improvements for this example didn’t scale linearly with the number of cores. The reason has to do with the <em>overhead</em> of running the parallel implementations — a topic that we will revisit in Section <a href="parallel.html#when-should-i-go-parallel">4.7.1</a>. Once again and for the record, here is a screenshot of Grant’s laptop, showing that all cores were being used during these parallel implementations.</p>
 <blockquote>
-<p><strong>Note:</strong> My local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.</p>
+<p><strong>Note:</strong> Grant’s local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.</p>
 </blockquote>
 <div class="inline-figure"><img src="pics/parallel/parallel.png" width="100%" style="display: block; margin: auto;"></div>
-<p>While it wasn’t exactly hard work, I think we deserve to see the results of our bootstrapping exercise in nice plot form. I’ll use the <code>sim_furrr</code> results data frame for this, although it doesn’t matter since they’re all the same thanks to our our random seed. As you can see, the estimated coefficient values are tightly clustered around our simulated mean of 2.</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<p>While it wasn’t exactly hard work, let’s reward ourselves by displaying the results from our bootstrapping simulation in the form of a nice plot. We’ll use the <code>sim_furrr</code> results data frame for this, although it doesn’t matter since they’re all the same thanks to our our random seed. As you can see, the estimated coefficient values are tightly clustered around our simulated mean of 2.</p>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sim_furrr</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">x_coef</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_density</span><span class="op">(</span>col<span class="op">=</span><span class="cn">NA</span>, fill<span class="op">=</span><span class="st">"gray25"</span>, alpha<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
@@ -301,9 +301,9 @@
 <h3>
 <span class="header-section-number">4.4.4</span> Other parallel options<a class="anchor" aria-label="anchor" href="#other-parallel-options"><i class="fas fa-link"></i></a>
 </h3>
-<p>Futures are not the only game in town for parallel programming in R. For example, I’m going to talk about the base R <code>mclapply</code> function further below. However, one particular option that I want to mention very briefly is the <strong>pbapply</strong> package (<a href="https://github.com/psolymos/pbapply">link</a>). As we saw during the first programming lecture, this package provides a lightweight wrapper on the *apply functions that adds a progress bar. However, the package also adds a very convenient option for multicore implementation. You basically just have to add <code>cl=CORES</code> to the call. While it doesn’t rely on futures, <strong>pbapply</strong> also takes care of all the OS-specific overhead for you. See <a href="http://peter.solymos.org/code/2016/09/11/what-is-the-cost-of-a-progress-bar-in-r.html">here</a> for an interesting discussion on what’s happening behind the scenes.</p>
+<p>Futures are not the only game in town for parallel programming in R. For example, we’ll talk more about the <code>mclapply</code> function that comes bundled with base R in Section <a href="parallel.html#forking-vs-sockets">4.5.3</a> below. However, one particular option that we want to mention very briefly is the <strong>pbapply</strong> package (<a href="https://github.com/psolymos/pbapply">link</a>). As we saw in Section <a href="funcs-intro.html#aside-progress-bars">2.5.3.2.1</a>, this package provides a lightweight wrapper for the <code>*apply</code> family of functions by adding a progress bar. However, the package also adds a very convenient option for multicore implementation. You basically just have to add <code>cl=CORES</code> to the call. While it doesn’t rely on futures, <strong>pbapply</strong> also takes care of all the OS-specific overhead for you. See <a href="http://peter.solymos.org/code/2016/09/11/what-is-the-cost-of-a-progress-bar-in-r.html">here</a> for an interesting discussion on what’s happening behind the scenes.</p>
 <p>You will need to run this next chunk interactively to see the progress bar.</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co">## Optional to ensure results are exactly the same.</span>
 
 <span class="co"># library(pbapply) ## Already loaded</span>
@@ -322,13 +322,13 @@
 <h2>
 <span class="header-section-number">4.5</span> General parallel programming topics<a class="anchor" aria-label="anchor" href="#general-parallel-programming-topics"><i class="fas fa-link"></i></a>
 </h2>
-<p>Motivating examples out of the way, let’s take a look underneath the hood. I want to emphasise that this section is more “good to know” than “need to know.” Even if you take nothing else away from rest of this lecture, you are already well placed to begin implementing parallel functions at a much larger scale.</p>
+<p>Motivating examples out of the way, let’s take a look underneath the hood. We want to emphasise that this section is more “good to know” than “need to know.” Even if you take nothing else away from rest of this chapter, you are already well placed to begin implementing parallel functions at a much larger scale.</p>
 <p>And yet… while you don’t <em>need</em> to know the next section in order to program in parallel in R, getting a solid grasp of the basics is valuable. It will give you a better understanding of how parallel programming works in general and help you to appreciate how much <strong>future</strong> and co. are doing behind the scenes for you. It will also help you to understand why the same code runs faster on some systems than others, and avoid some common pitfalls.</p>
 <div id="terminology" class="section level3" number="4.5.1">
 <h3>
 <span class="header-section-number">4.5.1</span> Terminology<a class="anchor" aria-label="anchor" href="#terminology"><i class="fas fa-link"></i></a>
 </h3>
-<p>I’ll start by clearing up some terminology.</p>
+<p>We’ll start by clearing up some terminology.</p>
 <ul>
 <li>
 <strong>Socket:</strong> The physical connection on your computer that houses the processor. Most work and home computers — even very high-end ones — only have one socket and, thus, one processor. However, they can have multiple cores. Speaking of which…</li>
@@ -341,21 +341,23 @@
 <li>
 <strong>Cluster:</strong> A collection of objects that are capable of hosting cores. This could range from a single socket (on your home computer) to an array of servers (on a high-performance computing network).</li>
 </ul>
-<p>You may wondering where the much-referenced <strong>CPU</strong> (i.e. central processing unit) fits into all of this. Truth be told, the meaning of CPU has evolved with the advent of new technology like multicore processors. For the purposes of this lecture I will use the following definition:</p>
+<p>You may wondering where the much-referenced <strong>CPU</strong> (i.e. central processing unit) fits into all of this. Truth be told, the meaning of CPU has evolved with the advent of new technology like multicore processors. For the purposes of this book, we will use the following definition:</p>
 <p><span class="math display">\[\text{No. of CPUs} = \text{No. of sockets} \times \text{No. of physcial cores} \times \text{No. of threads per core}\]</span></p>
-<p>If nothing else, this is consistent with the way that my Linux system records information about CPU architecture via the <a href="https://linux.die.net/man/1/lscpu">lscpu</a> shell command:</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb90-1"><a href="parallel.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> ## <span class="ex">Only</span> works on Linux</span>
-<span id="cb90-2"><a href="parallel.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="ex">+</span> lscpu <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^Thread|^Core|^Socket|^CPU\('</span></span>
-<span id="cb90-3"><a href="parallel.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; bash: line 1: lscpu: command not found</span></span></code></pre></div>
-<p>Note that the headline “CPU(s)” number is the same that I got from running <code><a href="https://rdrr.io/r/parallel/detectCores.html">parallel::detectCores()</a></code> earlier (i.e. 3).</p>
+<p>If nothing else, this is consistent with the way that Linux records information about CPU architecture via the <a href="https://linux.die.net/man/1/lscpu"><code>lscpu</code></a> shell command. For example, here is what Grant sees when he runs the command on his laptop:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb95-1"><a href="parallel.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="ex">lscpu</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^Thread|^Core|^Socket|^CPU\('</span>    <span class="co">## Only works on Linux</span></span>
+<span id="cb95-2"><a href="parallel.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CPU(s):                          12</span></span>
+<span id="cb95-3"><a href="parallel.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Thread(s) per core:              2</span></span>
+<span id="cb95-4"><a href="parallel.html#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Core(s) per socket:              6</span></span>
+<span id="cb95-5"><a href="parallel.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Socket(s):                       1</span></span></code></pre></div>
+<p>Note that the headline “CPU(s)” number is the same that he would get from running <code><a href="https://rdrr.io/r/parallel/detectCores.html">parallel::detectCores()</a></code>, i.e. 12.</p>
 </div>
 <div id="a-bit-more-about-logical-cores-and-hyperthreading" class="section level3" number="4.5.2">
 <h3>
 <span class="header-section-number">4.5.2</span> A bit more about logical cores and hyperthreading<a class="anchor" aria-label="anchor" href="#a-bit-more-about-logical-cores-and-hyperthreading"><i class="fas fa-link"></i></a>
 </h3>
 <p>Logical cores extend or emulate the ability of physical cores to perform additional tasks. The most famous example is Intel’s <a href="https://en.wikipedia.org/wiki/Hyper-threading"><strong>hyperthreading</strong></a> technology, which allows a single core to switch very rapidly between two different tasks. This mimics the appearance and performance (albeit to a lesser extent) of an extra physical core. You may find <a href="https://www.youtube.com/watch?v=mSZpDF-zUoI&amp;">this YouTube video</a> helpful for understanding the difference in more depth, including a nice analogy involving airport security lines.</p>
-<p>Taking a step back, you don’t have to worry too much about the difference between physical and logical (hyperthreaded) cores for the purpose of this lecture. R doesn’t care whether you run a function on a physical core or a logical one. Both will work equally well. (Okay, the latter will be a little slower.) Still, if you are interested in determining the number of physical cores versus logical cores on your system, then there are several ways to this from R. For example, you can use the <strong>RhpcBLASctl</strong> package (<a href="https://cran.r-project.org/web/packages/RhpcBLASctl/index.html">link</a>).</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<p>Taking a step back, you don’t have to worry too much about the difference between physical and logical (hyperthreaded) cores for the purpose of this chapter. R doesn’t care whether you run a function on a physical core or a logical one. Both will work equally well. (Okay, the latter will be a little slower.) Still, if you are interested in determining the number of physical cores versus logical cores on your system, then there are several ways to this from R. For example, you can use the <strong>RhpcBLASctl</strong> package (<a href="https://cran.r-project.org/web/packages/RhpcBLASctl/index.html">link</a>).</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(RhpcBLASctl) ## Already loaded</span>
 
 <span class="fu">get_num_procs</span><span class="op">(</span><span class="op">)</span> <span class="co">## No. of all cores (including logical/hyperthreaded)</span>
@@ -367,17 +369,17 @@
 <h3>
 <span class="header-section-number">4.5.3</span> Forking vs Sockets<a class="anchor" aria-label="anchor" href="#forking-vs-sockets"><i class="fas fa-link"></i></a>
 </h3>
-<p>As I keep saying, it’s now incredibly easy to run parallel programs in R. The truth is that it has actually been easy to do so for a long time, but the implementation used to vary by operating system. In particular, simple parallel implementations that worked perfectly well on Linux or Mac didn’t work on Windows (which required a lot more overhead). For example, take a look at the <a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html">help documentation</a> for the <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mclapply()</a></code> function, which has been around since 2011. If you did so, you would see a warning that <code>mclapply()</code> <em>“relies on forking and hence is not available on Windows”</em>.</p>
+<p>As we keep saying, it’s now incredibly easy to run parallel programs in R. The truth is that it has actually been easy to do so for a long time, but the implementation used to vary by operating system. In particular, simple parallel implementations that worked perfectly well on Linux or Mac didn’t work on Windows (which required a lot more overhead). For example, take a look at the <a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mclapply.html">help documentation</a> for the <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mclapply()</a></code> function, which has been around since 2011. If you did so, you would see a warning that <code>mclapply()</code> <em>“relies on forking and hence is not available on Windows”</em>.</p>
 <p>Now, we clearly didn’t encounter any OS-specific problems when we ran the parallel versions of our motivating examples above. The same code worked for everyone, including anyone using Windows. <del><em>Loud booing.</em></del> What was happening behind the scenes is that the <strong>future</strong> packages automatically handled any complications for us. The parallel functions were being executed in a way that was optimized for each person’s OS and R environment.</p>
-<p>But what is “forking” and why does it matter what OS I am using anyway? Those are good questions that relate to the method of parallelization (i.e. type of cluster) that your system supports. The short version is that there are basically two ways that code can be parallelized:</p>
+<p>But what is “forking” and why does it matter what OS we are using anyway? Those are good questions that relate to the method of parallelization (i.e. type of cluster) that your system supports. The short version is that there are basically two ways that code can be parallelized:</p>
 <ul>
 <li>
-<strong>Forking</strong> works by cloning your entire R environment to each separate core. This includes your data, loaded packages, functions, and any other objects in your current session. This is very efficient because you don’t have to worry about reproducing your “master” environment in each “worker” node. Everything is already linked, which means that you aren’t duplicating objects in memory. However, forking is not supported on Windows and can also cause problems in an IDE or GUI like RStudio.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The reason is that shared GUI elements are being shared across child processes. (See the “GUI/embedded environments” section &lt;a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mcfork.html"&gt;here&lt;/a&gt;.) Combined with the fact that the shared memory is &lt;em&gt;read only&lt;/em&gt;, there is a risk of “cross-contamination” where any modification made to a shared object by one of the worker nodes can propagates to the system.&lt;/p&gt;'><sup>20</sup></a>
+<strong>Forking</strong> works by cloning your entire R environment to each separate core. This includes your data, loaded packages, functions, and any other objects in your current session. This is very efficient because you don’t have to worry about reproducing your “master” environment in each “worker” node. Everything is already linked, which means that you aren’t duplicating objects in memory. However, forking is not supported on Windows and can also cause problems in an IDE or GUI like RStudio.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The reason is that shared GUI elements are being shared across child processes. (See the “GUI/embedded environments” section &lt;a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/html/mcfork.html"&gt;here&lt;/a&gt;.) Combined with the fact that the shared memory is &lt;em&gt;read only&lt;/em&gt;, there is a risk of “cross-contamination” where any modification made to a shared object by one of the worker nodes can propagates to the system.&lt;/p&gt;'><sup>22</sup></a>
 </li>
 <li>
 <strong>Parallel sockets</strong> (aka “PSOCKs”) work by launching a new R session in each core. This means that your master environment has to be copied over and instantiated separately in each parallel node. This requires greater overhead and causes everything to run slower, since objects will be duplicated across each core. Technically, a PSOCK works by establishing a network (e.g. as if you were connected to a remote cluster), but everything is self-contained on your computer. This approach can be implemented on every system, including Windows, and doesn’t create problems for IDEs like RStudio.</li>
 </ul>
-<p>I’ve summarised the differences between the two approaches in the table below.</p>
+<p>We’ve summarised the differences between the two approaches in the table below.</p>
 <div class="inline-table"><table class="table table-sm">
 <thead><tr class="header">
 <th align="left">Forking</th>
@@ -399,13 +401,13 @@
 </tbody>
 </table></div>
 <p>The general rule of thumb is PSOCKs are safer and more universal than forking. This makes them a good default, even if they do come with a potential performance/memory penalty. And, indeed, this is exactly what we did by selecting the <strong><code>plan(multisession)</code></strong> resolution strategy. So, now you know where that choice came from.</p>
-<p>At the same time, however, I recommend that you consider forking if it is available to you (i.e. you’re on Linux or Mac) and you want to maximize performance. In these cases, the solution requires two simple tweaks:</p>
+<p>At the same time, however, we recommend that you consider forking if it is available to you (i.e. you’re on Linux or Mac) and you want to maximize performance. In these cases, the solution requires two simple tweaks:</p>
 <ol style="list-style-type: decimal">
 <li>Change your resolution plan to <strong><code>plan(multicore)</code></strong>, and</li>
 <li>Run your R script from the terminal using, say, <code>$ Rscript -e 'rmarkdown::render("mydoc.Rmd", "all")'</code> or <code>$ Rscript myfile.R</code>.</li>
 </ol>
 <p>Here’s a very simple illustration, using the same setup as Example 1 from earlier.</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plan</span><span class="op">(</span><span class="va">multicore</span><span class="op">)</span> <span class="co">## NB: Only works on Unix!</span>
 
 <span class="fu">tic</span><span class="op">(</span><span class="op">)</span>
@@ -433,30 +435,30 @@
 <h3>
 <span class="header-section-number">4.6.2</span> Beware resource competition<a class="anchor" aria-label="anchor" href="#beware-resource-competition"><i class="fas fa-link"></i></a>
 </h3>
-<p>While this all sounds great — and I certainly recommend taking a look at MKL or OpenBLAS — there is a potential downside. In particular, you risk competing with yourself for computational resources (i.e. memory) if you mix explicit and implicit parallel calls. For instance, if you run explicit multicore functions from within R on a system that has been configured with an optimized BLAS. As <a href="http://dirk.eddelbuettel.com/">Dirk Eddelbuettel</a> succinctly puts it in <a href="https://stackoverflow.com/a/18291826">this Stack Overflow thread</a>:</p>
+<p>While this all sounds great — and we certainly recommend taking a look at MKL or OpenBLAS — there is a potential downside. In particular, you risk competing with yourself for computational resources (i.e. memory) if you mix explicit and implicit parallel calls. For instance, if you run explicit multicore functions from within R on a system that has been configured with an optimized BLAS. As <a href="http://dirk.eddelbuettel.com/">Dirk Eddelbuettel</a> succinctly puts it in <a href="https://stackoverflow.com/a/18291826">this Stack Overflow thread</a>:</p>
 <blockquote>
 <p>There is one situation you want to avoid: (1) spreading a task over all <em>N</em> cores and (2) having each core work on the task using something like OpenBLAS or MKL with all cores. Because now you have an <em>N</em> by <em>N</em> contention: each of the N task wants to farm its linear algebra work out to all <em>N</em> cores.</p>
 </blockquote>
-<p>Now, I want to emphasise that this conflict rarely matters in my own experience. I use optimized BLAS libraries and run explicit parallel calls all the time in my R scripts. Despite this, I have hardly ever run into a problem. Moreover, when these slowdowns have occurred, I’ve found the effect to be relatively modest.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The major cost appears to be the unnecessary duplication of objects in memory.&lt;/p&gt;"><sup>21</sup></a> Still, I have read of cases where the effect can be quite dramatic (e.g. <a href="https://stat.ethz.ch/pipermail/r-sig-hpc/2014-February/001846.html">here</a>) and so I wanted you to be aware of it all the same.</p>
-<p>Luckily, there’s also an easy and relatively costless solution: Simply turn off BLAS multi-threading. It turns out this has a negligible impact on performance, since most of the gains from optimized BLAS are actually coming from improved math vectorisation, not multi-threading. (See <a href="https://blog.revolutionanalytics.com/2015/10/edge-cases-in-using-the-intel-mkl-and-parallel-programming.html">this post</a> for a detailed discussion.) You can turn off BLAS multi-threading for the current R session via the <code><a href="https://rdrr.io/pkg/RhpcBLASctl/man/RhpcBLASctl-package.html">RhpcBLASctl::blas_set_num_threads()</a></code> function. For example, I sometimes include the following line at the top of an R script:</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<p>Now, we should emphasise that nested parallelism has rarely caused major problems in our own experience. We both use optimized BLAS libraries, run explicit parallel calls all the time in our R scripts, and have only occasionally run into issues. Moreover, when these slowdowns have occurred, the impact appears to have been relatively modest.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The major cost appears to be the unnecessary duplication of objects in memory.&lt;/p&gt;"><sup>23</sup></a> Still, we have heard of cases where the effect is much more dramatic (e.g. <a href="https://stat.ethz.ch/pipermail/r-sig-hpc/2014-February/001846.html">here</a>). Consider yourselves forewarned so as to be forearmed.</p>
+<p>With that admonishment in mind, thankfully there is a an easy and relatively costless solution: Simply turn off BLAS multithreading. It turns out this has a negligible impact on performance, since most of the gains from optimized BLAS are actually coming from improved math vectorisation, not multi-threading.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Detailed discussion here: &lt;a href="https://blog.revolutionanalytics.com/2015/10/edge-cases-in-using-the-intel-mkl-and-parallel-programming.html" class="uri"&gt;https://blog.revolutionanalytics.com/2015/10/edge-cases-in-using-the-intel-mkl-and-parallel-programming.html&lt;/a&gt;&lt;/p&gt;'><sup>24</sup></a> You can turn off BLAS multithreading for the current R session with the <code><a href="https://rdrr.io/pkg/RhpcBLASctl/man/RhpcBLASctl-package.html">RhpcBLASctl::blas_set_num_threads()</a></code> function. For example, we sometimes include the following line at the top of an R script:</p>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># blas_get_num_procs() ## If you want to find the existing number of BLAS threads</span>
 <span class="fu">RhpcBLASctl</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/RhpcBLASctl/man/RhpcBLASctl-package.html">blas_set_num_threads</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co">## Set BLAS threads to 1 (i.e. turn off multithreading)</span></code></pre></div>
-<p>Since this is only in effect for the current R session, BLAS multithreading will be restored when I restart R.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;I could also reinstate the original behaviour in the same session by running &lt;code&gt;blas_set_num_threads(parallel::detectCores())&lt;/code&gt;.&lt;/p&gt;"><sup>22</sup></a> You can turn off BLAS multithreading as the default mode by setting an appropriate environment variable. We’ll revisit this in the chapter(s) on Google Compute Engine.</p>
+<p>Since this is only in effect for the current R session, BLAS multithreading will be restored when we restart R.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;We could also reinstate the original behaviour in the same session by running &lt;code&gt;blas_set_num_threads(parallel::detectCores())&lt;/code&gt;.&lt;/p&gt;"><sup>25</sup></a> You can turn off BLAS multithreading as the default mode by setting an appropriate environment variable. We’ll see an example of this in Section <a href="gce-i.html#mkl">6.6.1</a>.</p>
 </div>
 <div id="library-source-code" class="section level3" number="4.6.3">
 <h3>
 <span class="header-section-number">4.6.3</span> Library source code<a class="anchor" aria-label="anchor" href="#library-source-code"><i class="fas fa-link"></i></a>
 </h3>
-<p>Very briefly, I want to point out that implicit parallelization is automatically invoked by many of the external libraries that we use in R. The good news is that package developers normally take pains to avoid potential resource competition. For instance, consider the message that <strong>data.table</strong> greets us with at load time.</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<p>Implicit parallelization is automatically invoked by many of the external libraries that we use in R. The good news is that package developers normally take pains to avoid potential resource competition. For instance, consider the message that <strong>data.table</strong> greets us with at load time.</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span>, warn.conflicts <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>#&gt; data.table 1.14.0 using 6 threads (see ?getDTthreads).  Latest news: r-datatable.com</code></pre>
 <p>If you follow the suggestion and look at the <code><a href="https://Rdatatable.gitlab.io/data.table/reference/openmp-utils.html">?getDTthreads</a></code> help documentation, you’ll find an informative (and reassuring) discussion of its approach here:</p>
 <blockquote>
 <p><code>data.table</code> automatically switches to single threaded mode upon fork (the mechanism used by <code><a href="https://rdrr.io/r/parallel/mclapply.html">parallel::mclapply</a></code> and the <code>foreach</code> package). Otherwise, nested parallelism would very likely overload your CPUs and result in much slower execution. As data.table becomes more parallel internally, we expect explicit user parallelism to be needed less often…</p>
 </blockquote>
-<p>A final point on this topic, riffing off the quoted text, is that packages like <strong>data.table</strong> implement their parallel operations at the source-code level, i.e. in C(++) and other compiled languages. So they are likely to be more efficient than the equivalent explicit parallel calls that you might make. It’s not that you can’t combine, say, <strong>future</strong> and <strong>data.table</strong> (I do this often). But you should know that trying to do better than the latter’s default operations may be a fool’s errand.</p>
+<p>A final point on this topic, riffing off the quoted text, is that packages like <strong>data.table</strong> implement their parallel operations at the source-code level, i.e. in C(++) and other compiled languages. So they are likely to be more efficient than the equivalent explicit parallel calls that you might make. It’s not that you can’t combine, say, <strong>future</strong> and <strong>data.table</strong> (we both do this often). But you should know that trying to do better than the latter’s default operations may be a fool’s errand.</p>
 </div>
 </div>
 <div id="miscellaneous" class="section level2" number="4.7">
@@ -476,14 +478,16 @@
 <h3>
 <span class="header-section-number">4.7.2</span> How many cores should I use?<a class="anchor" aria-label="anchor" href="#how-many-cores-should-i-use"><i class="fas fa-link"></i></a>
 </h3>
-<p>If you look this question up online, you’ll find that most people recommend using <code>detectCores()-1</code>. This advice stems from the idea that you probably want to reserve one core for other tasks, such as running your web browser or word processor. While I don’t disagree, I typically use all available cores for my parallel computations. For one thing, I do most of my heavy computational work in the cloud (i.e. on a server or virtual machine). So keeping some computational power in reserve doesn’t make sense. Second, when I am working locally, I’ve gotten into the habit of closing all other applications while a parallel function is running. Your mileage may vary, though. (And remember the possible diminishing returns brought on by Amdahl’s law). FWIW, calling <code>plan(multisession)</code> or <code>plan(multicore)</code> automatically default to using all your cores. You can change that by running, say, <code>plan(multisession(workers = detectCores()-1))</code>.</p>
+<p>If you look this question up online, you’ll find that most people recommend using <code>detectCores()-1</code>. This advice stems from the idea that you probably want to reserve one core for other tasks, such as running your web browser or word processor. While we don’t disagree, both of us typically use <em>all</em> available cores for our parallel computations. For one thing, we do most of our heavy computational work on a dedicated work station or in the cloud. Keeping some computational power in reserve doesn’t make sense in these cases. Second, when we are working locally, we’ve gotten into the habit of closing all other applications while a parallel function is running. Your mileage may vary, though. (And remember the possible diminishing returns brought on by Amdahl’s law). FWIW, calling <code>plan(multisession)</code> or <code>plan(multicore)</code> automatically default to using all your cores. You can change that by running, say, <code>plan(multisession(workers = detectCores()-1))</code>.</p>
 </div>
 <div id="fault-tolerance-error-catching-caching-etc." class="section level3" number="4.7.3">
 <h3>
 <span class="header-section-number">4.7.3</span> Fault tolerance (error catching, caching, etc.)<a class="anchor" aria-label="anchor" href="#fault-tolerance-error-catching-caching-etc."><i class="fas fa-link"></i></a>
 </h3>
-<p>In my experience, the worst thing about parallel computation is that it is very sensitive to failure in any one of its nodes. An especially frustrating example is the tendency of parallel functions to ignore/hide critical errors up until the very end when they are supposed to return output. (“Oh, so you encountered a critical error several hours ago, but just decided to continue for fun anyway? Thanks!”) Luckily, all of the defensive programming tools that we practiced in the <a href="https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.html">previous lecture</a> — catching user errors and caching intermediate results — carry over perfectly to their parallel equivalents. Just make sure that you use a persistent cache.</p>
-<p><strong>Challenge:</strong> Prove this to yourself by running a parallel version of the cached iteration that we practiced last time. Specifically, you should <a href="https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.html#Aside_1:_Caching_across_R_sessions">recreate</a> the <code>mem_square_verbose()</code> function, which in turn relies on the <code>mem_square_persistent()</code> function.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;To clarify: The verbose option simply provides helpful real-time feedback to us. However, the underlying persistent cache location — provided in this case by &lt;code&gt;mem_square_persistent()&lt;/code&gt; — is necessary whenever you want to use a memoised function in the futures framework.&lt;/p&gt;"><sup>23</sup></a> You should then be able to run <code>future_map_dfr(1:10, mem_square_verbose)</code> and it will automatically return the previously cached results. After that, try <code>future_map_dfr(1:24, mem_square_verbose)</code> and see what happens.</p>
+<p>One of the worst thing about parallel computation is that it is very sensitive to failure in any one of its nodes. An especially frustrating example is the tendency of parallel functions to ignore/hide critical errors up until the very end when they are supposed to return output. (“Oh, so you encountered a critical error several hours ago, but just decided to continue for fun anyway? Thanks!”) Luckily, all of the defensive programming tools that we practiced in Chapter <a href="funcs-adv.html#funcs-adv">3</a> — catching user errors and caching intermediate results — carry over perfectly to their parallel equivalents. Just make sure that you use a persistent cache.</p>
+<blockquote>
+<p><strong>Challenge:</strong> Prove this to yourself by running a parallel version of the cached iteration that we practiced in Section <a href="funcs-adv.html#caching-memoisation">3.4</a>. Specifically, you should recreate the <code>mem_square_verbose()</code> function from that section, which in turn relies on the <code>mem_square_persistent()</code> function.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;To clarify: The verbose option simply provides helpful real-time feedback to us. However, the underlying persistent cache location — provided in this case by &lt;code&gt;mem_square_persistent()&lt;/code&gt; — is necessary whenever you want to use a memoised function in the futures framework.&lt;/p&gt;"><sup>26</sup></a> You should then be able to run <code>future_map_dfr(1:10, mem_square_verbose)</code> and it will automatically return the previously cached results. After that, try <code>future_map_dfr(1:24, mem_square_verbose)</code> and see what happens.</p>
+</blockquote>
 </div>
 <div id="random-number-generation" class="section level3" number="4.7.4">
 <h3>
@@ -495,21 +499,21 @@
 <h3>
 <span class="header-section-number">4.7.5</span> Parallel regression<a class="anchor" aria-label="anchor" href="#parallel-regression"><i class="fas fa-link"></i></a>
 </h3>
-<p>A number of regression packages in R are optimized to run in parallel. For example, the superb <strong>fixest</strong> package (<a href="https://lrberge.github.io/fixest/">link</a>) that we saw in the lecture on regression analysis will automatically invoke multicore capabilities when fitting high dimensional fixed effects models. The many Bayesian packages in R are also all capable of — and, indeed, expected to — fit regression models by running their MCMC chains in parallel. For example, <strong>RStan</strong> (<a href="https://mc-stan.org/rstan/articles/rstan.html#running-multiple-chains-in-parallel">link</a>). Finally, you may be interested in the <strong>partools</strong> package (<a href="https://cran.r-project.org/web/packages/partools/index.html">link</a>), which provides convenient aliases for running a variety of statistical models and algorithms in parallel.</p>
+<p>A number of regression packages in R are optimized to run in parallel. For example, the superb <strong>fixest</strong> package (<a href="https://lrberge.github.io/fixest/">link</a>) that we saw in the chapter on regression analysis will automatically invoke multicore capabilities when fitting high dimensional fixed effects models. The many Bayesian packages in R are also all capable of — and, indeed, expected to — fit regression models by running their MCMC chains in parallel. For example, <strong>RStan</strong> (<a href="https://mc-stan.org/rstan/articles/rstan.html#running-multiple-chains-in-parallel">link</a>). Finally, you may be interested in the <strong>partools</strong> package (<a href="https://cran.r-project.org/web/packages/partools/index.html">link</a>), which provides convenient aliases for running a variety of statistical models and algorithms in parallel.</p>
 </div>
 <div id="cpus-vs-gpus" class="section level3" number="4.7.6">
 <h3>
 <span class="header-section-number">4.7.6</span> CPUs vs GPUs<a class="anchor" aria-label="anchor" href="#cpus-vs-gpus"><i class="fas fa-link"></i></a>
 </h3>
-<p>Graphical Processing Units, or GPUs, are specialised chipsets that were originally built to perform the heavy lifting associated with rendering graphics. It’s important to realise that not all computers have GPUs. Most laptops come with so-called <a href="https://www.laptopmag.com/articles/intel-hd-graphics-comparison">integrated graphics</a>, which basically means that the same processor is performing both regular and graphic-rendering tasks. However, gaming and other high-end laptops (and many desktop computers) include a dedicated GPU card. For example, the Dell Precision 5530 that I’m writing these lecture notes on has a <a href="https://wiki.archlinux.org/index.php/hybrid_graphics">hybrid graphics</a> setup with two cards: 1) an integrated Intel GPU (UHD 630) and 2) a discrete NVIDIA Quadro P2000.</p>
-<p>So why am I telling you this? Well, it turns out that GPUs also excel at non-graphic computation tasks. The same processing power needed to perform the millions of parallel calculations for rendering 3-D games or architectural software, can be put to use on scientific problems. How exactly this was discovered involves an interesting backstory of supercomputers being built with Playstations. (Google it.) But the short version is that modern GPUs comprise <em>thousands</em> of cores that can be run in parallel. Or, as my colleague <a href="http://econevans.com/">David Evans</a> once memorably described it to me: “GPUs are basically just really, really good at doing linear algebra.”</p>
-<p>Still, that’s about as much as I want to say about GPUs for now. Installing and maintaining a working GPU setup for scientific purposes is a much more complex task. (And, frankly, overkill for the vast majority of econometric or data science needs.) We may revisit the topic when we get to the machine learning section of the course in a few weeks.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Advanced machine learning techniques like &lt;a href="https://blog.rstudio.com/2018/09/12/getting-started-with-deep-learning-in-r/"&gt;deep learning&lt;/a&gt; are particularly performance-dependent on GPUs.&lt;/p&gt;'><sup>24</sup></a> Thus, and while the general concepts carry over, everything that we’ve covered in this chapter is limited to CPUs.</p>
+<p>Graphical Processing Units, or GPUs, are specialised chipsets that were originally built to perform the heavy lifting associated with rendering graphics. It’s important to realise that not all computers have GPUs. Most laptops come with so-called <a href="https://www.laptopmag.com/articles/intel-hd-graphics-comparison">integrated graphics</a>, which basically means that the same processor is performing both regular and graphic-rendering tasks. However, gaming and other high-end laptops (and many desktop computers) include a dedicated GPU card. For example, the Dell Precision 5530 that Grant is writing this book on has a <a href="https://wiki.archlinux.org/index.php/hybrid_graphics">hybrid graphics</a> setup with two cards: 1) an integrated Intel GPU (UHD 630) and 2) a discrete NVIDIA Quadro P2000.</p>
+<p>So why are we telling you this? Well, it turns out that GPUs also excel at non-graphic computation tasks. The same processing power needed to perform the millions of parallel calculations for rendering 3-D games or architectural software, can be put to use on scientific problems. How exactly this was discovered involves an interesting backstory of supercomputers being built with Playstations. (Look it up.) But the short version is that modern GPUs comprise <em>thousands</em> of cores that can be run in parallel. Or, as our colleague <a href="http://econevans.com/">David Evans</a> once memorably described it to me: “GPUs are basically just really, really good at doing linear algebra.”</p>
+<p>Still, that’s about as much as we want to say about GPUs for now. Installing and maintaining a working GPU setup for scientific purposes is a much more complex task. (And, frankly, overkill for the vast majority of econometric or data science needs.) We will revisit the topic when we get to the machine learning section of the book.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Advanced machine learning techniques like &lt;a href="https://blog.rstudio.com/2018/09/12/getting-started-with-deep-learning-in-r/"&gt;deep learning&lt;/a&gt; are particularly performance-dependent on GPUs.&lt;/p&gt;'><sup>27</sup></a> Thus, and while the general concepts carry over, everything that we’ve covered in this chapter is limited to CPUs.</p>
 </div>
 <div id="monitoring-multicore-performance" class="section level3" number="4.7.7">
 <h3>
 <span class="header-section-number">4.7.7</span> Monitoring multicore performance<a class="anchor" aria-label="anchor" href="#monitoring-multicore-performance"><i class="fas fa-link"></i></a>
 </h3>
-<p>Bash-compatible shells should come with the built-in <code>top</code> command, which provides a real-time view of running processes and resource consumption. (Pro-tip: Hit “1” to view processes across individual cores and “q” to quit.) An enhanced alternative that I really like and use all the time is <a href="https://hisham.hm/htop/"><strong>htop</strong></a>, which is available on both Linux and Mac. (Windows users can install <code>htop</code> on the WSL that we covered way back in the <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#windows">shell lecture</a>.). It’s entirely up to you whether you want to install it. Your operating system almost certainly provides built-in tools for monitoring processes and resource usage (e.g. <a href="https://wiki.gnome.org/Apps/SystemMonitor">System Monitor</a>). However, I wanted to flag <code>htop</code> before we get to the big data section of the course. We’ll all be connecting to remote Linux servers at that point and a shell-based (i.e. non-GUI) process monitor will prove very handy for tracking resource use.</p>
+<p>Bash-compatible shells should come with the built-in <code>top</code> command, which provides a real-time view of running processes and resource consumption. (Pro-tip: Hit “1” to view processes across individual cores and “q” to quit.) An enhanced alternative that we really like and use all the time is <a href="https://hisham.hm/htop/"><strong>htop</strong></a>, which is available on both Linux and Mac. (Windows users can install <code>htop</code> on the WSL that we covered way back in the <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#windows">shell lecture</a>.). It’s entirely up to you whether you want to install it. Your operating system almost certainly provides built-in tools for monitoring processes and resource usage (e.g. <a href="https://wiki.gnome.org/Apps/SystemMonitor">System Monitor</a>). However, we wanted to flag <code>htop</code> before we get to the big data section of the course. We’ll all be connecting to remote Linux servers at that point and a shell-based (i.e. non-GUI) process monitor will prove very handy for tracking resource use.</p>
 </div>
 </div>
 <div id="further-resources-2" class="section level2" number="4.8">
@@ -518,10 +522,10 @@
 </h2>
 <ul>
 <li>Dirk Eddelbuettel provides the authoritative reference on this topic in his review paper, <a href="https://doi.org/10.1002/wics.1515"><em>Parallel Computing With R: A Brief Review</em></a> (<a href="https://arxiv.org/pdf/1912.11144">pre-print</a>).</li>
-<li>Beyond Dirk’s article, I’d argue that the starting point for further reading should be the <strong>future</strong> vignettes (<a href="https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html">one</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-2-output.html">two</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-3-topologies.html">three</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-4-issues.html">four</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-5-startup.html">five</a>). There’s a lot in there, so feel free to pick and choose.</li>
+<li>Beyond Dirk’s article, we’d argue that the starting point for further reading should be the <strong>future</strong> vignettes (<a href="https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html">one</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-2-output.html">two</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-3-topologies.html">three</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-4-issues.html">four</a>, <a href="https://cran.r-project.org/web/packages/future/vignettes/future-5-startup.html">five</a>). There’s a lot in there, so feel free to pick and choose.</li>
 <li>Similarly, the <a href="https://davisvaughan.github.io/furrr/index.html">furrr package vignette</a> is very informative (and concise).</li>
 <li>The <a href="https://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf">parallel package vignette</a> provides a very good overview, not only its own purpose, but of parallel programming in general. Particular attention is paid to the steps needed to ensure a stable R environment (e.g. across operating systems).</li>
-<li>Finally, there a number of resources online that detail older parallel programming methods in R (<code>foreach</code>, <code>mclapply</code>, <code>parLapply</code> <code>snow</code>, etc.). While these methods have clearly been superseded by the future package ecosystem in my mind, there is still a lot of valuable information to be gleaned from understanding them. Two of my favourite resources in this regard are: <a href="http://gforge.se/2015/02/how-to-go-parallel-in-r-basics-tips/">How-to go parallel in R</a> (Max Gordon) and <a href="https://github.com/ljdursi/beyond-single-core-R">Beyond Single-Core R</a> (Jonathan Dursi).</li>
+<li>Finally, there a number of resources online that detail older parallel programming methods in R (<code>foreach</code>, <code>mclapply</code>, <code>parLapply</code> <code>snow</code>, etc.). While these methods have clearly been superseded by the future package ecosystem in our view, there is still a lot of valuable information to be gleaned from understanding them. Two of our favourite resources in this regard are: <a href="http://gforge.se/2015/02/how-to-go-parallel-in-r-basics-tips/">How-to go parallel in R</a> (Max Gordon) and <a href="https://github.com/ljdursi/beyond-single-core-R">Beyond Single-Core R</a> (Jonathan Dursi).</li>
 </ul>
 </div>
 </div>
@@ -592,7 +596,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-14.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-16.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

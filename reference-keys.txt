@@ -3,7 +3,7 @@ funcs-intro
 software-requirements
 r-packages
 basic-syntax
-a-simple-example
+simple-square
 specifying-return-values
 specifying-default-argument-values
 aside-environments-and-lexical-scoping
@@ -24,7 +24,7 @@ iterate-over-multiple-inputs
 use-mapplymap-or-pmap
 using-a-data-frame-of-input-combinations
 further-resources
-bonus-accessing-function-source-code
+addendum-inspecting-function-source-code
 funcs-adv
 software-requirements-1
 r-packages-1
@@ -125,7 +125,7 @@ manually-transfer-files-and-folders-using-the-command-line-or-scp
 sync-with-github-or-other-cloud-service
 further-resources-3
 bonus-material
-install-the-intel-math-kernel-library-mkl-or-openblaslapack
+mkl
 share-files-and-libraries-between-multiple-users-on-the-same-vm
 share-files-across-users
 share-r-libraries-packages-across-users

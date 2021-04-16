@@ -72,7 +72,7 @@
 <li>Already used: <strong>tidyverse</strong>, <strong>data.table</strong>
 </li>
 </ul>
-<p>We’ll be sticking mostly with base R functions int hsi chapter. But I also want to show you a few extra features and considerations for our main data wrangling packages. As per usual, run the following code chunk to install (if necessary) and load everything.</p>
+<p>We’ll be sticking mostly with base R functions in this chapter. But we’ll also show you a few extra features and considerations for the main data wrangling packages. As per usual, run the following code chunk to install (if necessary) and load everything.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/trinker/pacman">"pacman"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span>
 <span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">pbapply</span>, <span class="va">data.table</span>, <span class="va">tidyverse</span><span class="op">)</span></code></pre></div>
@@ -103,9 +103,9 @@
 <code class="sourceCode R"><span class="va">my_short_func</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span> <span class="va">OPERATION</span></code></pre></div>
 <p>Try to give your functions short, pithy names that are informative to both you and anyone else reading your code. This is harder than it sounds, but will pay off down the road.</p>
 </div>
-<div id="a-simple-example" class="section level2" number="2.3">
+<div id="simple-square" class="section level2" number="2.3">
 <h2>
-<span class="header-section-number">2.3</span> A simple example<a class="anchor" aria-label="anchor" href="#a-simple-example"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> A simple example<a class="anchor" aria-label="anchor" href="#simple-square"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s write out a simple example function, which gives the square of an input number.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -119,13 +119,13 @@
 <span class="co">#&gt; [1] 9</span></code></pre></div>
 <p>Great, it works. Note that for this simple example we could have written everything on a single line; i.e. <code>square = function(x) x^2</code> would work just as well. (Confirm this for yourself.) However, we’re about to add some extra conditions and options to our function, which will strongly favour the multi-line format.</p>
 <blockquote>
-<p><strong>Aside:</strong> I want to stress that our new <code>square()</code> function is not particularly exciting… or, indeed, useful. R’s built-in arithmetic functions already take care of (vectorised) exponentiation and do so very efficiently. (See <code><a href="https://rdrr.io/r/base/Arithmetic.html">?Arithmetic</a></code>.) However, we’re going to continue with this conceptually simple example, since it will provide a clear framework for demonstrating some general principles about functions in R.</p>
+<p><strong>Aside:</strong> We wish to emphasise that our little <code>square()</code> function is not exciting or, indeed, particularly useful. R’s built-in arithmetic functions already take care of (vectorised) exponentiation and do so very efficiently. (See <code><a href="https://rdrr.io/r/base/Arithmetic.html">?Arithmetic</a></code>.) However, we’re going to continue with this conceptually simple example, since it will provide a clear framework for demonstrating some general principles about functions in R.</p>
 </blockquote>
 <div id="specifying-return-values" class="section level3" number="2.3.1">
 <h3>
 <span class="header-section-number">2.3.1</span> Specifying return values<a class="anchor" aria-label="anchor" href="#specifying-return-values"><i class="fas fa-link"></i></a>
 </h3>
-<p>Notice that we didn’t specify a return value for our function. This will work in many cases because R’s default behaviour is to automatically return the final object that you created within the function. However, this won’t always be the case. Opinions on this differ, but my own recommendation is that you get into the habit of assigning the return object(s) explicitly with <code><a href="https://rdrr.io/r/base/function.html">return()</a></code>. Let’s modify our function to do exactly that.</p>
+<p>Notice that we didn’t specify a return value for our function. This will work in many cases because R’s default behaviour is to automatically return the final object that you created within the function. However, this won’t always be the case. Opinions on this differ, but our own recommendation is that you get into the habit of assigning the return object(s) explicitly with <code><a href="https://rdrr.io/r/base/function.html">return()</a></code>. Let’s modify our function to do exactly that.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> 
@@ -155,7 +155,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $value_squared</span>
 <span class="co">#&gt; [1] 9</span></code></pre></div>
-<p>Note that multiple return objects have to be combined in a list. I didn’t have to name these separate list elements — i.e. “value” and “value_squared” — but it will be helpful for users of our function. Nevertheless, remember that many objects in R contain multiple elements (vectors, data frames, and lists are all good examples of this). So we can also specify one of these “array”-type objects within the function itself if that provides a more convenient form of output. For example, we could combine the input and output values into a data frame:</p>
+<p>Note that multiple return objects have to be combined in a list. We didn’t have to name these separate list elements — i.e. “value” and “value_squared” — but it will be helpful for users of our function. Nevertheless, remember that many objects in R contain multiple elements (vectors, data frames, and lists are all good examples of this). So we can also specify one of these “array”-type objects within the function itself if that provides a more convenient form of output. For example, we could combine the input and output values into a data frame:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> 
@@ -192,15 +192,14 @@
 <span class="fu">square</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="co">## Now takes the explicit value that we give it.</span>
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     2             4</span></code></pre></div>
-<p>We’ll return the issue of specifying default values (and handling invalid inputs) in the next lecture on function debugging.</p>
+<p>We’ll return to the issues of specifying default values, handling invalid inputs, and general debugging in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
 </div>
 <div id="aside-environments-and-lexical-scoping" class="section level3" number="2.3.3">
 <h3>
 <span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping<a class="anchor" aria-label="anchor" href="#aside-environments-and-lexical-scoping"><i class="fas fa-link"></i></a>
 </h3>
-<p>Before continuing, I want to highlight the fact that none of the intermediate objects that we created within the above functions (<code>x_sq</code>, <code>df</code>, etc.) have made their way into our global environment. Take a moment to confirm this for yourself by looking in the “Environment” pane of your RStudio session.</p>
-<p>R has a set of so-called <a href="https://adv-r.hadley.nz/functions.html#lexical-scoping"><em>lexical scoping</em></a> rules, which govern where it stores and evaluates the values of different objects. Without going into too much depth, the practical implication of lexical scoping is that functions operate in a quasi-sandboxed <a href="https://adv-r.hadley.nz/environments.html"><em>environment</em></a>. They don’t return or use objects in the global environment unless they are forced to (e.g. with a <code><a href="https://rdrr.io/r/base/function.html">return()</a></code> command). Similarly, a function will only look to outside environments (e.g. a level “up”) to find an object if it doesn’t see the object named within itself.</p>
-<p>We’ll explore the ideas of separate environments and lexical scoping a bit further when we get to the <a href="funcs-intro.html#functional-programming">Functional programming</a> section below. We’ll also go into more depth during the next lecture on debugging.</p>
+<p>Before continuing, take a second to note that none of the intermediate objects that we created inside the above functions (<code>x_sq</code>, <code>df</code>, etc.) have made their way into your global environment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Look in the “Environment” pane of your RStudio session.&lt;/p&gt;"><sup>4</sup></a> R has a set of so-called <a href="https://adv-r.hadley.nz/functions.html#lexical-scoping"><em>lexical scoping</em></a> rules, which govern where it stores and evaluates the values of different objects. Without going into too much depth, the practical implication of lexical scoping is that functions operate in a quasi-sandboxed <a href="https://adv-r.hadley.nz/environments.html"><em>environment</em></a>. They don’t return or use objects in the global environment unless they are forced to (e.g. with a <code><a href="https://rdrr.io/r/base/function.html">return()</a></code> command). Similarly, a function will only look to outside environments (e.g. a level “up”) to find an object if it doesn’t see the object named within itself.</p>
+<p>We’ll revisit the ideas of distinct object environments and lexical scoping when we get to functional programming in Section <a href="funcs-intro.html#functional-programming">2.5.3</a> below, and then again in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
 </div>
 </div>
 <div id="control-flow" class="section level2" number="2.4">
@@ -212,7 +211,7 @@
 <h3>
 <span class="header-section-number">2.4.1</span> if and ifelse<a class="anchor" aria-label="anchor" href="#if-and-ifelse"><i class="fas fa-link"></i></a>
 </h3>
-<p>We’ve already encountered conditional statements like <code>if()</code> and <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> numerous times in the course thus far.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;E.g Conditional mutation in the tidyverse lecture (see &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>4</sup></a> However, let’s see how they can work in our own bespoke functions by slightly modifying our previous square function. This time, instead of specifying a default input value of 1 in the function argument itself, we’ll specify a value of <code>NULL</code>. Then we’ll use an <code>if()</code> statement to reassign this default to one.</p>
+<p>We’ve already encountered conditional statements like <code>if()</code> and <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> numerous times in the book thus far.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;E.g Conditional mutation in the tidyverse (see &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>5</sup></a> However, let’s see how they can work in our own bespoke functions by slightly modifying our <code>square</code> function. This time, instead of specifying a default input value of 1 in the function argument itself, we’ll specify a value of <code>NULL</code>. Then we’ll use an <code>if()</code> statement to reassign this default to one.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>  <span class="co">## Default value of NULL</span>
@@ -246,7 +245,7 @@
 <span class="co">#&gt; No input value provided. Using default value of 1.</span>
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     1             1</span></code></pre></div>
-<p>This time, by specifying NULL in the argument — alongside the expanded <code>if()</code> statement — our function now both takes a default value <em>and</em> generates a helpful message.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Think about how you might have tried to achieve this if we’d assigned the &lt;code&gt;x = 1&lt;/code&gt; default directly in function argument as before. It quickly gets complicated, because how can your message discriminate whether a user left the argument blank or deliberately entered &lt;code&gt;square(1)&lt;/code&gt;?&lt;/p&gt;"><sup>5</sup></a> Note too the use of curly brackets for conditional operations that span multiple lines after an <code>if()</code> statement.
+<p>This time, by specifying NULL in the argument — alongside the expanded <code>if()</code> statement — our function now both takes a default value <em>and</em> generates a helpful message.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Think about how you might have tried to achieve this if we’d assigned the &lt;code&gt;x = 1&lt;/code&gt; default directly in function argument as before. It quickly gets complicated, because how can your message discriminate whether a user left the argument blank or deliberately entered &lt;code&gt;square(1)&lt;/code&gt;?&lt;/p&gt;"><sup>6</sup></a> Note too the use of curly brackets for conditional operations that span multiple lines after an <code>if()</code> statement.
 This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. As we’ve already seen , these be written as a single conditional call where the format is:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="funcs-intro.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(CONDITION, DO IF <span class="cn">TRUE</span>, DO IF <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>Within our own functions, though we’re more likely to write them over several lines. Consider, for example a new function that evaluates whether our <code>square()</code> function is doing its job properly.</p>
@@ -269,16 +268,16 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h4>
 <span class="header-section-number">2.4.1.1</span> Aside: ifelse gotchas and alternatives<a class="anchor" aria-label="anchor" href="#aside-ifelse-gotchas-and-alternatives"><i class="fas fa-link"></i></a>
 </h4>
-<p>The base R <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> function normally works great and I use it all the time. However, there are a couple of “gotcha” cases that you should be aware of. Consider the following (silly) function which is designed to return either today’s date, or the day before.</p>
+<p>The base R <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> function normally works great and we use it all the time. However, there are a couple of “gotcha” cases that you should be aware of. Consider the following (silly) function which is designed to return either today’s date, or the day before.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; [1] 18730</span></code></pre></div>
 <p>You are no doubt surprised to find that our function returns a number instead of a date. This is because <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date(today(TRUE), origin = "1970-01-01")</a></code>.</p>
 <blockquote>
-<p><strong>Aside:</strong> The “dot-dot-dot” argument (<code>...</code>) that I’ve used above is a convenient shortcut that allows users to enter unspecified arguments into a function. This is beyond the scope of our current lecture, but can prove to be an incredibly useful and flexible programming strategy. I highly encourage you to look at the <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">relevant section</a> of <em>Advanced R</em> to get a better idea.</p>
+<p><strong>Aside:</strong> The “dot-dot-dot” argument (<code>...</code>) that we’ve used above is a convenient shortcut that allows users to enter unspecified arguments into a function. This is beyond the scope of this chapter, but can prove to be an incredibly useful and flexible programming strategy. We highly encourage you to look at the <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">relevant section</a> of <em>Advanced R</em> to get a better idea.</p>
 </blockquote>
-<p>To guard against this type of unexpected behaviour, as well as incorporate some other optimisations, both the tidyverse (through <strong>dplyr</strong>) and <strong>data.table</strong> offer their own versions of <code>ifelse</code> statements. I won’t explain these next code chunks in depth (consult the relevant help pages if needed), but here are adapted versions of our <code>today()</code> function based on these alternatives.</p>
+<p>To guard against this type of unexpected behaviour, in addition to various other optimizations, both <strong>dplyr</strong> and <strong>data.table</strong> offer their own versions of <code>ifelse</code> statements. We won’t explain these next code chunks in depth — consult the relevant help pages if needed — but here are adapted versions of our <code>today()</code> function based on these alternatives.</p>
 <p>First, <code><a href="https://dplyr.tidyverse.org/reference/if_else.html">dplyr::if_else()</a></code>:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
@@ -357,12 +356,13 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h2>
 <span class="header-section-number">2.5</span> Iteration<a class="anchor" aria-label="anchor" href="#iteration"><i class="fas fa-link"></i></a>
 </h2>
-<p>Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate — or <em>map</em> — over a set of inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Our focus in this chapter will only be on sequential iteration. We’ll explore parallel iteration in a few chapters.&lt;/p&gt;"><sup>6</sup></a> By far the most common way to iterate across different programming languages is <em>for</em> loops. Indeed, we already saw some examples of <em>for</em> loops back in the shell lecture (see <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95">here</a>). However, while R certainly accepts standard <em>for</em> loops, I’m going to advocate that you adopt what is known as a “functional programming” approach to writing loops. Let’s dive into the reasons why and how these approaches differ.</p>
+<p>Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate — or <em>map</em> — over a set of inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Our focus in this chapter will only be on sequential iteration. We’ll explore parallel iteration in a few chapters.&lt;/p&gt;"><sup>7</sup></a> By far the most common way to iterate across different programming languages is <em>for</em> loops. Indeed, we already saw some examples of <em>for</em> loops back in the shell lecture (see <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95">here</a>). However, while R certainly accepts standard <em>for</em> loops, we’re going to advocate that you adopt what is known as a “functional programming” approach to writing loops. Let’s dive into the reasons why and how these approaches differ.</p>
 <div id="vectorisation" class="section level3" number="2.5.1">
 <h3>
 <span class="header-section-number">2.5.1</span> Vectorisation<a class="anchor" aria-label="anchor" href="#vectorisation"><i class="fas fa-link"></i></a>
 </h3>
-<p>The first question you need to ask is: “Do I need to iterate at all?” You may remember from a previous lecture that I spoke about R being <em>vectorised</em>. This means that we can apply a function over an entire vector, rather than explicitly iterating over each element.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Vectorisation is a common feature of high-level programming languages like R and Python. What’s really happening with vectorisation is that a loop &lt;em&gt;is&lt;/em&gt; being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran. To borrow a phrase from Jenny Bryan: “Someone has to write a for loop. It just doesn’t have to be you.”&lt;/p&gt;"><sup>7</sup></a> Let’s demonstrate this property with our <code>square</code> function:</p>
+<p>The first question you should be asking yourself is: “Do I need to iterate at all?”</p>
+<p>You may remember from earlier chapters that we spoke about R being <em>vectorised</em>. This means that we can apply a function over an entire vector all at once, rather than having to iterate explicitly over each element. Vectorisation is a common feature of high-level programming languages like R and Python. What’s really happening with vectorisation is that a loop <em>is</em> being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;To borrow a phrase from Jenny Bryan: “Someone has to write a for loop. It just doesn’t have to be you.”&lt;/p&gt;"><sup>8</sup></a> Let’s demonstrate this property with our <code>square</code> function:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt;   value value_squared</span>
@@ -375,7 +375,8 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     2             4</span>
 <span class="co">#&gt; 2     4            16</span></code></pre></div>
-<p>So you may not need to worry about explicit iteration at all. That being said, there are certainly cases where you will need to worry about it. Let’s explore with some simple examples (some of which are already vectorised) that provide a mental springboard for thinking about more complex cases.</p>
+<p>So, again, you may not need to think about explicit iteration at all.</p>
+<p>That being said, there are certainly cases where you <em>will</em> need to think about iteration. For the remainder of this section, we’ll explore with some simple examples — some of which are already vectorised! — that provide a mental springboard for thinking about more complex cases.</p>
 </div>
 <div id="for-loops" class="section level3" number="2.5.2">
 <h3>
@@ -404,7 +405,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="op">}</span>
 <span class="va">fahrenheit</span>
 <span class="co">#&gt; [1] 80.33 82.13 83.93 85.73 87.53 89.33</span></code></pre></div>
-<p>Unfortunately, basic <em>for</em> loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but I’ve still run into cases where an inconspicuous <em>for</em> loop has brought an entire analysis crashing to its knees.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160"&gt;Exhibit A&lt;/a&gt;. Trust me: debugging these cases is not much fun.&lt;/p&gt;'><sup>8</sup></a> The bigger problem with <em>for</em> loops, however, is that they deviate from the norms and best practices of <strong>functional programming</strong>.</p>
+<p>Unfortunately, basic <em>for</em> loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but we’ve still run into cases where an inconspicuous <em>for</em> loop has brought an entire analysis crashing to its knees.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160"&gt;Exhibit A&lt;/a&gt;. Trust us: debugging these cases is not much fun.&lt;/p&gt;'><sup>9</sup></a> The bigger problem with <em>for</em> loops, however, is that they deviate from the norms and best practices of <strong>functional programming</strong>.</p>
 </div>
 <div id="functional-programming" class="section level3" number="2.5.3">
 <h3>
@@ -419,7 +420,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </iframe>
 <p></p>
 <p><strong>Summary:</strong> <em>for</em> loops tend to emphasise the <em>objects</em> that we’re working with (say, a vector of numbers) rather than the <em>operations</em> that we want to apply to them (say, get the mean or median or whatever). This is inefficient because it requires us to continually write out the <em>for</em> loops by hand rather than getting an R function to create the for-loop for us.</p>
-<p>As a corollary, <em>for</em> loops also pollute our global environment with the variables that are used as counting variables. Take a look at your “Environment” pane in RStudio. What do you see? In addition to the <code>kelvin</code> and <code>fahrenheit</code> vectors that we created, we also see two variables <code>i</code> and <code>k</code> (equal to the last value of their respective loops). Creating these auxiliary variables is almost certainly not an intended outcome when your write a for-loop.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The best case I can think of is when you are trying to keep track of the number of loops, but even then there are much better ways of doing this.&lt;/p&gt;"><sup>9</sup></a> More worringly, they can cause programming errors when we inadvertently refer to a similarly-named variable elsewhere in our script. So we best remove them manually as soon as we’re finished with a loop.</p>
+<p>As a corollary, <em>for</em> loops also pollute our global environment with the variables that are used as counting variables. Take a look at your “Environment” pane in RStudio. What do you see? In addition to the <code>kelvin</code> and <code>fahrenheit</code> vectors that we created, we also see two variables <code>i</code> and <code>k</code> (equal to the last value of their respective loops). Creating these auxiliary variables is almost certainly not an intended outcome when your write a for-loop.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The best case we can think of is when you are trying to keep track of the number of loops, but even then there are much better ways of doing this.&lt;/p&gt;"><sup>10</sup></a> More worryingly, they can cause programming errors when we inadvertently refer to a similarly-named variable elsewhere in our script. So we best remove them manually as soon as we’re finished with a loop.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">k</span><span class="op">)</span></code></pre></div>
 <p>Another annoyance arrived in cases where we want to “grow” an object as we iterate over it (e.g. the <code>fahrenheit</code> object in our second example). In order to do this with a <em>for</em> loop, we had to go through the rigmarole of creating an empty object first.</p>
@@ -433,7 +434,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h4>
 <span class="header-section-number">2.5.3.1</span> lapply and co.<a class="anchor" aria-label="anchor" href="#lapply-and-co."><i class="fas fa-link"></i></a>
 </h4>
-<p>Base R contains a very useful family of <code>*apply</code> functions. I won’t go through all of these here — see <code><a href="https://rdrr.io/r/base/apply.html">?apply</a></code> or <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">this blog post</a> among numerous excellent resources — but they all follow a similar philosophy and syntax. The good news is that this syntax very closely mimics the syntax of basic for-loops. For example, consider the code below, which is analgous to our first <em>for</em> loop above, but now invokes a <strong><code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code></strong> call instead.</p>
+<p>Base R contains a very useful family of <code>*apply</code> functions. We won’t go through all of these here, but they all follow a similar philosophy and syntax. The good news is that this syntax very closely mimics the syntax of basic for-loops. For example, consider the code below, which is analogous to our first <em>for</em> loop above, but now invokes a <strong><code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code></strong> call instead.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># for(i in 1:10) print(LETTERS[i]) ## Our original for loop (for comparison)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
@@ -475,7 +476,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h4>
 <span class="header-section-number">2.5.3.2</span> Aside: Binding and simplifying lists<a class="anchor" aria-label="anchor" href="#aside-binding-and-simplifying-lists"><i class="fas fa-link"></i></a>
 </h4>
-<p>Okay, but what if you don’t want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) Like most social scientists, I imagine, my preferred data structure is a data frame. So, I typically want to bind the different list elements into a single data frame. There are three simple ways to do this:</p>
+<p>Okay, but what if you don’t want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) As we imagine is the case for most social scientists, our preferred data structure is the data frame. So, we typically want to bind the different list elements into a single data frame. There are three simple ways to do this:</p>
 <ul>
 <li>
 <strong>Base R</strong>: <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code>
@@ -487,7 +488,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <strong>data.table</strong>: <code>rbindlist()</code>
 </li>
 </ul>
-<p>Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code>.) Is performance paramount? (If yes, then go with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code>). But for the most part I think any of them will do. As an example, here’s a slightly modified version of our previous function that now yields a data frame:</p>
+<p>Which of these three options you choose is largely a matter of taste and constraints. Do you feel like loading a package? (If not, then go with <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code>.) Is performance paramount? (If yes, then go with <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html">data.table::rbindlist()</a></code>). But, for the most part, any of them should be fine. As an example, here’s a slightly modified version of our previous function that now yields a data frame:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># do.call("rbind", .)      ## Also works</span>
@@ -504,7 +505,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 8    8   H</span>
 <span class="co">#&gt; 9    9   I</span>
 <span class="co">#&gt; 10  10   J</span></code></pre></div>
-<p>Taking a step back — and while the default list-return behaviour may not sound ideal at first — I find that I use <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> more frequently than any of the other <code>apply</code> family members. A key reason is that my functions often return multiple objects of different type (which makes lists the only sensible format). Or, they return a single data frame (which is where <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code> and co. enter the picture).</p>
+<p>Taking a step back — and while the default list-return behaviour may not sound ideal at first — we use <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> more frequently than any of the other <code>apply</code> family members. A key reason is that our functions often return multiple objects of different type (which makes lists the only sensible format). Or, they return a single data frame (which is where <code><a href="https://rdrr.io/r/base/do.call.html">do.call("rbind")</a></code> and co. enter the picture).</p>
 <p>For what it’s worth, another option that would work well in the present particular case is <code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>. This stands for “<strong>s</strong>implify apply” and is essentially a wrapper around <code>lapply</code> that tries to return simplified output that matches the input type. So, it will try to return a vector if you it a vector, etc. For example:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> 
@@ -513,8 +514,8 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h5>
 <span class="header-section-number">2.5.3.2.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
 </h5>
-<p>Who doesn’t like progress bars? Personally, I find it incredibly helpful to see how a function is progressing, or get a sense of how much longer I can expect to wait before completion.</p>
-<p>Along those lines, I’m a big fan of the <a href="https://github.com/psolymos/pbapply"><strong>pbapply</strong></a> package, which is a lightweight wrapper around the <code>*apply</code> functions that adds a progress bar. <code>pbapply</code> offers versions for all of the <code>*apply</code> family, but the one that I use the most is (unsurprisingly) <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html">pbapply::pblapply()</a></code>.</p>
+<p>Who doesn’t like progress bars? Personally, we find it incredibly helpful to see how a function is progressing, or get a sense of how much longer we can expect to wait before completion.</p>
+<p>Along those lines, we’re big fans of the <a href="https://github.com/psolymos/pbapply"><strong>pbapply</strong></a> package, which is a lightweight wrapper around the <code>*apply</code> functions that adds a progress bar. <code>pbapply</code> offers equivalents for all members of the <code>*apply</code> family. But the one that we use most often (unsurprisingly) is <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html">pbapply::pblapply()</a></code>.</p>
 <p><em>Note: You will need to run this next example interactively to see the effect properly.</em></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(pbapply) ## Already loaded</span>
@@ -536,15 +537,15 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 8    8   H</span>
 <span class="co">#&gt; 9    9   I</span>
 <span class="co">#&gt; 10  10   J</span></code></pre></div>
-<p>Another thing that I really like about the <code>pblapply()</code> function is that it allows for easy implementation of parallel (i.e. multicore) processing that works across operating systems. We’ll cover this next week, though.</p>
-<p>There’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. I won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
+<p>Another thing that we really like about the <code>pblapply()</code> function is that it easily extends to parallel (i.e. multicore) processing. We’ll cover this next in Chapter <a href="parallel.html#parallel">4</a>, though.</p>
+<p>At the time of writing, there’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. We won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
 </div>
 </div>
 <div id="purrr-package" class="section level4" number="2.5.3.3">
 <h4>
 <span class="header-section-number">2.5.3.3</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
 </h4>
-<p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>10</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
+<p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>11</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">map</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> <span class="co">## only need to swap `lapply` for `map`</span>
   <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
@@ -589,7 +590,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; [[10]]</span>
 <span class="co">#&gt;   num let</span>
 <span class="co">#&gt; 1  10   J</span></code></pre></div>
-<p>Given these similarities, I won’t spend much time on <strong>purrr</strong>. Although, I do think it could be the optimal entry point for many you when it comes to programming and iteration. You have already learned the syntax, so it should be very easy to switch over. However, one additional thing I wanted to flag for now is the fact that <code>map()</code> also comes with its own variants, which are useful for returning objects of a desired type. For example, we can use <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map_df()</a></code> to return a data frame.</p>
+<p>Given these similarities, we won’t spend much time on <strong>purrr</strong>. However, many readers may find it to be the optimal entry point for programming and iteration; particularly those that also rely on <strong>tidyverse</strong> for their workflow. One additional thing worth flagging is the fact that <code>map()</code> also comes with its own variants, which are useful for returning objects of a desired type. For example, we can use <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map_df()</a></code> to return a data frame.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span> <span class="co">## don't need bind_rows with `map_df`</span>
   <span class="va">d</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>num <span class="op">=</span> <span class="va">i</span>, let <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>
@@ -650,7 +651,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </h3>
 <p>Thus far, we have only been working with functions that take a single input when iterating. For example, we feed them a single vector (even though that vector contains many elements that drive the iteration process). But what if we want to iterate over multiple inputs? Consider the following function, which takes two separate variables <code>x</code> and <code>y</code> as inputs, combines them in a data frame, and then uses them to create a third variable <code>z</code>.</p>
 <blockquote>
-<p><strong>Note:</strong> Again, this is a rather silly function that we could easily improve upon using standard (vectorised) tools. But my goal here is to demonstrate programming principles with simple examples that carry over to more complicated cases where vectorisation is not possible.</p>
+<p><strong>Note:</strong> Again, this is a rather silly function that we could easily improve upon using standard (vectorised) tools. But our goal here is to demonstrate programming principles with simple examples that carry over to more complicated cases where vectorisation is not possible.</p>
 </blockquote>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Create a named function</span>
@@ -669,12 +670,12 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <li>Use <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">base::Map()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap()</a></code>.</li>
 <li>Use a data frame of input combinations.</li>
 </ol>
-<p>I’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
+<p>We’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
 <div id="use-mapplymap-or-pmap" class="section level4" number="2.5.5.1">
 <h4>
 <span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code>/<code>Map()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapplymap-or-pmap"><i class="fas fa-link"></i></a>
 </h4>
-<p>Both <strong>base</strong> R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> — and <strong>purrr</strong> — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is easier to work with in my opinion, since the syntax is closer (nearly identical) to the single input case. Still, I’ll demonstrate using both versions below.</p>
+<p>Both <strong>base</strong> R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> — and <strong>purrr</strong> — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is slightly easier to work with in our view, since the syntax is closer (nearly identical) to the single input case. Still, we’ll demonstrate using both versions below.</p>
 <p>First, <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Note that the inputs are now moved to the *end* of the call. Also, mapply() </span>
@@ -714,12 +715,12 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h4>
 <span class="header-section-number">2.5.5.2</span> Using a data frame of input combinations<a class="anchor" aria-label="anchor" href="#using-a-data-frame-of-input-combinations"><i class="fas fa-link"></i></a>
 </h4>
-<p>While the above approaches work perfectly well, I find that I don’t actually use either all that much in practice. Rather, I prefer to “cheat” by feeding multi-input functions a <em>single</em> data frame that specifies the necessary combination of variables by row. I’ll demonstrate how this works in a second, but first let me explain why.</p>
-<p>It basically boils down to the fact that I feel this gives me more control over my functions and inputs.</p>
+<p>While the above approaches work perfectly well, an alternative approach is to “cheat” by feeding multi-input functions a <em>single</em> data frame that specifies the necessary combination of variables by row. We’ll demonstrate how this works in a second. But first, let’s motivate why you might want to do this. The short answer is that it can give you more control over your functions and inputs. Specifically:</p>
 <ul>
-<li>I don’t have to worry about accidentally feeding separate inputs of different lengths. Try running the above functions with an <code>x</code> vector input of <code>1:10</code>, for example. (Leave everything else unchanged.) <code>pmap()</code> will at least fail to iterate and give you a helpful message, but <code>mapply</code> will actually complete with totally misaligned columns. Putting everything in a (rectangular) data frame forces you to ensure the equal length of inputs <em>a priori</em>.</li>
-<li>Similarly, I often need to run a function over all possible combinations of different inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;A convenient way to do this is with &lt;code&gt;base::expand.grid()&lt;/code&gt; — or the equivalent &lt;code&gt;tidyr::expand_grid()&lt;/code&gt; and &lt;code&gt;data.table:CJ()&lt;/code&gt; functions — which automatically generate a data frame of all combinations.&lt;/p&gt;"><sup>11</sup></a> So it’s convenient for me to use this data frame as an input directly in my function.</li>
-<li>In my view, it’s just simpler and cleaner to keep things down to a single input. This will be harder to see in the simple example that I’m going to present next. But I’ve found that it can make a big difference with complicated functions that have a lot of nesting (i.e. functions of functions) and/or parallelization.</li>
+<li>You don’t have to worry about accidentally feeding separate inputs of different lengths. Try running the above functions with an <code>x</code> vector input of <code>1:10</code>, for example. (Leave everything else unchanged.) <code>pmap()</code> will at least fail to iterate and give you a helpful message, but <code>mapply</code> will actually complete with totally misaligned columns. Putting everything in a (rectangular) data frame forces you to ensure the equal length of inputs <em>a priori</em>.</li>
+<li>Like us, you may find yourself frequently needing to run a function over all possible combinations of a set of inputs. In these cases, it is typically much more convenient to create a data frame of combinations first, which can then be passed to functions directly.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Creating combination data frames is easily done with &lt;code&gt;base::expand.grid()&lt;/code&gt;, or the equivalent &lt;code&gt;tidyr::expand_grid()&lt;/code&gt; and &lt;code&gt;data.table:CJ()&lt;/code&gt; functions.&lt;/p&gt;"><sup>12</sup></a>
+</li>
+<li>Keeping things down to a single input argument can really help to make your code cleaner and simpler to understand. This is especially true for complicated functions that have a lot of nesting (i.e. functions of functions) and/or parallelization.</li>
 </ul>
 <p>Those justifications aside, let’s see how this might work with an example. Consider the following function:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
@@ -741,7 +742,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
     <span class="op">}</span></code></pre></div>
 <p>There are three conceptual steps to the above code chunk:</p>
 <ol style="list-style-type: decimal">
-<li>First, I create a new function called <code>parent_func()</code>, which takes a single input: a data frame containing <code>x</code> and <code>y</code> columns (and potentially other columns too).</li>
+<li>First, we create a new function called <code>parent_func()</code>, which takes a single input: a data frame containing <code>x</code> and <code>y</code> columns (and potentially other columns too).</li>
 <li>This input data frame is then passed to a second (nested) function, which will <em>iterate over the rows of the data frame</em>.</li>
 <li>During each iteration, the <code>x</code> and <code>y</code> values for that row are passed to our original <code>multi_func()</code> function. This will return a data frame containing the desired output.</li>
 </ol>
@@ -793,21 +794,187 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <h2>
 <span class="header-section-number">2.6</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources"><i class="fas fa-link"></i></a>
 </h2>
-<p>In the next two lectures, we’ll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, I hope that this chapter has given you solid grasp of the fundamentals. I highly encourage you to start writing some of your own functions. You will be doing this a <em>lot</em> as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:</p>
+<p>In Chapters <a href="funcs-adv.html#funcs-adv">3</a> and <a href="parallel.html#parallel">4</a>, we’ll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, we hope that this chapter has given you solid grasp of the fundamentals. We highly encourage you to start writing some of your own functions. You will be doing this a <em>lot</em> as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:</p>
 <ul>
 <li>Garrett Grolemund and Hadley Wickham’s <a href="http://r4ds.had.co.nz"><em><b>R for Data Science</b></em></a> book — esp. chapters <a href="http://r4ds.had.co.nz/functions.html">19 (“Functions)”)</a> and <a href="http://r4ds.had.co.nz/iteration.html">21 (“Iteration)”)</a> — covers much of the same ground as we have here, with particular emphasis on the <strong>purrr</strong> package for iteration.</li>
-<li>If you’re looking for an in-depth treatment, then I can highly recommend Hadley’s <a href="https://adv-r.hadley.nz"><em><b>Advanced R</b></em></a> (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on in this chapter, including more on his (and R’s) philosophy regarding functional programming (see <a href="https://adv-r.hadley.nz/fp.html">Section ||</a>).</li>
-<li>If you’re in the market for a more concise overview of the different <code>*apply()</code> functions, then I recommend <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">this blog post</a> by Neil Saunders.</li>
+<li>If you’re looking for an in-depth treatment, then we can highly recommend Hadley’s <a href="https://adv-r.hadley.nz"><em><b>Advanced R</b></em></a> (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on in this chapter, including more on his (and R’s) philosophy regarding functional programming (see <a href="https://adv-r.hadley.nz/fp.html">Section ||</a>).</li>
+<li>If you’re in the market for a more concise overview of the different <code>*apply()</code> functions, then we recommend <a href="https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/">this blog post</a> by Neil Saunders.</li>
 <li>On the other end of the scale, Jenny Bryan (all hail) has created a fairly epic <a href="https://jennybc.github.io/purrr-tutorial">purrr tutorial</a> mini-website. (Bonus: She goes into more depth about working with lists and list columns.)</li>
 </ul>
 </div>
-<div id="bonus-accessing-function-source-code" class="section level2" number="2.7">
+<div id="addendum-inspecting-function-source-code" class="section level2" number="2.7">
 <h2>
-<span class="header-section-number">2.7</span> Bonus: Accessing function source code<a class="anchor" aria-label="anchor" href="#bonus-accessing-function-source-code"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.7</span> Addendum: Inspecting function source code<a class="anchor" aria-label="anchor" href="#addendum-inspecting-function-source-code"><i class="fas fa-link"></i></a>
 </h2>
-<p>Looking inside a function is not only important for debugging (i.e. a subject for our next lecture), but it’s also a great way to pick up programming tips and tricks. We refer to this as accessing a function’s <em>source code</em>. For simple functions, accessing the source is a mere matter of typing the function name into your R console (without parentheses) and letting R print the object to screen. Try this yourself with the <code>num_to_alpha</code> function that we created earlier, or, say, <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows</a></code>.</p>
-<p>Unfortunately, the simple print-function-to-screen approach doesn’t work once you start getting into functions that have different dispatch methods (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, even if that sometimes requires a bit more legwork. See Joshua Ulrich’s StackOverflow Q/A <a href="https://stackoverflow.com/a/19226817/4115816">here</a>, or Jenny Bryan’s summary <a href="https://github.com/jennybc/access-r-source">here</a>. Lastly, Jim Hester’s <a href="https://github.com/jimhester/lookup"><strong>lookup</strong></a> package can do all of the legwork for you if don’t feel like dealing with any complications.</p>
-
+<p>Looking inside a function is not only important for debugging — a subject covered in <a href="funcs-adv.html#debugging">3.2</a> — but is also a great way to pick up programming tips and tricks. We refer to this as inspecting a function’s <em>source code</em>. For some functions, viewing the source code is a simple matter of typing the function name into your R console (without the parentheses!) and letting R print the object to screen. Try this yourself with the <code>num_to_alpha</code> function that we created earlier. Or, here’s the source code for <code><a href="https://rdrr.io/r/base/replace.html">replace()</a></code>, arguably the simplest base R function around:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">replace</span>
+<span class="co">#&gt; function (x, list, values) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     x[list] &lt;- values</span>
+<span class="co">#&gt;     x</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fb590dfddd0&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
+<p>Unfortunately, the simple print-function-to-screen approach doesn’t work once you start getting into functions that have different dispatch “methods” (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, although it does require a bit more legwork. As a quick example, consider what happens if we try to look at the source code for R’s generic <code>summary</code> function.</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">summary</span>
+<span class="co">#&gt; function (object, ...) </span>
+<span class="co">#&gt; UseMethod("summary")</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fb58d675670&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
+<p>The <code><a href="https://rdrr.io/r/base/UseMethod.html">UseMethod("summary")</a></code> part is telling us that R will invoke different methods for summarising different objects, depending on their class. Obviously, this makes sense. We wouldn’t expect a data frame to be summarised in the same way as a regression object. To see which methods are available to <code>summary</code> in our current R session, we can use the <code><a href="https://rdrr.io/r/utils/methods.html">methods()</a></code> function:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span><span class="va">summary</span><span class="op">)</span>
+<span class="co">#&gt;  [1] summary,ANY-method             summary,DBIObject-method      </span>
+<span class="co">#&gt;  [3] summary.aov                    summary.aovlist*              </span>
+<span class="co">#&gt;  [5] summary.aspell*                summary.check_packages_in_dir*</span>
+<span class="co">#&gt;  [7] summary.connection             summary.data.frame            </span>
+<span class="co">#&gt;  [9] summary.Date                   summary.default               </span>
+<span class="co">#&gt; [11] summary.Duration*              summary.ecdf*                 </span>
+<span class="co">#&gt; [13] summary.factor                 summary.ggplot*               </span>
+<span class="co">#&gt; [15] summary.glm                    summary.haven_labelled*       </span>
+<span class="co">#&gt; [17] summary.hcl_palettes*          summary.infl*                 </span>
+<span class="co">#&gt; [19] summary.Interval*              summary.lm                    </span>
+<span class="co">#&gt; [21] summary.loess*                 summary.manova                </span>
+<span class="co">#&gt; [23] summary.matrix                 summary.mlm*                  </span>
+<span class="co">#&gt; [25] summary.nls*                   summary.packageStatus*        </span>
+<span class="co">#&gt; [27] summary.Period*                summary.POSIXct               </span>
+<span class="co">#&gt; [29] summary.POSIXlt                summary.ppr*                  </span>
+<span class="co">#&gt; [31] summary.prcomp*                summary.princomp*             </span>
+<span class="co">#&gt; [33] summary.proc_time              summary.rlang_error*          </span>
+<span class="co">#&gt; [35] summary.rlang_trace*           summary.srcfile               </span>
+<span class="co">#&gt; [37] summary.srcref                 summary.stepfun               </span>
+<span class="co">#&gt; [39] summary.stl*                   summary.table                 </span>
+<span class="co">#&gt; [41] summary.tukeysmooth*           summary.vctrs_sclr*           </span>
+<span class="co">#&gt; [43] summary.vctrs_vctr*            summary.warnings              </span>
+<span class="co">#&gt; see '?methods' for accessing help and source code</span></code></pre></div>
+<p>Here we see the list of possible summary methods, which all take the form <code>summary.OBJECTCLASS</code>. Behind the scenes, when we call <code><a href="https://rdrr.io/r/base/summary.html">summary(x)</a></code>, R first determines the class of <code>x</code> and then dispatches to the appropriate summary method. If <code>x</code> is a data frame, it will invoke <code><a href="https://rdrr.io/r/base/summary.html">summary.data.frame()</a></code>. If <code>x</code> is an <code>lm</code> object, it will invoke <code>summary.lm</code>. And so forth.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;As an aside, this insight also provides the key to extending a generic function like &lt;code&gt;summary()&lt;/code&gt;. We simply need to define a new method for the particular object class that we’re interested in (say “foo”) using the same syntax form: &lt;code&gt;summary.foo = ...&lt;/code&gt;.&lt;/p&gt;"><sup>13</sup></a> Accessing the source code of a particular summary method is then a straightforward matter of being explicit about object class. For example:</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">summary.data.frame</span>
+<span class="co">#&gt; function (object, maxsum = 7L, digits = max(3L, getOption("digits") - </span>
+<span class="co">#&gt;     3L), ...) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     ncw &lt;- function(x) {</span>
+<span class="co">#&gt;         z &lt;- nchar(x, type = "w")</span>
+<span class="co">#&gt;         if (any(na &lt;- is.na(z))) {</span>
+<span class="co">#&gt;             z[na] &lt;- nchar(encodeString(z[na]), "b")</span>
+<span class="co">#&gt;         }</span>
+<span class="co">#&gt;         z</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     z &lt;- lapply(X = as.list(object), FUN = summary, maxsum = maxsum, </span>
+<span class="co">#&gt;         digits = 12L, ...)</span>
+<span class="co">#&gt;     nv &lt;- length(object)</span>
+<span class="co">#&gt;     nm &lt;- names(object)</span>
+<span class="co">#&gt;     lw &lt;- numeric(nv)</span>
+<span class="co">#&gt;     nr &lt;- if (nv) </span>
+<span class="co">#&gt;         max(vapply(z, function(x) NROW(x) + !is.null(attr(x, </span>
+<span class="co">#&gt;             "NAs")), integer(1)))</span>
+<span class="co">#&gt;     else 0</span>
+<span class="co">#&gt;     for (i in seq_len(nv)) {</span>
+<span class="co">#&gt;         sms &lt;- z[[i]]</span>
+<span class="co">#&gt;         if (is.matrix(sms)) {</span>
+<span class="co">#&gt;             cn &lt;- paste(nm[i], gsub("^ +", "", colnames(sms), </span>
+<span class="co">#&gt;                 useBytes = TRUE), sep = ".")</span>
+<span class="co">#&gt;             tmp &lt;- format(sms)</span>
+<span class="co">#&gt;             if (nrow(sms) &lt; nr) </span>
+<span class="co">#&gt;                 tmp &lt;- rbind(tmp, matrix("", nr - nrow(sms), </span>
+<span class="co">#&gt;                   ncol(sms)))</span>
+<span class="co">#&gt;             sms &lt;- apply(tmp, 1L, function(x) paste(x, collapse = "  "))</span>
+<span class="co">#&gt;             wid &lt;- sapply(tmp[1L, ], nchar, type = "w")</span>
+<span class="co">#&gt;             blanks &lt;- paste(character(max(wid)), collapse = " ")</span>
+<span class="co">#&gt;             wcn &lt;- ncw(cn)</span>
+<span class="co">#&gt;             pad0 &lt;- floor((wid - wcn)/2)</span>
+<span class="co">#&gt;             pad1 &lt;- wid - wcn - pad0</span>
+<span class="co">#&gt;             cn &lt;- paste0(substring(blanks, 1L, pad0), cn, substring(blanks, </span>
+<span class="co">#&gt;                 1L, pad1))</span>
+<span class="co">#&gt;             nm[i] &lt;- paste(cn, collapse = "  ")</span>
+<span class="co">#&gt;         }</span>
+<span class="co">#&gt;         else {</span>
+<span class="co">#&gt;             sms &lt;- format(sms, digits = digits)</span>
+<span class="co">#&gt;             lbs &lt;- format(names(sms))</span>
+<span class="co">#&gt;             sms &lt;- paste0(lbs, ":", sms, "  ")</span>
+<span class="co">#&gt;             lw[i] &lt;- ncw(lbs[1L])</span>
+<span class="co">#&gt;             length(sms) &lt;- nr</span>
+<span class="co">#&gt;         }</span>
+<span class="co">#&gt;         z[[i]] &lt;- sms</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     if (nv) {</span>
+<span class="co">#&gt;         z &lt;- unlist(z, use.names = TRUE)</span>
+<span class="co">#&gt;         dim(z) &lt;- c(nr, nv)</span>
+<span class="co">#&gt;         if (anyNA(lw)) </span>
+<span class="co">#&gt;             warning("probably wrong encoding in names(.) of column ", </span>
+<span class="co">#&gt;                 paste(which(is.na(lw)), collapse = ", "))</span>
+<span class="co">#&gt;         blanks &lt;- paste(character(max(lw, na.rm = TRUE) + 2L), </span>
+<span class="co">#&gt;             collapse = " ")</span>
+<span class="co">#&gt;         pad &lt;- floor(lw - ncw(nm)/2)</span>
+<span class="co">#&gt;         nm &lt;- paste0(substring(blanks, 1, pad), nm)</span>
+<span class="co">#&gt;         dimnames(z) &lt;- list(rep.int("", nr), nm)</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     else {</span>
+<span class="co">#&gt;         z &lt;- character()</span>
+<span class="co">#&gt;         dim(z) &lt;- c(nr, nv)</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     attr(z, "class") &lt;- c("table")</span>
+<span class="co">#&gt;     z</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fb591a14ac8&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
+<p>By the way, it’s also possible to go the other way around; you can view all of the generic methods associated with a particular object class. For example, there are <em>lots</em> of valid methods associated with data frames:</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span> 
+<span class="co">#&gt;   [1] [                 [[                [[&lt;-              [&lt;-              </span>
+<span class="co">#&gt;   [5] $&lt;-               aggregate         anti_join         anyDuplicated    </span>
+<span class="co">#&gt;   [9] anyNA             arrange_          arrange           as_factor        </span>
+<span class="co">#&gt;  [13] as_tibble         as.col_spec       as.data.frame     as.data.table    </span>
+<span class="co">#&gt;  [17] as.list           as.matrix         as.tbl            auto_copy        </span>
+<span class="co">#&gt;  [21] by                cbind             coerce            coerce&lt;-         </span>
+<span class="co">#&gt;  [25] collapse          collect           complete_         complete         </span>
+<span class="co">#&gt;  [29] compute           count             dim               dimnames         </span>
+<span class="co">#&gt;  [33] dimnames&lt;-        distinct_         distinct          do_              </span>
+<span class="co">#&gt;  [37] do                dplyr_col_modify  dplyr_reconstruct dplyr_row_slice  </span>
+<span class="co">#&gt;  [41] drop_na_          drop_na           droplevels        duplicated       </span>
+<span class="co">#&gt;  [45] edit              expand_           expand            extract_         </span>
+<span class="co">#&gt;  [49] extract           fill_             fill              filter_          </span>
+<span class="co">#&gt;  [53] filter            format            formula           fortify          </span>
+<span class="co">#&gt;  [57] full_join         gather_           gather            ggplot_add       </span>
+<span class="co">#&gt;  [61] glimpse           group_by_         group_by          group_data       </span>
+<span class="co">#&gt;  [65] group_indices_    group_indices     group_keys        group_map        </span>
+<span class="co">#&gt;  [69] group_modify      group_nest        group_size        group_split      </span>
+<span class="co">#&gt;  [73] group_trim        group_vars        groups            head             </span>
+<span class="co">#&gt;  [77] initialize        inner_join        intersect         is.na            </span>
+<span class="co">#&gt;  [81] left_join         Math              merge             mutate_          </span>
+<span class="co">#&gt;  [85] mutate            n_groups          na.exclude        na.omit          </span>
+<span class="co">#&gt;  [89] nest_by           nest_join         nest_legacy       nest             </span>
+<span class="co">#&gt;  [93] Ops               pivot_longer      pivot_wider       plot             </span>
+<span class="co">#&gt;  [97] print             prompt            pull              rbind            </span>
+<span class="co">#&gt; [101] relocate          rename_           rename_with       rename           </span>
+<span class="co">#&gt; [105] replace_na        right_join        row.names         row.names&lt;-      </span>
+<span class="co">#&gt; [109] rows_delete       rows_insert       rows_patch        rows_update      </span>
+<span class="co">#&gt; [113] rows_upsert       rowsum            rowwise           same_src         </span>
+<span class="co">#&gt; [117] sample_frac       sample_n          select_           select           </span>
+<span class="co">#&gt; [121] semi_join         separate_         separate_rows_    separate_rows    </span>
+<span class="co">#&gt; [125] separate          setdiff           setequal          show             </span>
+<span class="co">#&gt; [129] slice_            slice_head        slice_max         slice_min        </span>
+<span class="co">#&gt; [133] slice_sample      slice_tail        slice             slotsFromS3      </span>
+<span class="co">#&gt; [137] split             split&lt;-           spread_           spread           </span>
+<span class="co">#&gt; [141] stack             str               subset            summarise_       </span>
+<span class="co">#&gt; [145] summarise         summary           Summary           t                </span>
+<span class="co">#&gt; [149] tail              tally             tbl_vars          transform        </span>
+<span class="co">#&gt; [153] transmute_        transmute         type.convert      ungroup          </span>
+<span class="co">#&gt; [157] union_all         union             unique            unite_           </span>
+<span class="co">#&gt; [161] unite             unnest_legacy     unnest            unstack          </span>
+<span class="co">#&gt; [165] within           </span>
+<span class="co">#&gt; see '?methods' for accessing help and source code</span></code></pre></div>
+<p>In this brief addendum, we’ve focused on the source code for different dispatch methods. Accessing compiled source code (e.g. written in C or Fortran) is a bit more complicated and, frankly, beyond the scope of what we want to show you here. You are already well-equipped to peruse many of the key R functions that you are likely to be using. For a full length treatment of how to access source code of R functions, we recommend any of the three sources:</p>
+<ul>
+<li>Joshua Ulrich’s StackOverflow Q/A: <a href="https://stackoverflow.com/a/19226817/4115816" class="uri">https://stackoverflow.com/a/19226817/4115816</a>
+</li>
+<li>Jenny Bryan’s summary: <a href="https://github.com/jennybc/access-r-source" class="uri">https://github.com/jennybc/access-r-source</a>
+</li>
+<li>Jim Hester’s <strong>lookup</strong> package, which can do all of the legwork for you if don’t feel like dealing with manual complications: <a href="https://github.com/jimhester/lookup" class="uri">https://github.com/jimhester/lookup</a>
+</li>
+</ul>
 </div>
 </div>
 
@@ -823,7 +990,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </li>
 <li><a class="nav-link" href="#basic-syntax"><span class="header-section-number">2.2</span> Basic syntax</a></li>
 <li>
-<a class="nav-link" href="#a-simple-example"><span class="header-section-number">2.3</span> A simple example</a><ul class="nav navbar-nav">
+<a class="nav-link" href="#simple-square"><span class="header-section-number">2.3</span> A simple example</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#specifying-return-values"><span class="header-section-number">2.3.1</span> Specifying return values</a></li>
 <li><a class="nav-link" href="#specifying-default-argument-values"><span class="header-section-number">2.3.2</span> Specifying default argument values</a></li>
 <li><a class="nav-link" href="#aside-environments-and-lexical-scoping"><span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping</a></li>
@@ -845,7 +1012,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </ul>
 </li>
 <li><a class="nav-link" href="#further-resources"><span class="header-section-number">2.6</span> Further resources</a></li>
-<li><a class="nav-link" href="#bonus-accessing-function-source-code"><span class="header-section-number">2.7</span> Bonus: Accessing function source code</a></li>
+<li><a class="nav-link" href="#addendum-inspecting-function-source-code"><span class="header-section-number">2.7</span> Addendum: Inspecting function source code</a></li>
 </ul>
 
       <div class="book-extra">
@@ -863,7 +1030,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-14.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-16.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
