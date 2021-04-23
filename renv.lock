@@ -65,6 +65,13 @@
       "Repository": "RSPM",
       "Hash": "dbb5e436998a7eba5a9d682060533338"
     },
+    "RhpcBLASctl": {
+      "Package": "RhpcBLASctl",
+      "Version": "0.20-137",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "fb135751ed3f00f33890826823ebe332"
+    },
     "Rttf2pt1": {
       "Package": "Rttf2pt1",
       "Version": "1.3.8",
@@ -398,6 +405,13 @@
       "Repository": "RSPM",
       "Hash": "44594a07a42e5f91fac9f93fda6d0109"
     },
+    "furrr": {
+      "Package": "furrr",
+      "Version": "0.2.2",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "9f8988c1c716080a968a2949d1fd9af3"
+    },
     "future": {
       "Package": "future",
       "Version": "1.21.0",
@@ -666,10 +680,10 @@
     },
     "lwgeom": {
       "Package": "lwgeom",
-      "Version": "0.2-5",
+      "Version": "0.2-6",
       "Source": "Repository",
       "Repository": "RSPM",
-      "Hash": "cf96b08482dfbed1b7ab7d0ba4395077"
+      "Hash": "1db8e70ff9db156a176b642e417030ae"
     },
     "magrittr": {
       "Package": "magrittr",
@@ -1121,6 +1135,13 @@
       "Repository": "RSPM",
       "Hash": "4d894a114dbd4ecafeda5074e7c538e6"
     },
+    "tictoc": {
+      "Package": "tictoc",
+      "Version": "1.0",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "f8cc5adf4671b013434bbe127f35b28c"
+    },
     "tidycensus": {
       "Package": "tidycensus",
       "Version": "0.11.4",
@@ -1170,10 +1191,10 @@
     },
     "tmap": {
       "Package": "tmap",
-      "Version": "3.3",
+      "Version": "3.3-1",
       "Source": "Repository",
       "Repository": "RSPM",
-      "Hash": "3940ee8bb68080f1954d31d454034dae"
+      "Hash": "3c0ea20623eddb47d6bcefd40dd1371b"
     },
     "tmaptools": {
       "Package": "tmaptools",
