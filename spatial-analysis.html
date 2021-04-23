@@ -745,6 +745,8 @@
     title <span class="op">=</span> <span class="st">"Population percentiles"</span>,
     opacity <span class="op">=</span> <span class="fl">1</span>
     <span class="op">)</span></code></pre></div>
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/oregon_leaflet.html" width="672" height="400px">
+</iframe>
 <p>No suprises here. The bulk of Oregon’s population is situated just west of the Cascades, in cities connected along the I-5.</p>
 <p>A particularly useful feature of interactive maps is not being limited by scale or granularity, so you can really dig in to specific areas and neighbourhoods. Here’s an example using home values from Lane County.</p>
 <div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
@@ -779,12 +781,16 @@
     labFormat <span class="op">=</span> <span class="fu">labelFormat</span><span class="op">(</span>prefix <span class="op">=</span> <span class="st">"$"</span><span class="op">)</span>,
     opacity <span class="op">=</span> <span class="fl">1</span>
     <span class="op">)</span></code></pre></div>
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/lane_leaflet.html" width="672" height="400px">
+</iframe>
 <p>Having tried to convince you of the conceptual similarities between building maps with either <strong>leaflet</strong> or <strong>ggplot2</strong> — layering etc. — there’s no denying that the syntax does take some getting used to. If you only plan to spin up the occasional interactive map, that cognitive overhead might be more effort than it’s worth. The good news is that R spatial community has created the <strong>mapview</strong> package (<a href="https://r-spatial.github.io/mapview/">link</a>) for very quickly generating interactive maps. Behind the scenes, it uses <strong>leaflet</strong> to power everything, alongside some sensible defaults. Here’s a quick example that recreates our Lane county home value map from above.</p>
 <div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(mapview) ## Already loaded</span>
 
 <span class="fu">mapview</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/mapview/man/mapView.html">mapview</a></span><span class="op">(</span><span class="va">lane</span>, zcol <span class="op">=</span> <span class="st">"estimate"</span>, 
                  layer.name <span class="op">=</span> <span class="st">'Median home values&lt;br&gt;Lane County, OR'</span><span class="op">)</span></code></pre></div>
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/lane_mapview.html" width="672" height="400px">
+</iframe>
 <p>Super easy, no? While it doesn’t offer quite the same flexibility as the native <strong>leaflet</strong> syntax, <strong>mapview</strong> is a great way to get decent interactive maps up and running with minimal effort.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;I also want to flag the companion &lt;strong&gt;mapedit&lt;/strong&gt; package (&lt;a href="https://github.com/r-spatial/mapedit"&gt;link&lt;/a&gt;), which lets you &lt;em&gt;edit&lt;/em&gt; maps interactively by hand (e.g. redrawing polygons). I’ve used it for some of my projects and it works very well.&lt;/p&gt;'><sup>35</sup></a></p>
 </div>
 <div id="bonus-3-other-map-plotting-options-plot-tmap-etc." class="section level2" number="5.7">
@@ -900,7 +906,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-16.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-23.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

@@ -817,6 +817,7 @@ oregon %>%
     opacity = 1
     )
 ```
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/oregon_leaflet.html" width="672" height="400px"></iframe>
 
 No suprises here. The bulk of Oregon's population is situated just west of the Cascades, in cities connected along the I-5.
 
@@ -859,6 +860,7 @@ lane %>%
     opacity = 1
     )
 ```
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/lane_leaflet.html" width="672" height="400px"></iframe>
 
 Having tried to convince you of the conceptual similarities between building maps with either **leaflet** or **ggplot2** --- layering etc. --- there's no denying that the syntax does take some getting used to. If you only plan to spin up the occasional interactive map, that cognitive overhead might be more effort than it's worth. The good news is that R spatial community has created the **mapview** package ([link](https://r-spatial.github.io/mapview/)) for very quickly generating interactive maps. Behind the scenes, it uses **leaflet** to power everything, alongside some sensible defaults. Here's a quick example that recreates our Lane county home value map from above.
 
@@ -869,6 +871,7 @@ Having tried to convince you of the conceptual similarities between building map
 mapview::mapview(lane, zcol = "estimate", 
                  layer.name = 'Median home values<br>Lane County, OR')
 ```
+<iframe src="http://grantmcdermott.com/ds4e-extras/spatial/lane_mapview.html" width="672" height="400px"></iframe>
 
 Super easy, no? While it doesn't offer quite the same flexibility as the native **leaflet** syntax, **mapview** is a great way to get decent interactive maps up and running with minimal effort.^[I also want to flag the companion **mapedit** package ([link](https://github.com/r-spatial/mapedit)), which lets you _edit_ maps interactively by hand (e.g. redrawing polygons). I've used it for some of my projects and it works very well.]
 

@@ -15,15 +15,6 @@ The code chunk below will install (if necessary) and load all of these packages 
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tictoc, parallel, pbapply, future, future.apply, tidyverse, 
                hrbrthemes, furrr, RhpcBLASctl, memoise, here)
-#> 
-#> The downloaded binary packages are in
-#> 	/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages
-#> 
-#> The downloaded binary packages are in
-#> 	/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages
-#> 
-#> The downloaded binary packages are in
-#> 	/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpwyCj4j/downloaded_packages
 ## ggplot2 plotting theme (optional)
 theme_set(hrbrthemes::theme_ipsum())
 
