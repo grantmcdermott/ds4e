@@ -326,7 +326,7 @@ The previous paragraph elides an important caveat: The default `memoise()` cache
 
 For example, we can specify a new, persistent memoise cache location for our `slow_square()` function within a `.rcache` sub-directory of our current project as follows.
 
-```{r cache_dir, dependson=slow_square}
+```{r cache_dir, dependson=slow_square, cache=FALSE}
 ## Specify local cache directory path
 cache_dir = here(".rcache")
 
@@ -364,7 +364,7 @@ It's possible (and often very helpful) to add verbose prompts to our memoised fu
 1. Check for and load previously cached results. Print the results to screen.
 2. Run our memoised function on any inputs that have not already been evaluated.( These results will be cached in turn for future use.) Again, print the results to screen.
 
-```{r mem_square_verbose,  dependson=mem_square_persistent}
+```{r mem_square_verbose,  dependson=mem_square_persistent, cache=FALSE}
 mem_square_verbose = 
   function(x) {
     ## 1. Load cached data if already generated
