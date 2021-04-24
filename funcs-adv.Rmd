@@ -385,7 +385,7 @@ mem_square_verbose =
 
 And here's an example of the verbose function in action. The output is admittedly less impressive in a book format. But we find this type of real-time feedback to be very informative in live sessions. (Try it yourself, by running the below function.)
 
-```{r m5, dependson=mem_square_verbose, dependson=m4}
+```{r m5, dependson=m4}
 system.time({
   m5 = map_df(1:10, mem_square_verbose)
 })
