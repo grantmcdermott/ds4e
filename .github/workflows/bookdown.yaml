@@ -40,6 +40,12 @@ jobs:
         run: |
           R -e 'install.packages("renv")'
           R -e 'renv::restore()'
+          
+      - name: Decrypt GCP key
+        uses: actions/checkout@v2
+        run: ./.github/secrets/decrypt_secret.sh
+        env:
+          GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
 
       - name: Build site
         run: Rscript -e 'bookdown::render_book("index.Rmd", quiet = TRUE)'
