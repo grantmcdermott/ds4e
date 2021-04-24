@@ -41,8 +41,8 @@ jobs:
           R -e 'install.packages("renv")'
           R -e 'renv::restore()'
           
+      - uses: actions/checkout@v2
       - name: Decrypt GCP key
-        uses: actions/checkout@v2
         run: ./.github/secrets/decrypt_secret.sh
         env:
           GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
