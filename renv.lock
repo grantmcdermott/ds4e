@@ -270,10 +270,10 @@
     },
     "data.table": {
       "Package": "data.table",
-      "Version": "1.14.1",
+      "Version": "1.14.0",
       "Source": "Repository",
       "Repository": "RSPM",
-      "Hash": "4f864376373c7041161eb42aee112add"
+      "Hash": "d1b8b1a821ee564a3515fa6c6d5c52dc"
     },
     "dbplyr": {
       "Package": "dbplyr",
