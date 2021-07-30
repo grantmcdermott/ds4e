@@ -24,7 +24,6 @@ jobs:
       
       - name: Install gdal
         run: |
-          brew install pkg-config
           brew install gdal
 
       - name: Cache Renv packages

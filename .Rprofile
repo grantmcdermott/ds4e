@@ -11,5 +11,12 @@ if (Sys.info()[['sysname']] %in% c('Linux', 'Windows')) {
 	## RSPM does not yet support Mac binaries.
 	options(repos = c(CRAN = "https://cran.rstudio.com/"))
 	# options(renv.config.mran.enabled = TRUE) ## TRUE by default
+	## Also need to configure proj path for sf (assuming gdal installed with brew)
+	## See: https://github.com/r-spatial/sf/#macos
+	options(
+		configure.args = list(
+			sf = "--with-proj-lib=/usr/local/lib/"
+		)
+	)
 }
 options(renv.config.repos.override = getOption("repos"))
