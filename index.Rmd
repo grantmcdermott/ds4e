@@ -36,6 +36,7 @@ renv::restore(prompt = FALSE)
 Note that you might need a few extra packages if you want to build the book locally (unlikely):
 
 ```{r xtra_libs}
+library(bookdown)
 library(bslib)
 library(downlit)
 library(usethis)
