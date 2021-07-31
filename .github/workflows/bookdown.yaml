@@ -19,7 +19,7 @@ jobs:
         uses: r-lib/actions/setup-r@v1
 
       - name: Install pandoc
-        run: r-lib/actions/setup-pandoc@master
+        uses: r-lib/actions/setup-pandoc@v1
       
       - name: Cache Renv packages
         uses: actions/cache@v2
