@@ -35,8 +35,9 @@ jobs:
             libproj-dev
 
       - name: Decrypt GCP key
-        env: GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
-        run: bash ./.github/workflows/secrets/decrypt_secret.sh
+        run: ./.github/workflows/secrets/decrypt_secret.sh
+        env:
+          GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
       
       - name: Cache Renv packages
         uses: actions/cache@v1
