@@ -33,6 +33,10 @@ jobs:
             libgdal-dev \
             libgeos-dev \
             libproj-dev
+
+      - name: Decrypt GCP key
+        env: GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
+        run: bash ./.github/workflows/secrets/decrypt_secret.sh
       
       - name: Cache Renv packages
         uses: actions/cache@v1
@@ -55,12 +59,6 @@ jobs:
         run: |
           if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
           renv::restore()
-          
-      - uses: actions/checkout@v2
-      - name: Decrypt GCP key
-        run: ./.github/workflows/secrets/decrypt_secret.sh
-        env:
-          GCP_ENCRYPT_PASSPHRASE: ${{ secrets.GCP_ENCRYPT_PASSPHRASE }}
 
       - name: Build book
         run: Rscript -e 'bookdown::render_book("index.Rmd", quiet = TRUE)'
