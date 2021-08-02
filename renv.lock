@@ -1201,10 +1201,10 @@
     },
     "tigris": {
       "Package": "tigris",
-      "Version": "1.4",
+      "Version": "1.4.1",
       "Source": "Repository",
       "Repository": "RSPM",
-      "Hash": "00255e04726a40e9f8f79a58a28d4b90"
+      "Hash": "29cb7994d9eb3e93fbcb7b4b74d43a71"
     },
     "tinytex": {
       "Package": "tinytex",
