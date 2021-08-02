@@ -29,10 +29,14 @@ jobs:
           sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt update
           sudo apt install \
-            libudunits2-dev \
+            libcurl4-openssl-dev \
+            libssl-dev \
             libgdal-dev \
+            gdal-bin \
+            libproj-dev \
+            libudunits2-dev \
             libgeos-dev \
-            libproj-dev
+            libicu-dev
 
       - name: Decrypt GCP key
         run: ./.github/workflows/secrets/decrypt_secret.sh
