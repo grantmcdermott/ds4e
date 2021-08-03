@@ -10,6 +10,9 @@ rmd_files: [
 
   # "intro.Rmd",
   
+  # Data section
+  "tidyverse.Rmd",
+  
   # Programming section
   "funcs-intro.Rmd",
   "funcs-adv.Rmd",
