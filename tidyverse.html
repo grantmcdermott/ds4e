@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>1 Tidyverse | Data Science for Economists and Other Animals</title>
+<meta name="author" content="Grant McDermott and Ed Rubin">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-76482472-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-76482472-1');
+  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="css/preamble.css">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Data Science for Economists and Other Animals</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome</a></li>
+<li class="book-part">Data wrangling</li>
+<li><a class="active" href="tidyverse.html"><span class="header-section-number">1</span> Tidyverse</a></li>
+<li class="book-part">Programming</li>
+<li><a class="" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
+<li class="book-part">Analysis</li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
+<li class="book-part">Cloud</li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/grantmcdermott/ds4e">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="tidyverse" class="section level1">
+<h1>
+<span class="header-section-number">1</span> Tidyverse<a class="anchor" aria-label="anchor" href="#tidyverse"><i class="fas fa-link"></i></a>
+</h1>
+<p><em>In this chapter, we will introduce the first of two major data wrangling ecosystems within R. Namely, the very popular <strong>tidyverse</strong> family of packages (<a href="https://www.tidyverse.org">link</a>). As the previous sentence suggests, the <strong>tidyverse</strong> consists of a number of inter-related packages, although we will limit ourselves here to tasks related to data cleaning and wrangling. In the next chapter, we will cover much of the same functionality using the also-very-popular <strong>data.table</strong> package (<a href="https://rdatatable.gitlab.io/data.table">link</a>). Both ecosystems have their merits and ardent proponents. We therefore think it worthwhile to cover both and expose our readers to the different options at hand. While you may find yourself strongly preferring one to the other, our take-home message will be that both offer very powerful frameworks for that most essential of data science tasks: getting your data into shape.</em></p>
+<div id="software-requirements" class="section level2">
+<h2>
+<span class="header-section-number">1.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"><i class="fas fa-link"></i></a>
+</h2>
+<div id="r-packages" class="section level3">
+<h3>
+<span class="header-section-number">1.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
+</h3>
+<p>We only require two R packages for this chapter.</p>
+<ul>
+<li>New: <strong>nycflights13</strong>
+</li>
+<li>Already used: <strong>tidyverse</strong>
+</li>
+</ul>
+<p>We’ll hold off loading these libraries for now, although please make sure that they are installed on your system. If you cloned the companion book repository from GitHub and used the recommended <strong>renv</strong> install method (Chapter <a href="index.html#sw-intro">0.1</a>), then they should already be available to you. If not, then you can install them both with the following command.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'tidyverse'</span>, <span class="st">'nycflights13'</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="tidyverse-basics" class="section level2">
+<h2>
+<span class="header-section-number">1.2</span> Tidyverse basics<a class="anchor" aria-label="anchor" href="#tidyverse-basics"><i class="fas fa-link"></i></a>
+</h2>
+<div id="tidyverse-vs.-base-r-vs.-data.table" class="section level3">
+<h3>
+<span class="header-section-number">1.2.1</span> Tidyverse vs. Base R (vs. data.table)<a class="anchor" aria-label="anchor" href="#tidyverse-vs.-base-r-vs.-data.table"><i class="fas fa-link"></i></a>
+</h3>
+<p>Newcomers to R are often surprised by the degree of choice — some would say fragmentation — within the language. There are, invariably, many ways to achieve the same goal and several packages may provide equivalent functionality via different syntax. One topic over which much digital ink has be spilled is the “tidyverse vs. base R” debate. We won’t delve into this debate here, in part because we have already covered some important base R concepts in the previous chapter. However, we also feel that there are compelling arguments to introduce the <strong>tidyverse</strong> early in a book like the one you are reading.</p>
+<ul>
+<li>The documentation and community support are outstanding.</li>
+<li>Having a consistent philosophy and syntax makes it easier to learn.</li>
+<li>Provides a convenient “front-end” to big data tools that we will cover later in the book.</li>
+<li>For data cleaning, wrangling, and plotting, the <strong>tidyverse</strong> offers some important improvements over base R.</li>
+</ul>
+<p>Having said that, we want to emphasise that the <strong>tidyverse</strong> is not the only game in town for data work in R. For example, we are huge fans of the <strong>data.table</strong> package and will dedicate the entire next chapter to it. A larger point is that, while we may steer you towards certain methods or packages in this book, you shouldn’t feel bound by our recommendations. Base R is extremely flexible and powerful (and stable). There are some things that you’ll have to venture outside of the <strong>tidyverse</strong> for and you may, for example, find that a combination of <strong>tidyverse</strong> and base R is the best solution to a particular problem.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Two excellent base R data manipulation tutorials are available &lt;a href="https://www.rspatial.org/intr/index.html"&gt;here&lt;/a&gt; and &lt;a href="https://github.com/matloff/fasteR"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>1</sup></a></p>
+<p>One point of convenience is that there is often a direct correspondence between a <strong>tidyverse</strong> command and its base R equivalent. These generally follow a <code>tidyverse::snake_case</code> vs <code>base::period.case</code> rule. For example:</p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th>tidyverse</th>
+<th>base</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code><a href="https://readr.tidyverse.org/reference/read_delim.html">?readr::read_csv</a></code></td>
+<td><code><a href="https://rdrr.io/r/utils/read.table.html">?utils::read.csv</a></code></td>
+</tr>
+<tr class="even">
+<td><code><a href="https://dplyr.tidyverse.org/reference/if_else.html">?dplyr::if_else</a></code></td>
+<td><code><a href="https://rdrr.io/r/base/ifelse.html">?base::ifelse</a></code></td>
+</tr>
+<tr class="odd">
+<td><code><a href="https://tibble.tidyverse.org/reference/tibble.html">?tibble::tibble</a></code></td>
+<td><code><a href="https://rdrr.io/r/base/data.frame.html">?base::data.frame</a></code></td>
+</tr>
+<tr class="even">
+<td>etc.</td>
+<td>etc.</td>
+</tr>
+</tbody>
+</table></div>
+<p>If you call up the above examples, you’ll see that the <strong>tidyverse</strong> alternative typically offers some enhancements or other useful options (and occassional restrictions) over its base counterpart.</p>
+</div>
+<div id="tidyverse-packages" class="section level3">
+<h3>
+<span class="header-section-number">1.2.2</span> Tidyverse packages<a class="anchor" aria-label="anchor" href="#tidyverse-packages"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let’s load the <strong>tidyverse</strong> meta-package and take a look at the output.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="co">#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</span>
+<span class="co">#&gt; ✔ ggplot2 3.3.5     ✔ purrr   0.3.4</span>
+<span class="co">#&gt; ✔ tibble  3.1.3     ✔ dplyr   1.0.7</span>
+<span class="co">#&gt; ✔ tidyr   1.1.3     ✔ stringr 1.4.0</span>
+<span class="co">#&gt; ✔ readr   2.0.0     ✔ forcats 0.5.1</span>
+<span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span>
+<span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span>
+<span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></code></pre></div>
+<p>We see that we have actually loaded a number of packages (which could also be loaded individually): <strong>ggplot2</strong>, <strong>tibble</strong>, <strong>dplyr</strong>, etc. We can also see information about the package versions and some namespace conflicts.</p>
+<p>Note that the tidyverse actually comes with a lot more packages than those that are just loaded automatically.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;It also includes a &lt;em&gt;lot&lt;/em&gt; of dependencies upon installation. This is a matter of some &lt;a href="http://www.tinyverse.org/"&gt;controversy&lt;/a&gt;.&lt;/p&gt;'><sup>2</sup></a></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://tidyverse.tidyverse.org/reference/tidyverse_packages.html">tidyverse_packages</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt;  [1] "broom"         "cli"           "crayon"        "dbplyr"       </span>
+<span class="co">#&gt;  [5] "dplyr"         "dtplyr"        "forcats"       "googledrive"  </span>
+<span class="co">#&gt;  [9] "googlesheets4" "ggplot2"       "haven"         "hms"          </span>
+<span class="co">#&gt; [13] "httr"          "jsonlite"      "lubridate"     "magrittr"     </span>
+<span class="co">#&gt; [17] "modelr"        "pillar"        "purrr"         "readr"        </span>
+<span class="co">#&gt; [21] "readxl"        "reprex"        "rlang"         "rstudioapi"   </span>
+<span class="co">#&gt; [25] "rvest"         "stringr"       "tibble"        "tidyr"        </span>
+<span class="co">#&gt; [29] "xml2"          "tidyverse"</span></code></pre></div>
+<p>We’ll use several of these additional packages later in the book (e.g. <strong>rvest</strong> for webscraping). However, for the remainder of this chapter we will focus on two packages:</p>
+<ol style="list-style-type: decimal">
+<li><strong>dplyr</strong></li>
+<li><strong>tidyr</strong></li>
+</ol>
+<p>These are the workhorse packages for data cleaning and wrangling. They are thus the ones that you will likely use most often in your data science work, especially given how much time data work requires in every project.</p>
+</div>
+<div id="an-aside-on-pipes-and" class="section level3">
+<h3>
+<span class="header-section-number">1.2.3</span> An aside on pipes (<code>%&gt;%</code> and <code>|&gt;</code>)<a class="anchor" aria-label="anchor" href="#an-aside-on-pipes-and"><i class="fas fa-link"></i></a>
+</h3>
+<!-- We already learned about pipes in our [lecture](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#91) on the bash shell.  -->
+<p>The <strong>tidyverse</strong> loads its own pipe operator, which is written as <code><a href="https://rstudio.github.io/bslib/reference/pipe.html">%&gt;%</a></code>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The &lt;strong&gt;tidyverse&lt;/strong&gt; pipe is also known as the “magrittr” pipe — &lt;a href="https://en.wikipedia.org/wiki/The_Treachery_of_Images"&gt;geddit?&lt;/a&gt; — and was originally bundled in the &lt;strong&gt;magrittr&lt;/strong&gt; package (&lt;a href="https://magrittr.tidyverse.org/"&gt;link&lt;/a&gt;). This package can do some other neat things if you’re inclined to explore.&lt;/p&gt;'><sup>3</sup></a></p>
+<p>We want to reiterate how cool pipes are, and how using them can dramatically improve the experience of reading and writing code. Compare the following two code chunks, which do exactly the same thing:</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p>Piped code:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mtcars</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">==</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu">group_by</span><span class="op">(</span><span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu">summarise</span><span class="op">(</span>mpg_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt;      am mpg_mean</span>
+<span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0     22.9</span>
+<span class="co">#&gt; 2     1     28.1</span></code></pre></div>
+</div>
+<div class="column" style="width:4%;">
+<p> <!-- an empty Div (with a white space), serving as a column separator --></p>
+</div>
+<div class="column" style="width:48%;">
+<p>Non-piped code:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">summarise</span><span class="op">(</span>
+    <span class="fu">group_by</span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span><span class="op">==</span><span class="fl">4</span><span class="op">)</span>, 
+        <span class="va">am</span><span class="op">)</span>, 
+    mpg_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt;      am mpg_mean</span>
+<span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0     22.9</span>
+<span class="co">#&gt; 2     1     28.1</span></code></pre></div>
+</div>
+</div>
+<p> <!-- an empty Div again to give some extra space before the next block --></p>
+<p>The piped version of the code reads from left to right, exactly how we think of these operations in our heads. Take this object (<code>mtcars</code>), do this (<code>filter</code>), then do this (<code>group_by</code>), then do that (<code>summarise</code>). In contrast, the non-piped code totally inverts the logical order of execution. (The final summarising operation comes first!) Who wants to read things inside out?</p>
+<p>Note that it’s possible write both of the above code chunks on a single line. But splitting the commands over several lines tends to greatly improve the readability of one’s code. Vertical space costs us nothing in a programming environment and so we might as well use it.</p>
+<p>The <strong>tidyverse</strong> pipe (aka <strong>magrittr</strong> pipe) has proven so popular that several other data science and programming languages have implemented their own versions. Indeed, the R Core team introduced a “native” pipe to base R in version 4.1.0, denoted <code>|&gt;</code>. This base R pipe differs somewhat in its implementation and does not offer a perfect like-for-like equivalent.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;A good summary of the differences at the time of write is provided &lt;a href="https://www.r-bloggers.com/2021/05/the-new-r-pipe/"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>4</sup></a> But for the most part, you should be able to use them interchangeably. Using our previous sequence of commands to illustrate:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mtcars</span> |&gt;
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">==</span><span class="fl">4</span><span class="op">)</span> |&gt;
+    <span class="fu">group_by</span><span class="op">(</span><span class="va">am</span><span class="op">)</span> |&gt;
+    <span class="fu">summarise</span><span class="op">(</span>mpg_mean <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; # A tibble: 2 × 2</span>
+<span class="co">#&gt;      am mpg_mean</span>
+<span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0     22.9</span>
+<span class="co">#&gt; 2     1     28.1</span></code></pre></div>
+</div>
+</div>
+<div id="dplyr" class="section level2">
+<h2>
+<span class="header-section-number">1.3</span> dplyr<a class="anchor" aria-label="anchor" href="#dplyr"><i class="fas fa-link"></i></a>
+</h2>
+<p><em>To be added…</em></p>
+
+</div>
+</div>
+
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html">Welcome</a></div>
+<div class="next"><a href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#tidyverse"><span class="header-section-number">1</span> Tidyverse</a></li>
+<li>
+<a class="nav-link" href="#software-requirements"><span class="header-section-number">1.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages"><span class="header-section-number">1.1.1</span> R packages</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#tidyverse-basics"><span class="header-section-number">1.2</span> Tidyverse basics</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#tidyverse-vs.-base-r-vs.-data.table"><span class="header-section-number">1.2.1</span> Tidyverse vs. Base R (vs. data.table)</a></li>
+<li><a class="nav-link" href="#tidyverse-packages"><span class="header-section-number">1.2.2</span> Tidyverse packages</a></li>
+<li><a class="nav-link" href="#an-aside-on-pipes-and"><span class="header-section-number">1.2.3</span> An aside on pipes (%&gt;% and |&gt;)</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#dplyr"><span class="header-section-number">1.3</span> dplyr</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/grantmcdermott/ds4e/blob/master/tidyverse.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/grantmcdermott/ds4e/edit/master/tidyverse.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-08-03.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>

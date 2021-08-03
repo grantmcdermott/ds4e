@@ -56,7 +56,7 @@ Let's iterate over this function using the standard `lapply()` method that we're
 tic()
 serial_ex = lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 24.038 sec elapsed
+#> 24.033 sec elapsed
 ```
 
 
@@ -84,7 +84,7 @@ Okay, back to our example. We're going to implement the parallel iteration using
 tic()
 future_ex = future_lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 12.208 sec elapsed
+#> 12.212 sec elapsed
 ```
 
 
@@ -109,7 +109,7 @@ For those of you who prefer the `purrr::map()` family of functions for iteration
 tic()
 furrr_ex = future_map_dfr(1:12, slow_square)
 toc()
-#> 12.217 sec elapsed
+#> 12.224 sec elapsed
 ```
 
 How easy was that? We hardly had to change our original code and didn't have to pay a cent for all that extra performance.^[Not to flog a dead horse, but as we pointed out in the very [first lecture](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html#26) of this course: Have you seen the price of a [Stata/MP](https://www.stata.com/statamp/) license recently? Not to mention the fact that you effectively pay *per* core...] Congratulate yourself on already being such an expert at parallel programming.
@@ -161,7 +161,7 @@ set.seed(123L) ## Optional to ensure that the results are the same
 tic()
 sim_serial = lapply(1:1e4, bootstrap)
 toc(log = TRUE)
-#> 14.825 sec elapsed
+#> 14.886 sec elapsed
 ```
 
 
@@ -202,7 +202,7 @@ Here's the `future.apply::future_lapply()` parallel implementation. Note that we
 tic()
 sim_future = future_lapply(1:1e4, bootstrap, future.seed=123L)
 toc()
-#> 8.202 sec elapsed
+#> 8.156 sec elapsed
 ```
 
 Remember from our previous programming chapters that `lapply` returns a list (in this case: a list of 10,000 single row data frames). So we would have have to bind these elements together in a single, large data frame if that's what we wanted. For example,
@@ -238,7 +238,7 @@ And here's the `furrr::future_map_dfr()` implementation. Similar to the above, n
 tic()
 sim_furrr = future_map_dfr(1:1e4, bootstrap, .options = furrr_options(seed=123L))
 toc()
-#> 7.969 sec elapsed
+#> 7.963 sec elapsed
 
 head(sim_furrr)
 #>       sim   x_coef
@@ -292,7 +292,7 @@ set.seed(123) ## Optional to ensure results are exactly the same.
 tic()
 sim_pblapply = pblapply(1:1e4, bootstrap, cl = parallel::detectCores())
 toc()
-#> 7.909 sec elapsed
+#> 7.999 sec elapsed
 ```
 
 > **Aside:** On the subject of progress bars, check out the **progressr** package ([link](https://github.com/HenrikBengtsson/progressr)) for a unified framework that works with all kinds of functions and (a)syncronous backends.
@@ -381,7 +381,7 @@ plan(multicore) ## NB: Only works on Unix!
 tic()
 future_ex_mc = future_lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 12.103 sec elapsed
+#> 12.117 sec elapsed
 ```
 
 

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>2 Functions: Advanced concepts | Data Science for Economists and Other Animals</title>
+<title>3 Functions: Advanced concepts | Data Science for Economists and Other Animals</title>
 <meta name="author" content="Grant McDermott and Ed Rubin">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -15,7 +15,7 @@
     gtag('js', new Date());
   
     gtag('config', 'UA-76482472-1');
-  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="css/preamble.css">
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -38,14 +38,16 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome</a></li>
+<li class="book-part">Data wrangling</li>
+<li><a class="" href="tidyverse.html"><span class="header-section-number">1</span> Tidyverse</a></li>
 <li class="book-part">Programming</li>
-<li><a class="" href="funcs-intro.html"><span class="header-section-number">1</span> Functions: Introductory concepts</a></li>
-<li><a class="active" href="funcs-adv.html"><span class="header-section-number">2</span> Functions: Advanced concepts</a></li>
-<li><a class="" href="parallel.html"><span class="header-section-number">3</span> Parallel programming</a></li>
+<li><a class="" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li><a class="active" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -55,15 +57,15 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="funcs-adv" class="section level1">
 <h1>
-<span class="header-section-number">2</span> Functions: Advanced concepts<a class="anchor" aria-label="anchor" href="#funcs-adv"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3</span> Functions: Advanced concepts<a class="anchor" aria-label="anchor" href="#funcs-adv"><i class="fas fa-link"></i></a>
 </h1>
-<div id="software-requirements-1" class="section level2">
+<div id="software-requirements-2" class="section level2">
 <h2>
-<span class="header-section-number">2.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements-2"><i class="fas fa-link"></i></a>
 </h2>
-<div id="r-packages-1" class="section level3">
+<div id="r-packages-2" class="section level3">
 <h3>
-<span class="header-section-number">2.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages-2"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>New: <strong>memoise</strong>
@@ -72,11 +74,11 @@
 </li>
 </ul>
 <p>Install (if necessary) and load these packages now:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/trinker/pacman">"pacman"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"pacman"</span><span class="op">)</span>
 <span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">memoise</span>, <span class="va">tidyverse</span>, <span class="va">here</span><span class="op">)</span></code></pre></div>
-<p>We will also be working with our simple <code>square()</code> function from Chapter <a href="funcs-intro.html#funcs-intro">1</a>. Let’s create it again quickly.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<p>We will also be working with our simple <code>square()</code> function from Chapter <a href="funcs-intro.html#funcs-intro">2</a>. Let’s create it again quickly.</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span> 
@@ -87,31 +89,31 @@
 </div>
 <div id="debugging" class="section level2">
 <h2>
-<span class="header-section-number">2.2</span> Debugging<a class="anchor" aria-label="anchor" href="#debugging"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2</span> Debugging<a class="anchor" aria-label="anchor" href="#debugging"><i class="fas fa-link"></i></a>
 </h2>
 <p>Functions are incredibly powerful and helpful programming tools. They also tend to go wrong a lot. Sometimes this is because we (or someone else) made a mistake in writing up the code. Othertimes it is because of user error (e.g. invalid inputs). Regardless, this is where we have to begin debugging the code to figure out where and why things went wrong.</p>
 <div id="debugging-tools-in-rstudio" class="section level3">
 <h3>
-<span class="header-section-number">2.2.1</span> Debugging tools in RStudio<a class="anchor" aria-label="anchor" href="#debugging-tools-in-rstudio"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2.1</span> Debugging tools in RStudio<a class="anchor" aria-label="anchor" href="#debugging-tools-in-rstudio"><i class="fas fa-link"></i></a>
 </h3>
-<p>R and the RStudio IDE provide a number of excellent tools for debugging. We’ll walk through these together in a series of live coding examples in a minute. But, first here is a visual summary, cropped directly from the <a href="https://www.rstudio.com/resources/cheatsheets/#ide">RStudio IDE Cheat Sheet</a>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;RStudio hosts a bunch of excellent &lt;a href="https://www.rstudio.com/resources/cheatsheets/"&gt;cheat sheets&lt;/a&gt; that are all worth checking out.&lt;/p&gt;'><sup>14</sup></a></p>
+<p>R and the RStudio IDE provide a number of excellent tools for debugging. We’ll walk through these together in a series of live coding examples in a minute. But, first here is a visual summary, cropped directly from the <a href="https://www.rstudio.com/resources/cheatsheets/#ide">RStudio IDE Cheat Sheet</a>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;RStudio hosts a bunch of excellent &lt;a href="https://www.rstudio.com/resources/cheatsheets/"&gt;cheat sheets&lt;/a&gt; that are all worth checking out.&lt;/p&gt;'><sup>18</sup></a></p>
 <div class="inline-figure"><img src="pics/funcs-adv/rstudio-debug.png" width="100%" style="display: block; margin: auto;"></div>
 </div>
 <div id="debug-mode" class="section level3">
 <h3>
-<span class="header-section-number">2.2.2</span> Debug mode<a class="anchor" aria-label="anchor" href="#debug-mode"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2.2</span> Debug mode<a class="anchor" aria-label="anchor" href="#debug-mode"><i class="fas fa-link"></i></a>
 </h3>
 <blockquote>
 <p><strong>Note:</strong> To get the most out of this section, we strongly recommend running the code interactively on your own computer and following along with the text.*</p>
 </blockquote>
-<p>As the figure above suggests, there are various ways to enter so-called <strong>debug mode</strong>. This is where you “step inside” a function and evaluate objects <em>within that function environment</em>. In other words, it allows you to pause time and interact with internal function objects that are normally hidden from your global environment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Remember from our Chapter &lt;a href="funcs-intro.html#funcs-intro"&gt;1&lt;/a&gt;: Functions operate in semi-sandboxed &lt;a href="http://adv-r.had.co.nz/Environments.html"&gt;environments&lt;/a&gt; determined by R’s &lt;a href="http://adv-r.had.co.nz/Functions.html#lexical-scoping"&gt;lexical scoping&lt;/a&gt; rules.&lt;/p&gt;'><sup>15</sup></a> Let’s practice with an example.</p>
+<p>As the figure above suggests, there are various ways to enter so-called <strong>debug mode</strong>. This is where you “step inside” a function and evaluate objects <em>within that function environment</em>. In other words, it allows you to pause time and interact with internal function objects that are normally hidden from your global environment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Remember from our Chapter &lt;a href="funcs-intro.html#funcs-intro"&gt;2&lt;/a&gt;: Functions operate in semi-sandboxed &lt;a href="http://adv-r.had.co.nz/Environments.html"&gt;environments&lt;/a&gt; determined by R’s &lt;a href="http://adv-r.had.co.nz/Functions.html#lexical-scoping"&gt;lexical scoping&lt;/a&gt; rules.&lt;/p&gt;'><sup>19</sup></a> Let’s practice with an example.</p>
 <p>Suppose we feed some deliberately invalid input — i.e. a character string — to our <code>square()</code> function:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="st">"one"</span><span class="op">)</span>
 <span class="co">#&gt; Error in x^2: non-numeric argument to binary operator</span></code></pre></div>
 <p>Now, of course, we already knew that this function call would fail. (D’uh, you can’t square a string.) In this case, R also produced an informative error message. However, notice that we don’t actually get to see the point of failure — i.e. the line of code where our function tried square the value “one”. For this we need to enter debug mode.</p>
-<p>While there are several ways to do trigger the debugger, we recommend the <strong><code><a href="https://rdrr.io/r/base/debug.html">debugonce()</a></code></strong> function. As the name suggests, running <code><a href="https://rdrr.io/r/base/debug.html">debugonce(square)</a></code> will cause us to enter debug mode the next time we call <code>square()</code>, but only that one time.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The generic &lt;code&gt;debug()&lt;/code&gt; function works well too. However, there are some edge cases where running it inside the RStudio IDE can result in a recursive debugging loop (i.e. hell). So we advise avoiding &lt;code&gt;debug()&lt;/code&gt; in favour of &lt;code&gt;debugonce()&lt;/code&gt; unless you are running R (or calling R scripts) directly from the terminal.&lt;/p&gt;"><sup>16</sup></a> Let’s try it in a live session:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<p>While there are several ways to do trigger the debugger, we recommend the <strong><code><a href="https://rdrr.io/r/base/debug.html">debugonce()</a></code></strong> function. As the name suggests, running <code><a href="https://rdrr.io/r/base/debug.html">debugonce(square)</a></code> will cause us to enter debug mode the next time we call <code>square()</code>, but only that one time.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;The generic &lt;code&gt;debug()&lt;/code&gt; function works well too. However, there are some edge cases where running it inside the RStudio IDE can result in a recursive debugging loop (i.e. hell). So we advise avoiding &lt;code&gt;debug()&lt;/code&gt; in favour of &lt;code&gt;debugonce()&lt;/code&gt; unless you are running R (or calling R scripts) directly from the terminal.&lt;/p&gt;"><sup>20</sup></a> Let’s try it in a live session:</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Run this next chunk yourself in a live session</span>
 <span class="fu"><a href="https://rdrr.io/r/base/debug.html">debugonce</a></span><span class="op">(</span><span class="va">square</span><span class="op">)</span>
 <span class="fu">square</span><span class="op">(</span><span class="st">"one"</span><span class="op">)</span></code></pre></div>
@@ -142,7 +144,7 @@
 </div>
 <div id="aside-manual-vs-prompted-debugging" class="section level3">
 <h3>
-<span class="header-section-number">2.2.3</span> Aside: Manual vs prompted debugging<a class="anchor" aria-label="anchor" href="#aside-manual-vs-prompted-debugging"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.2.3</span> Aside: Manual vs prompted debugging<a class="anchor" aria-label="anchor" href="#aside-manual-vs-prompted-debugging"><i class="fas fa-link"></i></a>
 </h3>
 <p>First, an aside: We don’t always have to manually invoke the debugger when a function fails. For example, with <code><a href="https://rdrr.io/r/base/debug.html">debugonce()</a></code>. In fact, RStudio will often prompt you to “Rerun with Debug” automatically if something goes wrong. You will see something like the below screenshot in your console when this happens. (Ignore the specific function and error message and rather focus on the blue icons on the right.)</p>
 <div class="inline-figure"><img src="pics/funcs-adv/debug_prompt.png" width="100%" style="display: block; margin: auto;"></div>
@@ -151,10 +153,10 @@
 </div>
 <div id="catching-user-errors" class="section level2">
 <h2>
-<span class="header-section-number">2.3</span> Catching user errors<a class="anchor" aria-label="anchor" href="#catching-user-errors"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3</span> Catching user errors<a class="anchor" aria-label="anchor" href="#catching-user-errors"><i class="fas fa-link"></i></a>
 </h2>
 <p>In the previous chapter, we implicitly assumed that the user knows exactly how to use our function. However, this isn’t always the case. A related, but more complicated, case is when we mistakenly input the wrong type of argument into a function. Let’s return to our earlier example, where we “accidentally” entered a string into our <code>square()</code> function.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">square</span><span class="op">(</span><span class="st">"one"</span><span class="op">)</span> 
 <span class="co">#&gt; Error in x^2: non-numeric argument to binary operator</span></code></pre></div>
 <p>This may just seem like a case of particularly dumb user error. However — trust us — its very easy to run into this category of problem when you have a complex analysis that consists of, say, a series of nested functions. (One function calling another, calling another…) For whatever reason, a single function or iteration may produce slightly different output than expected and this can bring your entire analysis crashing to its knees, because the output can’t be used in the next part of the chain. This is especially frustrating when you are running a multicore process (e.g. a parallel Monte Carlo simulation), since the program will first complete the <em>entire</em> run — perhaps taking several hours — before informing you right at the end that there was an error somewhere and no results (even for the valid iterations!) have been retained.</p>
@@ -167,10 +169,10 @@
 </ol>
 <div id="function-specific-control-flow" class="section level3">
 <h3>
-<span class="header-section-number">2.3.1</span> Function-specific control flow<a class="anchor" aria-label="anchor" href="#function-specific-control-flow"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.1</span> Function-specific control flow<a class="anchor" aria-label="anchor" href="#function-specific-control-flow"><i class="fas fa-link"></i></a>
 </h3>
-<p>We covered the basics of control flow in Chapter <a href="funcs-intro.html#funcs-intro">1</a>. Let’s put the same concepts to use for debugging. In this particular function, for example, we know that our function requires a numeric input. So we can check whether the input argument is a numeric and use an <code>ifelse</code> statement to produce a warning/error message if it fails this test. Consider, then, a slightly modified version of our function, which we’ll call <code>square_ifelse</code>.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<p>We covered the basics of control flow in Chapter <a href="funcs-intro.html#funcs-intro">2</a>. Let’s put the same concepts to use for debugging. In this particular function, for example, we know that our function requires a numeric input. So we can check whether the input argument is a numeric and use an <code>ifelse</code> statement to produce a warning/error message if it fails this test. Consider, then, a slightly modified version of our function, which we’ll call <code>square_ifelse</code>.</p>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_ifelse</span> <span class="op">=</span> 
   <span class="kw">function</span> <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span> 
     <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> <span class="co">## Check valid argument to our function.</span>
@@ -182,14 +184,14 @@
     <span class="op">}</span>
   <span class="op">}</span></code></pre></div>
 <p>Test it.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">square_ifelse</span><span class="op">(</span><span class="st">"one"</span><span class="op">)</span> <span class="co">## Will trigger our warning message.</span>
 <span class="co">#&gt; Sorry, you need to provide a numeric input variable.</span>
 <span class="fu">square_ifelse</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="co">## Works.</span>
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     1             1</span></code></pre></div>
 <p>We can achieve a very similar result, but with less code, using the generic <code><a href="https://rdrr.io/r/base/stop.html">stop()</a></code> function.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_stop</span> <span class="op">=</span> 
   <span class="kw">function</span> <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span> 
     <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="st">"Sorry, you need to provide a numeric input variable."</span><span class="op">)</span>
@@ -205,22 +207,22 @@
 </div>
 <div id="use-basetrycatch" class="section level3">
 <h3>
-<span class="header-section-number">2.3.2</span> Use <code>base::tryCatch()</code><a class="anchor" aria-label="anchor" href="#use-basetrycatch"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.2</span> Use <code>base::tryCatch()</code><a class="anchor" aria-label="anchor" href="#use-basetrycatch"><i class="fas fa-link"></i></a>
 </h3>
 <p>Another, more general option is to use the <code><a href="https://rdrr.io/r/base/conditions.html">base::tryCatch()</a></code> function for handling errors and warnings. Let us demonstrate its usefulness with two separate examples.</p>
 <div id="wrap-trycatch-around-an-entire-function" class="section level4">
 <h4>
-<span class="header-section-number">2.3.2.1</span> Wrap <code>tryCatch()</code> around an entire function<a class="anchor" aria-label="anchor" href="#wrap-trycatch-around-an-entire-function"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.2.1</span> Wrap <code>tryCatch()</code> around an entire function<a class="anchor" aria-label="anchor" href="#wrap-trycatch-around-an-entire-function"><i class="fas fa-link"></i></a>
 </h4>
 <p>The first simply wraps a generic <code>tryCatch</code> statement <em>around</em> our existing <code>square</code> function. Note the invocation of R’s in-built “error” class, which in turn is passed to another in-built function called <code>message</code>. Basically, we are telling R to produce a particular message whenever it recognizes that an error (any error!) has occurred while executing our bespoke function.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span><span class="op">(</span>
   <span class="fu">square</span><span class="op">(</span><span class="st">"three"</span><span class="op">)</span>, 
   error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Oops. Did you try to square a string instead of a number?"</span><span class="op">)</span>
   <span class="op">)</span>
 <span class="co">#&gt; Oops. Did you try to square a string instead of a number?</span></code></pre></div>
 <p>This first example works well, but it has the downside of throwing out everything that went into the function in favour of a single error message. Not only that, but it could throw out potentially valid input-output because of a single error. To see this more clearly, let’s feed our function a vector of inputs, where only one input is invalid.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span><span class="op">(</span>
   <span class="fu">square</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="st">"three"</span><span class="op">)</span><span class="op">)</span>, 
   error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Oops. Did you try to square a string instead of a number?"</span><span class="op">)</span>
@@ -230,10 +232,10 @@
 </div>
 <div id="use-trycatch-inside-a-function" class="section level4">
 <h4>
-<span class="header-section-number">2.3.2.2</span> Use <code>tryCatch()</code> inside a function<a class="anchor" aria-label="anchor" href="#use-trycatch-inside-a-function"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.2.2</span> Use <code>tryCatch()</code> inside a function<a class="anchor" aria-label="anchor" href="#use-trycatch-inside-a-function"><i class="fas fa-link"></i></a>
 </h4>
 <p>The second example avoids the above problem by invoking <code><a href="https://rdrr.io/r/base/conditions.html">tryCatch()</a></code> <em>inside</em> our user-defined function. The principle is very much the same as before: We’re going to tell R what to give us whenever it encounters an error. However, we are going to be more explicit about where we expect that error to occur. Moreover, instead of simply producing an error message, this time we’ll instruct R to return an explicit, alternative value (i.e. <code>NA</code>).</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_trycatch</span> <span class="op">=</span>
   <span class="kw">function</span> <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
     <span class="co">## tryCatch goes here now. Produce an NA value if we can't square the input.</span>
@@ -244,7 +246,7 @@
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span>
   <span class="op">}</span></code></pre></div>
 <p>Let’s see that it works on our previous input vector, where only one input was invalid.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">square_trycatch</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="st">"three"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     1            NA</span>
@@ -252,11 +254,11 @@
 <span class="co">#&gt; 3 three            NA</span></code></pre></div>
 <p>Huh? Looks like it half worked. We get the input values, but now all of the squared values have been converted to <code>NA</code>. Why do you think that is? <strong>Challenge:</strong> See if you can figure out the problem on your own using <code><a href="https://rdrr.io/r/base/debug.html">debugonce(square_trycatch)</a></code> before continuing…</p>
 <p>Let’s take a deeper look at our input vector:</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="st">"three"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt;  chr [1:3] "1" "2" "three"</span></code></pre></div>
-<p><em>Ah-ha.</em> R has coerced every element in the input vector to a character string. (Remember: Vectors can only contain elements of the same type.) The solution is to use an input array that allows different element types — i.e. a <em>list</em>. This, in turn, requires modifying the way that we invoke the function by putting it in a <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code> call. As you’ll hopefully remember from Chapter <a href="funcs-intro.html#funcs-intro">1</a>, these two functions are syntactically identical, so we’ll just use the latter:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<p><em>Ah-ha.</em> R has coerced every element in the input vector to a character string. (Remember: Vectors can only contain elements of the same type.) The solution is to use an input array that allows different element types — i.e. a <em>list</em>. This, in turn, requires modifying the way that we invoke the function by putting it in a <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code> call. As you’ll hopefully remember from Chapter <a href="funcs-intro.html#funcs-intro">2</a>, these two functions are syntactically identical, so we’ll just use the latter:</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">map</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="st">"three"</span><span class="op">)</span>,  <span class="va">square_trycatch</span><span class="op">)</span> 
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt;   value value_squared</span>
@@ -270,11 +272,11 @@
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1 three            NA</span></code></pre></div>
 <p>As we practiced the previous chapter, we may wish to bind the resulting list of data frames into a single data frame using <code><a href="https://dplyr.tidyverse.org/reference/bind.html">dplyr::bind_rows()</a></code> or, more simply, <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map_df()</a></code>. However, that actually produces errors of its own because all of the columns need to be the same.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">map_df</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="st">"three"</span><span class="op">)</span>,  <span class="va">square_trycatch</span><span class="op">)</span>
 <span class="co">#&gt; Error: Can't combine `..1$value` &lt;double&gt; and `..3$value` &lt;character&gt;.</span></code></pre></div>
 <p>The somewhat pedantic solution is to make sure that the offending input is coerced to a numeric within the function itself. Note that this will introduce coercion warnings of its own, but at least it won’t fail.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_trycatch2</span> <span class="op">=</span>
   <span class="kw">function</span> <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">x_sq</span> <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html">tryCatch</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="cn">NA_real_</span><span class="op">)</span> 
@@ -296,10 +298,10 @@
 </div>
 <div id="use-purrrsafely-and-family" class="section level3">
 <h3>
-<span class="header-section-number">2.3.3</span> Use <code>purrr::safely()</code> and family<a class="anchor" aria-label="anchor" href="#use-purrrsafely-and-family"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.3.3</span> Use <code>purrr::safely()</code> and family<a class="anchor" aria-label="anchor" href="#use-purrrsafely-and-family"><i class="fas fa-link"></i></a>
 </h3>
 <p>Finally, for those of you who prefer a <strong>tidyverse</strong> equivalent of <code><a href="https://rdrr.io/r/base/conditions.html">tryCatch()</a></code>, you can use <code><a href="https://purrr.tidyverse.org/reference/safely.html">purrr::safely()</a></code> and its related functions (including <code><a href="https://purrr.tidyverse.org/reference/safely.html">purrr::possibly()</a></code> and other variants). We won’t go through the entire rigmarole again, so here’s a simple flavour of how they work:</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_simple</span> <span class="op">=</span>
   <span class="kw">function</span> <span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">x_sq</span> <span class="op">=</span> <span class="va">x</span><span class="op">^</span><span class="fl">2</span>
@@ -312,7 +314,7 @@
 <span class="co">#&gt; $error</span>
 <span class="co">#&gt; &lt;simpleError in x^2: non-numeric argument to binary operator&gt;</span></code></pre></div>
 <p>You can also specify default behaviour in case of an error:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">square_safely</span> <span class="op">=</span> <span class="fu">safely</span><span class="op">(</span><span class="va">square_simple</span>, otherwise <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span>
 <span class="fu">square_safely</span><span class="op">(</span><span class="st">"three"</span><span class="op">)</span>
 <span class="co">#&gt; $result</span>
@@ -324,13 +326,13 @@
 </div>
 <div id="caching-memoisation" class="section level2">
 <h2>
-<span class="header-section-number">2.4</span> Caching (memoisation)<a class="anchor" aria-label="anchor" href="#caching-memoisation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.4</span> Caching (memoisation)<a class="anchor" aria-label="anchor" href="#caching-memoisation"><i class="fas fa-link"></i></a>
 </h2>
 <p>If you’ve ever used R Markdown, then you’ve already experienced the benefits (and occasional frustrations) of caching. Caching can also be extremely useful for regular R scripts and analyses. For example, we may wish to save some computationally-expensive output so that we don’t have to run it again. On a related but more sinister note, programs and functions can crash midway through completion. This can happen for a variety of reasons: invalid function arguments buried in iterated input, computer malfunction, memory limits, power outages, timeouts, etc. Regardless, it can be a fairly soul-splintering experience to lose all of your work if you’re working on a particularly lengthy simulation or computation problem.</p>
 <p>We’ll get to parallel computation in the next chapter, but the problem is <em>even worse</em> there. What typically happens with a parallelized program is that the entire run will complete (potentially taking many hours or days) and only reveal an error right at the end… with no saved output!</p>
 <p>Fortunately, R has our back with several caching tools. Here we’re going to focus on the <strong>memoise</strong> package (<a href="https://github.com/r-lib/memoise"><strong>link</strong></a>). Note that <a href="https://en.wikipedia.org/wiki/Memoization">memoisation/memoization</a> refers to a particular form of caching where we save (i.e. “remember”) the results of expensive functions calls, so that we don’t have to repeat them in the future.</p>
 <p>Let’s start by creating a “slow” version of our simple square function — that waits for two seconds before doing anything — which we’ll creatively call <code>slow_square()</code>. Of course, this is just meant to emulate a computationally-expensive operation, but the basic principles will carry through intact.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Emulate slow function</span>
 <span class="va">slow_square</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -338,7 +340,7 @@
     <span class="fu">square</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
     <span class="op">}</span></code></pre></div>
 <p>Enabling caching (i.e. memoisation) of our slow function is a simple matter of feeding it to <code><a href="https://rdrr.io/pkg/memoise/man/memoise.html">memoise::memoise()</a></code>.</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(memoise) ## Already loaded</span>
 
 <span class="va">mem_square</span> <span class="op">=</span> <span class="fu">memoise</span><span class="op">(</span><span class="va">slow_square</span><span class="op">)</span></code></pre></div>
@@ -347,21 +349,21 @@
 </blockquote>
 <p>The first time we execute our memoised <code>slow_square_mem()</code> function, it won’t be able to draw on any saved results. This means that it will have to run through all of the underlying computation. In the process of doing so, however, it will save both the inputs and results for immediate retrieval later on.</p>
 <p>Let’s run some examples and compare actual timings. For the first run, we’ll iterate over our function using the numbers 1 through 10 and save the resulting data frame to an object called <code>m1</code>.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m1</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.034   0.000  20.054</span></code></pre></div>
+<span class="co">#&gt;   0.033   0.000  20.053</span></code></pre></div>
 <p>As expected this took 20 seconds because of the enforced two second wait during each iteration. Now, we try calling the function a second time — iterating over the exact same inputs and saving to a new <code>m2</code> object — to see if caching makes a difference…</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m2</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
 <span class="co">#&gt;   0.001   0.000   0.001</span></code></pre></div>
 <p>And does it ever! We’re down to a fraction of a second, since we didn’t need to run at all again. Rather, we simply recalled the previously saved (i.e. memoised) results. And just to prove that we’re really saving meaningful output, here is a comparison of the two data frames, as well as the printed output of <code>m2</code>.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html">all.equal</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span><span class="op">)</span>
 <span class="co">#&gt; [1] TRUE</span>
 <span class="va">m2</span>
@@ -377,20 +379,20 @@
 <span class="co">#&gt; 9      9            81</span>
 <span class="co">#&gt; 10    10           100</span></code></pre></div>
 <p>Finally, note that our caching function is smart enough to distinguish between previously cached and non-cached results. For example, consider what happens ifweinclude five more numbers in the <code>x</code> input vector.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m3</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, <span class="va">mem_square</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.006   0.000  10.016</span></code></pre></div>
+<span class="co">#&gt;   0.005   0.000  10.016</span></code></pre></div>
 <p>As expected, this only took (5 <span class="math inline">\(\times\)</span> 2 = ) 10 seconds to generate the new results from scratch, with the previous results being called up from the cache. You can think of preceding example as approximating a real-life scenario, where your program crashes or halts midway through its run, yet you don’t need to restart all the way at the beginning. These kinds of interruptions happen more frequently than you might expect, especially if you’re working with complex analyses and high-performance computing tools (e.g. preemptible nodes or VM instances). Being smart about caching has saved us <em>many</em> lost hours and it could do the same for you.</p>
 <div id="caching-across-r-sessions" class="section level3">
 <h3>
-<span class="header-section-number">2.4.1</span> Caching across R sessions<a class="anchor" aria-label="anchor" href="#caching-across-r-sessions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.4.1</span> Caching across R sessions<a class="anchor" aria-label="anchor" href="#caching-across-r-sessions"><i class="fas fa-link"></i></a>
 </h3>
 <p>The previous paragraph elides an important caveat: The default <code>memoise()</code> cache is only valid for the current R session. You can see this more clearly by exploring the help documentation of the function, where you will note the internal <code>cache = cache_memory()</code> argument. To enable caching that persists across sessions — including when your computer crashes — you need to specify a dedicated cache directory with <code>cache = cache_filesystem(PATH)</code>. This directory can be located anywhere on your system (or, indeed, on a linked cloud storage service) and you can even have multiple cache directories for different projects. Our only modest recommendation is that you use a <code>.rcache/</code> naming pattern to keep things orderly.</p>
 <p>For example, we can specify a new, persistent memoise cache location for our <code>slow_square()</code> function within a <code>.rcache</code> sub-directory of our current project as follows.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Specify local cache directory path</span>
 <span class="va">cache_dir</span> <span class="op">=</span> <span class="fu">here</span><span class="op">(</span><span class="st">".rcache"</span><span class="op">)</span>
 
@@ -400,7 +402,7 @@
 <span class="co">## (Re-)memoise our function with the persistent cache location</span>
 <span class="va">mem_square_persistent</span> <span class="op">=</span> <span class="fu">memoise</span><span class="op">(</span><span class="va">slow_square</span>, cache <span class="op">=</span> <span class="fu">cache_filesystem</span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Run our new memoised function and check that it saved the cached output to the specified directory.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m4</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="va">mem_square_persistent</span><span class="op">)</span>
 
 <span class="va">cached_files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span>
@@ -411,14 +413,14 @@
 </div>
 <div id="verbose-output" class="section level3">
 <h3>
-<span class="header-section-number">2.4.2</span> Verbose output<a class="anchor" aria-label="anchor" href="#verbose-output"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.4.2</span> Verbose output<a class="anchor" aria-label="anchor" href="#verbose-output"><i class="fas fa-link"></i></a>
 </h3>
 <p>It’s possible (and often very helpful) to add verbose prompts to our memoised functions. Consider the code below, which which folds our <code>mem_square_persistent()</code> function into two sections:</p>
 <ol style="list-style-type: decimal">
 <li>Check for and load previously cached results. Print the results to screen.</li>
 <li>Run our memoised function on any inputs that have not already been evaluated.( These results will be cached in turn for future use.) Again, print the results to screen.</li>
 </ol>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mem_square_verbose</span> <span class="op">=</span> 
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
     <span class="co">## 1. Load cached data if already generated</span>
@@ -436,7 +438,7 @@
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">my_data</span><span class="op">)</span>
   <span class="op">}</span></code></pre></div>
 <p>And here’s an example of the verbose function in action. The output is admittedly less impressive in a book format. But we find this type of real-time feedback to be very informative in live sessions. (Try it yourself, by running the below function.)</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="op">{</span>
   <span class="va">m5</span> <span class="op">=</span> <span class="fu">map_df</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="va">mem_square_verbose</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
@@ -451,16 +453,16 @@
 <span class="co">#&gt; Generating data from scratch for x = 9 ...ok</span>
 <span class="co">#&gt; Generating data from scratch for x = 10 ...ok</span>
 <span class="co">#&gt;    user  system elapsed </span>
-<span class="co">#&gt;   0.008   0.004   6.018</span></code></pre></div>
+<span class="co">#&gt;   0.012   0.000   6.018</span></code></pre></div>
 <p>Finally, albeit probably unnecessary, we can also prove to ourselves that we’ve added the three new cases (i.e. for <code>8:10</code>) to our cache directory by comparing to what we had previously.</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="va">cache_dir</span><span class="op">)</span>, <span class="va">cached_files</span><span class="op">)</span>
 <span class="co">#&gt; [1] "4cecd4ddcc3e39e2" "e8f1fd81cf9238e8" "f87e79515d7f3630"</span></code></pre></div>
 </div>
 </div>
 <div id="further-resources-1" class="section level2">
 <h2>
-<span class="header-section-number">2.5</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.5</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources-1"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
 <li>RStudio have a number of great debugging resources. We recommend <a href="https://rstudio.com/resources/rstudioconf-2018/debugging-techniques-in-rstudio/"><em>Debugging techniques in RStudio</em></a> (a recorded talk by Amanda Gadrow) and <a href="https://support.rstudio.com/hc/en-us/articles/205612627-Debugging-with-RStudio">Debugging with RStudio</a> (Jonathan McPherson).</li>
@@ -471,36 +473,36 @@
 </div>
 
   <div class="chapter-nav">
-<div class="prev"><a href="funcs-intro.html"><span class="header-section-number">1</span> Functions: Introductory concepts</a></div>
-<div class="next"><a href="parallel.html"><span class="header-section-number">3</span> Parallel programming</a></div>
+<div class="prev"><a href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></div>
+<div class="next"><a href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#funcs-adv"><span class="header-section-number">2</span> Functions: Advanced concepts</a></li>
+<li><a class="nav-link" href="#funcs-adv"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
 <li>
-<a class="nav-link" href="#software-requirements-1"><span class="header-section-number">2.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages-1"><span class="header-section-number">2.1.1</span> R packages</a></li></ul>
+<a class="nav-link" href="#software-requirements-2"><span class="header-section-number">3.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages-2"><span class="header-section-number">3.1.1</span> R packages</a></li></ul>
 </li>
 <li>
-<a class="nav-link" href="#debugging"><span class="header-section-number">2.2</span> Debugging</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#debugging-tools-in-rstudio"><span class="header-section-number">2.2.1</span> Debugging tools in RStudio</a></li>
-<li><a class="nav-link" href="#debug-mode"><span class="header-section-number">2.2.2</span> Debug mode</a></li>
-<li><a class="nav-link" href="#aside-manual-vs-prompted-debugging"><span class="header-section-number">2.2.3</span> Aside: Manual vs prompted debugging</a></li>
+<a class="nav-link" href="#debugging"><span class="header-section-number">3.2</span> Debugging</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#debugging-tools-in-rstudio"><span class="header-section-number">3.2.1</span> Debugging tools in RStudio</a></li>
+<li><a class="nav-link" href="#debug-mode"><span class="header-section-number">3.2.2</span> Debug mode</a></li>
+<li><a class="nav-link" href="#aside-manual-vs-prompted-debugging"><span class="header-section-number">3.2.3</span> Aside: Manual vs prompted debugging</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#catching-user-errors"><span class="header-section-number">2.3</span> Catching user errors</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#function-specific-control-flow"><span class="header-section-number">2.3.1</span> Function-specific control flow</a></li>
-<li><a class="nav-link" href="#use-basetrycatch"><span class="header-section-number">2.3.2</span> Use base::tryCatch()</a></li>
-<li><a class="nav-link" href="#use-purrrsafely-and-family"><span class="header-section-number">2.3.3</span> Use purrr::safely() and family</a></li>
+<a class="nav-link" href="#catching-user-errors"><span class="header-section-number">3.3</span> Catching user errors</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#function-specific-control-flow"><span class="header-section-number">3.3.1</span> Function-specific control flow</a></li>
+<li><a class="nav-link" href="#use-basetrycatch"><span class="header-section-number">3.3.2</span> Use base::tryCatch()</a></li>
+<li><a class="nav-link" href="#use-purrrsafely-and-family"><span class="header-section-number">3.3.3</span> Use purrr::safely() and family</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#caching-memoisation"><span class="header-section-number">2.4</span> Caching (memoisation)</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#caching-across-r-sessions"><span class="header-section-number">2.4.1</span> Caching across R sessions</a></li>
-<li><a class="nav-link" href="#verbose-output"><span class="header-section-number">2.4.2</span> Verbose output</a></li>
+<a class="nav-link" href="#caching-memoisation"><span class="header-section-number">3.4</span> Caching (memoisation)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#caching-across-r-sessions"><span class="header-section-number">3.4.1</span> Caching across R sessions</a></li>
+<li><a class="nav-link" href="#verbose-output"><span class="header-section-number">3.4.2</span> Verbose output</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#further-resources-1"><span class="header-section-number">2.5</span> Further resources</a></li>
+<li><a class="nav-link" href="#further-resources-1"><span class="header-section-number">3.5</span> Further resources</a></li>
 </ul>
 
       <div class="book-extra">

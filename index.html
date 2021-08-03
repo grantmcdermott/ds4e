@@ -15,7 +15,7 @@
     gtag('js', new Date());
   
     gtag('config', 'UA-76482472-1');
-  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><link rel="stylesheet" href="css/preamble.css">
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -38,14 +38,16 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="active" href="index.html">Welcome</a></li>
+<li class="book-part">Data wrangling</li>
+<li><a class="" href="tidyverse.html"><span class="header-section-number">1</span> Tidyverse</a></li>
 <li class="book-part">Programming</li>
-<li><a class="" href="funcs-intro.html"><span class="header-section-number">1</span> Functions: Introductory concepts</a></li>
-<li><a class="" href="funcs-adv.html"><span class="header-section-number">2</span> Functions: Advanced concepts</a></li>
-<li><a class="" href="parallel.html"><span class="header-section-number">3</span> Parallel programming</a></li>
+<li><a class="" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -65,28 +67,84 @@ enough of the chapters and basic book structure.</p>
 <blockquote>
 <p>This seminar (ED: book) is targeted at economics PhD students (ED: and other animals) and will introduce you to the modern data science toolkit. While some material will likely overlap with your other quantitative and empirical methods courses, this is not just another econometrics course. Rather, my goal is bring you up to speed on the practical tools and techniques that I feel will most benefit your dissertation work and future research career. This includes many of the seemingly forgotten skills — like where to find interesting data sets in the “wild” and how to actually clean them — that are crucial to any successful scientific project, but are typically excluded from core econometrics and statistics classes. We will cover topics like version control and effective project management; programming; data acquisition (e.g. web-scraping), cleaning and visualization; GIS and remote sensing products; and tools for big data analysis (e.g. relational databases, cloud computation and machine learning). In short, we will cover things that I wish someone had taught me when I was starting out in graduate school.</p>
 </blockquote>
-<p>We use renv to snapshot the project environment. You can install all of the
-packages needed to run the code in this book with:</p>
+<div id="sw-intro" class="section level2">
+<h2>
+<span class="header-section-number">0.1</span> Install necessary software packages<a class="anchor" aria-label="anchor" href="#sw-intro"><i class="fas fa-link"></i></a>
+</h2>
+<p>The primary programming language used throughout this book is R
+(<a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a>). The book was built against R version 4.1.0.</p>
+<p>Each chapter of the book begins with a description of the software — e.g. R
+packages and external libraries — needed to complete that section. However,
+users may find it convenient to install all of the necessary packages (and
+versions thereof) in a single go. To that end, we have used <strong>renv</strong>
+(<a href="https://rstudio.github.io/renv">link</a>) to snapshot
+the project environment of the book. This means that you can install all of the
+R packages needed to run the code in this book, simply by cloning the
+companion GitHub repo (<a href="https://github.com/grantmcdermott/ds4e" class="uri">https://github.com/grantmcdermott/ds4e</a>) and running:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># renv::init() ## Only run this line if the next line returns an error</span>
 <span class="fu">renv</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/renv/reference/restore.html">restore</a></span><span class="op">(</span>prompt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>Note that you might need a few extra packages if you want to build the book locally (unlikely):</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div id="special-requirements-for-linux-users" class="section level3">
+<h3>
+<span class="header-section-number">0.1.1</span> Special requirements for Linux users<a class="anchor" aria-label="anchor" href="#special-requirements-for-linux-users"><i class="fas fa-link"></i></a>
+</h3>
+<p>Linux users will likely need to install a few system requirements before running
+the <code><a href="https://rstudio.github.io/renv/reference/restore.html">renv::restore()</a></code> command above, mostly related to spatial libraries. (More
+information about individual distro requirements
+<a href="https://github.com/r-spatial/sf#linux">here</a>.) For Ubuntu users on 20.04 and
+above, the following commands should suffice:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="index.html#cb2-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt upgrade -y</span>
+<span id="cb2-2"><a href="index.html#cb2-2"></a><span class="fu">sudo</span> apt install -y libudunits2-dev libgdal-dev gdal-bin \</span>
+<span id="cb2-3"><a href="index.html#cb2-3"></a>  libgeos-dev libproj-dev libcairo2-dev</span></code></pre></div>
+<p>As an aside, our <strong>renv</strong> configuration is set up so that it will install
+pre-compiled R package binaries across operating systems, including most Linux
+distros. This should make package installation much faster and less error prone.
+If you are on a Linux system, but don’t plan to use our recommended <strong>renv</strong>
+approach for simultaneously installing all of the needed packages, we would
+still recommend configuring your system to install R package binaries from
+<a href="https://packagemanager.rstudio.com/client/#/repos/1/overview">RStudio Package Manager</a>.
+(RSPM). Again, assuming a Linux user on Ubuntu 20.04, this would require adding
+the following line to your <code>~/.Rprofile</code> dotfile:</p>
+<pre><code><a href="https://rdrr.io/r/base/options.html">options(repos = c(RSPM = "https://packagemanager.rstudio.com/all/__linux__/focal/latest"))</a></code></pre>
+<p>An alternative approach for installing pre-compiled R package binaries on Linux
+is available in the form of the <strong>bspm</strong> package
+(<a href="https://github.com/Enchufa2/bspm">link</a>). The benefit of this approach
+(compared to our recommended renv/RSPM approach) is that it will automatically
+handle system dependencies too. The downside is that there is no way to snapshot
+packages and it will simply (and automatically) pull in the most recently
+available package versions. This may inadvertently introduce breaking changes
+with respect to the code presented here.</p>
+</div>
+</div>
+<div id="building-the-book-locally" class="section level2">
+<h2>
+<span class="header-section-number">0.2</span> Building the book locally<a class="anchor" aria-label="anchor" href="#building-the-book-locally"><i class="fas fa-link"></i></a>
+</h2>
+<p>Finally, note that you might need a few extra packages if you want to build the
+book locally (unlikely):</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rstudio/bookdown">bookdown</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/">bslib</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://downlit.r-lib.org/">downlit</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://usethis.r-lib.org">usethis</a></span><span class="op">)</span></code></pre></div>
 
 </div>
+</div>
 
 
 
   <div class="chapter-nav">
 <div class="empty"></div>
-<div class="next"><a href="funcs-intro.html"><span class="header-section-number">1</span> Functions: Introductory concepts</a></div>
+<div class="next"><a href="tidyverse.html"><span class="header-section-number">1</span> Tidyverse</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
-      <ul class="nav navbar-nav"><li><a class="nav-link" href="#welcome">Welcome</a></li></ul>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#welcome">Welcome</a></li>
+<li>
+<a class="nav-link" href="#sw-intro"><span class="header-section-number">0.1</span> Install necessary software packages</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#special-requirements-for-linux-users"><span class="header-section-number">0.1.1</span> Special requirements for Linux users</a></li></ul>
+</li>
+<li><a class="nav-link" href="#building-the-book-locally"><span class="header-section-number">0.2</span> Building the book locally</a></li>
+</ul>
 
       <div class="book-extra">
         <ul class="list-unstyled">
