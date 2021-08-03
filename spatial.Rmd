@@ -2,7 +2,7 @@
 
 # Spatial analysis
 
-## Requirements
+## Software requirements
 
 ### External libraries (requirements vary by OS)
 
