@@ -341,7 +341,7 @@ system.time({
   m1 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.038   0.000  20.058
+#>   0.034   0.000  20.054
 ```
 
 As expected this took 20 seconds because of the enforced two second wait during each iteration. Now, we try calling the function a second time --- iterating over the exact same inputs and saving to a new `m2` object --- to see if caching makes a difference...
@@ -352,7 +352,7 @@ system.time({
   m2 = map_df(1:10, mem_square)
 })
 #>    user  system elapsed 
-#>   0.002   0.000   0.002
+#>   0.001   0.000   0.001
 ```
 
 And does it ever! We're down to a fraction of a second, since we didn't need to run at all again. Rather, we simply recalled the previously saved (i.e. memoised) results. And just to prove that we're really saving meaningful output, here is a comparison of the two data frames, as well as the printed output of `m2`.
@@ -383,7 +383,7 @@ system.time({
   m3 = map_df(1:15, mem_square)
 })
 #>    user  system elapsed 
-#>   0.007   0.000  10.016
+#>   0.006   0.000  10.016
 ```
 
 As expected, this only took (5 $\times$ 2 = ) 10 seconds to generate the new results from scratch, with the previous results being called up from the cache. You can think of preceding example as approximating a real-life scenario, where your program crashes or halts midway through its run, yet you don't need to restart all the way at the beginning. These kinds of interruptions happen more frequently than you might expect, especially if you're working with complex analyses and high-performance computing tools (e.g. preemptible nodes or VM instances). Being smart about caching has saved us *many* lost hours and it could do the same for you.
@@ -471,7 +471,7 @@ system.time({
 #> Generating data from scratch for x = 9 ...ok
 #> Generating data from scratch for x = 10 ...ok
 #>    user  system elapsed 
-#>   0.014   0.000   6.021
+#>   0.008   0.004   6.018
 ```
 
 Finally, albeit probably unnecessary, we can also prove to ourselves that we've added the three new cases (i.e. for `8:10`) to our cache directory by comparing to what we had previously.

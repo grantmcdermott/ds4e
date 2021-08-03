@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>2 Functions: Introductory concepts | Data Science for Economists and Other Animals</title>
+<title>1 Functions: Introductory concepts | Data Science for Economists and Other Animals</title>
 <meta name="author" content="Grant McDermott and Ed Rubin">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -38,15 +38,14 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome</a></li>
-<li><a class="" href="intro.html"><span class="header-section-number">1</span> Introduction</a></li>
 <li class="book-part">Programming</li>
-<li><a class="active" href="funcs-intro.html"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
-<li><a class="" href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></li>
-<li><a class="" href="parallel.html"><span class="header-section-number">4</span> Parallel programming</a></li>
+<li><a class="active" href="funcs-intro.html"><span class="header-section-number">1</span> Functions: Introductory concepts</a></li>
+<li><a class="" href="funcs-adv.html"><span class="header-section-number">2</span> Functions: Advanced concepts</a></li>
+<li><a class="" href="parallel.html"><span class="header-section-number">3</span> Parallel programming</a></li>
 <li class="book-part">Analysis</li>
-<li><a class="" href="spatial-analysis.html"><span class="header-section-number">5</span> Spatial analysis</a></li>
+<li><a class="" href="spatial-analysis.html"><span class="header-section-number">4</span> Spatial analysis</a></li>
 <li class="book-part">Cloud</li>
-<li><a class="" href="gce-i.html"><span class="header-section-number">6</span> Google Compute Engine (I)</a></li>
+<li><a class="" href="gce-i.html"><span class="header-section-number">5</span> Google Compute Engine (I)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -56,15 +55,15 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="funcs-intro" class="section level1">
 <h1>
-<span class="header-section-number">2</span> Functions: Introductory concepts<a class="anchor" aria-label="anchor" href="#funcs-intro"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1</span> Functions: Introductory concepts<a class="anchor" aria-label="anchor" href="#funcs-intro"><i class="fas fa-link"></i></a>
 </h1>
 <div id="software-requirements" class="section level2">
 <h2>
-<span class="header-section-number">2.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"><i class="fas fa-link"></i></a>
 </h2>
 <div id="r-packages" class="section level3">
 <h3>
-<span class="header-section-number">2.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>New: <strong>pbapply</strong>
@@ -80,7 +79,7 @@
 </div>
 <div id="basic-syntax" class="section level2">
 <h2>
-<span class="header-section-number">2.2</span> Basic syntax<a class="anchor" aria-label="anchor" href="#basic-syntax"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2</span> Basic syntax<a class="anchor" aria-label="anchor" href="#basic-syntax"><i class="fas fa-link"></i></a>
 </h2>
 <p>We have already seen and used a multitude of functions in R. Some of these functions come pre-packaged with base R (e.g. <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>), while others are from external packages (e.g. <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code>). Regardless of where they come from, functions in R all adopt the same basic syntax:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -105,7 +104,7 @@
 </div>
 <div id="simple-square" class="section level2">
 <h2>
-<span class="header-section-number">2.3</span> A simple example<a class="anchor" aria-label="anchor" href="#simple-square"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3</span> A simple example<a class="anchor" aria-label="anchor" href="#simple-square"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s write out a simple example function, which gives the square of an input number.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -123,7 +122,7 @@
 </blockquote>
 <div id="specifying-return-values" class="section level3">
 <h3>
-<span class="header-section-number">2.3.1</span> Specifying return values<a class="anchor" aria-label="anchor" href="#specifying-return-values"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3.1</span> Specifying return values<a class="anchor" aria-label="anchor" href="#specifying-return-values"><i class="fas fa-link"></i></a>
 </h3>
 <p>Notice that we didn’t specify a return value for our function. This will work in many cases because R’s default behaviour is to automatically return the final object that you created within the function. However, this won’t always be the case. Opinions on this differ, but our own recommendation is that you get into the habit of assigning the return object(s) explicitly with <code><a href="https://rdrr.io/r/base/function.html">return()</a></code>. Let’s modify our function to do exactly that.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -174,7 +173,7 @@
 </div>
 <div id="specifying-default-argument-values" class="section level3">
 <h3>
-<span class="header-section-number">2.3.2</span> Specifying default argument values<a class="anchor" aria-label="anchor" href="#specifying-default-argument-values"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3.2</span> Specifying default argument values<a class="anchor" aria-label="anchor" href="#specifying-default-argument-values"><i class="fas fa-link"></i></a>
 </h3>
 <p>Another thing worth noting about R functions is that you can assign default argument values. You have already encountered some examples of this in action.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;E.g. Type &lt;code&gt;?rnorm&lt;/code&gt; and see that it provides a default mean and standard deviation of 0 and 1, respectively.&lt;/p&gt;"><sup>3</sup></a> We can add a default option to our own function pretty easily.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -192,24 +191,24 @@
 <span class="fu">square</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="co">## Now takes the explicit value that we give it.</span>
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1     2             4</span></code></pre></div>
-<p>We’ll return to the issues of specifying default values, handling invalid inputs, and general debugging in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
+<p>We’ll return to the issues of specifying default values, handling invalid inputs, and general debugging in Section <a href="funcs-adv.html#debugging">2.2</a>.</p>
 </div>
 <div id="aside-environments-and-lexical-scoping" class="section level3">
 <h3>
-<span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping<a class="anchor" aria-label="anchor" href="#aside-environments-and-lexical-scoping"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3.3</span> Aside: Environments and lexical scoping<a class="anchor" aria-label="anchor" href="#aside-environments-and-lexical-scoping"><i class="fas fa-link"></i></a>
 </h3>
 <p>Before continuing, take a second to note that none of the intermediate objects that we created inside the above functions (<code>x_sq</code>, <code>df</code>, etc.) have made their way into your global environment.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Look in the “Environment” pane of your RStudio session.&lt;/p&gt;"><sup>4</sup></a> R has a set of so-called <a href="https://adv-r.hadley.nz/functions.html#lexical-scoping"><em>lexical scoping</em></a> rules, which govern where it stores and evaluates the values of different objects. Without going into too much depth, the practical implication of lexical scoping is that functions operate in a quasi-sandboxed <a href="https://adv-r.hadley.nz/environments.html"><em>environment</em></a>. They don’t return or use objects in the global environment unless they are forced to (e.g. with a <code><a href="https://rdrr.io/r/base/function.html">return()</a></code> command). Similarly, a function will only look to outside environments (e.g. a level “up”) to find an object if it doesn’t see the object named within itself.</p>
-<p>We’ll revisit the ideas of distinct object environments and lexical scoping when we get to functional programming in Section <a href="funcs-intro.html#functional-programming">2.5.3</a> below, and then again in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
+<p>We’ll revisit the ideas of distinct object environments and lexical scoping when we get to functional programming in Section <a href="funcs-intro.html#functional-programming">1.5.3</a> below, and then again in Section <a href="funcs-adv.html#debugging">2.2</a>.</p>
 </div>
 </div>
 <div id="control-flow" class="section level2">
 <h2>
-<span class="header-section-number">2.4</span> Control flow<a class="anchor" aria-label="anchor" href="#control-flow"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4</span> Control flow<a class="anchor" aria-label="anchor" href="#control-flow"><i class="fas fa-link"></i></a>
 </h2>
 <p>Now that we’ve got a good sense of the basic function syntax, it’s time to learn control flow. That is, we want to control the order (or “flow”) of statements and operations that our functions evaluate.</p>
 <div id="if-and-ifelse" class="section level3">
 <h3>
-<span class="header-section-number">2.4.1</span> if and ifelse<a class="anchor" aria-label="anchor" href="#if-and-ifelse"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4.1</span> if and ifelse<a class="anchor" aria-label="anchor" href="#if-and-ifelse"><i class="fas fa-link"></i></a>
 </h3>
 <p>We’ve already encountered conditional statements like <code>if()</code> and <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> numerous times in the book thus far.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;E.g Conditional mutation in the tidyverse (see &lt;a href="https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html#38"&gt;here&lt;/a&gt;.&lt;/p&gt;'><sup>5</sup></a> However, let’s see how they can work in our own bespoke functions by slightly modifying our <code>square</code> function. This time, instead of specifying a default input value of 1 in the function argument itself, we’ll specify a value of <code>NULL</code>. Then we’ll use an <code>if()</code> statement to reassign this default to one.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -266,7 +265,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; Nailed it.</span></code></pre></div>
 <div id="aside-ifelse-gotchas-and-alternatives" class="section level4">
 <h4>
-<span class="header-section-number">2.4.1.1</span> Aside: ifelse gotchas and alternatives<a class="anchor" aria-label="anchor" href="#aside-ifelse-gotchas-and-alternatives"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4.1.1</span> Aside: ifelse gotchas and alternatives<a class="anchor" aria-label="anchor" href="#aside-ifelse-gotchas-and-alternatives"><i class="fas fa-link"></i></a>
 </h4>
 <p>The base R <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> function normally works great and we use it all the time. However, there are a couple of “gotcha” cases that you should be aware of. Consider the following (silly) function which is designed to return either today’s date, or the day before.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
@@ -292,7 +291,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="case-when-nested-ifelse" class="section level3">
 <h3>
-<span class="header-section-number">2.4.2</span> <em>case when</em> (nested ifelse)<a class="anchor" aria-label="anchor" href="#case-when-nested-ifelse"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4.2</span> <em>case when</em> (nested ifelse)<a class="anchor" aria-label="anchor" href="#case-when-nested-ifelse"><i class="fas fa-link"></i></a>
 </h3>
 <p>As you may have guessed, it’s certainly possible to write nested <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. For example,</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="funcs-intro.html#cb25-1"></a><span class="kw">ifelse</span>(CONDITION1, DO IF <span class="ot">TRUE</span>, <span class="kw">ifelse</span>(CONDITION2, DO IF <span class="ot">TRUE</span>, <span class="kw">ifelse</span>(...)))</span></code></pre></div>
@@ -354,12 +353,12 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="iteration" class="section level2">
 <h2>
-<span class="header-section-number">2.5</span> Iteration<a class="anchor" aria-label="anchor" href="#iteration"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5</span> Iteration<a class="anchor" aria-label="anchor" href="#iteration"><i class="fas fa-link"></i></a>
 </h2>
 <p>Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate — or <em>map</em> — over a set of inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Our focus in this chapter will only be on sequential iteration. We’ll explore parallel iteration in a few chapters.&lt;/p&gt;"><sup>7</sup></a> By far the most common way to iterate across different programming languages is <em>for</em> loops. Indeed, we already saw some examples of <em>for</em> loops back in the shell lecture (see <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95">here</a>). However, while R certainly accepts standard <em>for</em> loops, we’re going to advocate that you adopt what is known as a “functional programming” approach to writing loops. Let’s dive into the reasons why and how these approaches differ.</p>
 <div id="vectorisation" class="section level3">
 <h3>
-<span class="header-section-number">2.5.1</span> Vectorisation<a class="anchor" aria-label="anchor" href="#vectorisation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.1</span> Vectorisation<a class="anchor" aria-label="anchor" href="#vectorisation"><i class="fas fa-link"></i></a>
 </h3>
 <p>The first question you should be asking yourself is: “Do I need to iterate at all?”</p>
 <p>You may remember from earlier chapters that we spoke about R being <em>vectorised</em>. This means that we can apply a function over an entire vector all at once, rather than having to iterate explicitly over each element. Vectorisation is a common feature of high-level programming languages like R and Python. What’s really happening with vectorisation is that a loop <em>is</em> being called behind the scenes. But that loop is implemented in a low-level compiled language like C or Fortran.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;To borrow a phrase from Jenny Bryan: “Someone has to write a for loop. It just doesn’t have to be you.”&lt;/p&gt;"><sup>8</sup></a> Let’s demonstrate this property with our <code>square</code> function:</p>
@@ -380,7 +379,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="for-loops" class="section level3">
 <h3>
-<span class="header-section-number">2.5.2</span> <em>for</em> loops<a class="anchor" aria-label="anchor" href="#for-loops"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.2</span> <em>for</em> loops<a class="anchor" aria-label="anchor" href="#for-loops"><i class="fas fa-link"></i></a>
 </h3>
 <p>In R, standard <em>for</em> loops take a pretty intuitive form. For example:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
@@ -409,7 +408,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="functional-programming" class="section level3">
 <h3>
-<span class="header-section-number">2.5.3</span> Functional programming<a class="anchor" aria-label="anchor" href="#functional-programming"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.3</span> Functional programming<a class="anchor" aria-label="anchor" href="#functional-programming"><i class="fas fa-link"></i></a>
 </h3>
 <p>The concept of functional programming (FP) is arguably the most important thing that you can take away from this chapter. In his excellent book, <em>Advanced R</em>, <a href="http://adv-r.had.co.nz/Functional-programming.html">Hadley Wickham</a> explains the core idea as follows.</p>
 <blockquote>
@@ -432,7 +431,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>Let’s explore these in more depth.</p>
 <div id="lapply-and-co." class="section level4">
 <h4>
-<span class="header-section-number">2.5.3.1</span> lapply and co.<a class="anchor" aria-label="anchor" href="#lapply-and-co."><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.3.1</span> lapply and co.<a class="anchor" aria-label="anchor" href="#lapply-and-co."><i class="fas fa-link"></i></a>
 </h4>
 <p>Base R contains a very useful family of <code>*apply</code> functions. We won’t go through all of these here, but they all follow a similar philosophy and syntax. The good news is that this syntax very closely mimics the syntax of basic for-loops. For example, consider the code below, which is analogous to our first <em>for</em> loop above, but now invokes a <strong><code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code></strong> call instead.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
@@ -474,7 +473,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="aside-binding-and-simplifying-lists" class="section level4">
 <h4>
-<span class="header-section-number">2.5.3.2</span> Aside: Binding and simplifying lists<a class="anchor" aria-label="anchor" href="#aside-binding-and-simplifying-lists"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.3.2</span> Aside: Binding and simplifying lists<a class="anchor" aria-label="anchor" href="#aside-binding-and-simplifying-lists"><i class="fas fa-link"></i></a>
 </h4>
 <p>Okay, but what if you don’t want your iteration output to remain in list form? There several options here, depending on the type of output you want (vector, data frame, etc.) As we imagine is the case for most social scientists, our preferred data structure is the data frame. So, we typically want to bind the different list elements into a single data frame. There are three simple ways to do this:</p>
 <ul>
@@ -512,7 +511,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;  [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J"</span></code></pre></div>
 <div id="aside-progress-bars" class="section level5">
 <h5>
-<span class="header-section-number">2.5.3.2.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.3.2.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
 </h5>
 <p>Who doesn’t like progress bars? Personally, we find it incredibly helpful to see how a function is progressing, or get a sense of how much longer we can expect to wait before completion.</p>
 <p>Along those lines, we’re big fans of the <a href="https://github.com/psolymos/pbapply"><strong>pbapply</strong></a> package, which is a lightweight wrapper around the <code>*apply</code> functions that adds a progress bar. <code>pbapply</code> offers equivalents for all members of the <code>*apply</code> family. But the one that we use most often (unsurprisingly) is <code><a href="https://rdrr.io/pkg/pbapply/man/pbapply.html">pbapply::pblapply()</a></code>.</p>
@@ -537,13 +536,13 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 8    8   H</span>
 <span class="co">#&gt; 9    9   I</span>
 <span class="co">#&gt; 10  10   J</span></code></pre></div>
-<p>Another thing that we really like about the <code>pblapply()</code> function is that it easily extends to parallel (i.e. multicore) processing. We’ll cover this next in Chapter <a href="parallel.html#parallel">4</a>, though.</p>
+<p>Another thing that we really like about the <code>pblapply()</code> function is that it easily extends to parallel (i.e. multicore) processing. We’ll cover this next in Chapter <a href="parallel.html#parallel">3</a>, though.</p>
 <p>At the time of writing, there’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. We won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
 </div>
 </div>
 <div id="purrr-package" class="section level4">
 <h4>
-<span class="header-section-number">2.5.3.3</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.3.3</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
 </h4>
 <p>The <strong>tidyverse</strong> offers its own enhanced implementation of the base <code>*apply()</code> functions through the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a> package.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;In their &lt;a href="https://r4ds.had.co.nz/iteration.html"&gt;words&lt;/a&gt;: “The apply family of functions in base R solve a similar problem &lt;em&gt;[i.e. to purrr]&lt;/em&gt;, but purrr is more consistent and thus is easier to learn.”&lt;/p&gt;'><sup>11</sup></a> The key function to remember here is <code><a href="https://purrr.tidyverse.org/reference/map.html">purrr::map()</a></code>. And, indeed, the syntax and output of this command are effectively identical to <code><a href="https://rdrr.io/r/base/lapply.html">base::lapply()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
@@ -612,7 +611,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="create-and-iterate-over-named-functions" class="section level3">
 <h3>
-<span class="header-section-number">2.5.4</span> Create and iterate over named functions<a class="anchor" aria-label="anchor" href="#create-and-iterate-over-named-functions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.4</span> Create and iterate over named functions<a class="anchor" aria-label="anchor" href="#create-and-iterate-over-named-functions"><i class="fas fa-link"></i></a>
 </h3>
 <p>As you may have guessed already, we can split the function and the iteration (and binding) into separate steps. This is generally a good idea, since you typically create (named) functions with the goal of reusing them.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
@@ -647,7 +646,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="iterate-over-multiple-inputs" class="section level3">
 <h3>
-<span class="header-section-number">2.5.5</span> Iterate over multiple inputs<a class="anchor" aria-label="anchor" href="#iterate-over-multiple-inputs"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.5</span> Iterate over multiple inputs<a class="anchor" aria-label="anchor" href="#iterate-over-multiple-inputs"><i class="fas fa-link"></i></a>
 </h3>
 <p>Thus far, we have only been working with functions that take a single input when iterating. For example, we feed them a single vector (even though that vector contains many elements that drive the iteration process). But what if we want to iterate over multiple inputs? Consider the following function, which takes two separate variables <code>x</code> and <code>y</code> as inputs, combines them in a data frame, and then uses them to create a third variable <code>z</code>.</p>
 <blockquote>
@@ -673,7 +672,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>We’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
 <div id="use-mapplymap-or-pmap" class="section level4">
 <h4>
-<span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code>/<code>Map()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapplymap-or-pmap"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.5.1</span> Use <code>mapply()</code>/<code>Map()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapplymap-or-pmap"><i class="fas fa-link"></i></a>
 </h4>
 <p>Both <strong>base</strong> R — through <code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code> — and <strong>purrr</strong> — through <code>pmap</code> — can handle multiple input cases for iteration. The latter is slightly easier to work with in our view, since the syntax is closer (nearly identical) to the single input case. Still, we’ll demonstrate using both versions below.</p>
 <p>First, <code><a href="https://rdrr.io/r/base/mapply.html">base::mapply()</a></code>:</p>
@@ -713,7 +712,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="using-a-data-frame-of-input-combinations" class="section level4">
 <h4>
-<span class="header-section-number">2.5.5.2</span> Using a data frame of input combinations<a class="anchor" aria-label="anchor" href="#using-a-data-frame-of-input-combinations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.5.5.2</span> Using a data frame of input combinations<a class="anchor" aria-label="anchor" href="#using-a-data-frame-of-input-combinations"><i class="fas fa-link"></i></a>
 </h4>
 <p>While the above approaches work perfectly well, an alternative approach is to “cheat” by feeding multi-input functions a <em>single</em> data frame that specifies the necessary combination of variables by row. We’ll demonstrate how this works in a second. But first, let’s motivate why you might want to do this. The short answer is that it can give you more control over your functions and inputs. Specifically:</p>
 <ul>
@@ -792,9 +791,9 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="further-resources" class="section level2">
 <h2>
-<span class="header-section-number">2.6</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.6</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources"><i class="fas fa-link"></i></a>
 </h2>
-<p>In Chapters <a href="funcs-adv.html#funcs-adv">3</a> and <a href="parallel.html#parallel">4</a>, we’ll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, we hope that this chapter has given you solid grasp of the fundamentals. We highly encourage you to start writing some of your own functions. You will be doing this a <em>lot</em> as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:</p>
+<p>In Chapters <a href="funcs-adv.html#funcs-adv">2</a> and <a href="parallel.html#parallel">3</a>, we’ll dive into more advanced programming and function topics (debugging, parallel implementation, etc.). However, we hope that this chapter has given you solid grasp of the fundamentals. We highly encourage you to start writing some of your own functions. You will be doing this a <em>lot</em> as your career progresses. Establishing an early mastery of function writing will put you on the road to awesome data science success<sup>TM</sup>. Here are some additional resources for both inspiration and reference:</p>
 <ul>
 <li>Garrett Grolemund and Hadley Wickham’s <a href="http://r4ds.had.co.nz"><em><b>R for Data Science</b></em></a> book — esp. chapters <a href="http://r4ds.had.co.nz/functions.html">19 (“Functions)”)</a> and <a href="http://r4ds.had.co.nz/iteration.html">21 (“Iteration)”)</a> — covers much of the same ground as we have here, with particular emphasis on the <strong>purrr</strong> package for iteration.</li>
 <li>If you’re looking for an in-depth treatment, then we can highly recommend Hadley’s <a href="https://adv-r.hadley.nz"><em><b>Advanced R</b></em></a> (2nd ed.) He provides a detailed yet readable overview of all the concepts that we touched on in this chapter, including more on his (and R’s) philosophy regarding functional programming (see <a href="https://adv-r.hadley.nz/fp.html">Section ||</a>).</li>
@@ -804,9 +803,9 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 <div id="addendum-inspecting-function-source-code" class="section level2">
 <h2>
-<span class="header-section-number">2.7</span> Addendum: Inspecting function source code<a class="anchor" aria-label="anchor" href="#addendum-inspecting-function-source-code"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.7</span> Addendum: Inspecting function source code<a class="anchor" aria-label="anchor" href="#addendum-inspecting-function-source-code"><i class="fas fa-link"></i></a>
 </h2>
-<p>Looking inside a function is not only important for debugging — a subject covered in <a href="funcs-adv.html#debugging">3.2</a> — but is also a great way to pick up programming tips and tricks. We refer to this as inspecting a function’s <em>source code</em>. For some functions, viewing the source code is a simple matter of typing the function name into your R console (without the parentheses!) and letting R print the object to screen. Try this yourself with the <code>num_to_alpha</code> function that we created earlier. Or, here’s the source code for <code><a href="https://rdrr.io/r/base/replace.html">replace()</a></code>, arguably the simplest base R function around:</p>
+<p>Looking inside a function is not only important for debugging — a subject covered in <a href="funcs-adv.html#debugging">2.2</a> — but is also a great way to pick up programming tips and tricks. We refer to this as inspecting a function’s <em>source code</em>. For some functions, viewing the source code is a simple matter of typing the function name into your R console (without the parentheses!) and letting R print the object to screen. Try this yourself with the <code>num_to_alpha</code> function that we created earlier. Or, here’s the source code for <code><a href="https://rdrr.io/r/base/replace.html">replace()</a></code>, arguably the simplest base R function around:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">replace</span>
 <span class="co">#&gt; function (x, list, values) </span>
@@ -814,14 +813,14 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x55e1443cd848&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55b248c497f0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>Unfortunately, the simple print-function-to-screen approach doesn’t work once you start getting into functions that have different dispatch “methods” (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, although it does require a bit more legwork. As a quick example, consider what happens if we try to look at the source code for R’s generic <code>summary</code> function.</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">summary</span>
 <span class="co">#&gt; function (object, ...) </span>
 <span class="co">#&gt; UseMethod("summary")</span>
-<span class="co">#&gt; &lt;bytecode: 0x55e13f3bd7c0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55b243c37600&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/UseMethod.html">UseMethod("summary")</a></code> part is telling us that R will invoke different methods for summarising different objects, depending on their class. Obviously, this makes sense. We wouldn’t expect a data frame to be summarised in the same way as a regression object. To see which methods are available to <code>summary</code> in our current R session, we can use the <code><a href="https://rdrr.io/r/utils/methods.html">methods()</a></code> function:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
@@ -918,7 +917,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;     attr(z, "class") &lt;- c("table")</span>
 <span class="co">#&gt;     z</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x55e144944060&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55b2491c00b8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>By the way, it’s also possible to go the other way around; you can view all of the generic methods associated with a particular object class. For example, there are <em>lots</em> of valid methods associated with data frames:</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
@@ -979,40 +978,40 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 
   <div class="chapter-nav">
-<div class="prev"><a href="intro.html"><span class="header-section-number">1</span> Introduction</a></div>
-<div class="next"><a href="funcs-adv.html"><span class="header-section-number">3</span> Functions: Advanced concepts</a></div>
+<div class="prev"><a href="index.html">Welcome</a></div>
+<div class="next"><a href="funcs-adv.html"><span class="header-section-number">2</span> Functions: Advanced concepts</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#funcs-intro"><span class="header-section-number">2</span> Functions: Introductory concepts</a></li>
+<li><a class="nav-link" href="#funcs-intro"><span class="header-section-number">1</span> Functions: Introductory concepts</a></li>
 <li>
-<a class="nav-link" href="#software-requirements"><span class="header-section-number">2.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages"><span class="header-section-number">2.1.1</span> R packages</a></li></ul>
+<a class="nav-link" href="#software-requirements"><span class="header-section-number">1.1</span> Software requirements</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-packages"><span class="header-section-number">1.1.1</span> R packages</a></li></ul>
 </li>
-<li><a class="nav-link" href="#basic-syntax"><span class="header-section-number">2.2</span> Basic syntax</a></li>
+<li><a class="nav-link" href="#basic-syntax"><span class="header-section-number">1.2</span> Basic syntax</a></li>
 <li>
-<a class="nav-link" href="#simple-square"><span class="header-section-number">2.3</span> A simple example</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#specifying-return-values"><span class="header-section-number">2.3.1</span> Specifying return values</a></li>
-<li><a class="nav-link" href="#specifying-default-argument-values"><span class="header-section-number">2.3.2</span> Specifying default argument values</a></li>
-<li><a class="nav-link" href="#aside-environments-and-lexical-scoping"><span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping</a></li>
+<a class="nav-link" href="#simple-square"><span class="header-section-number">1.3</span> A simple example</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#specifying-return-values"><span class="header-section-number">1.3.1</span> Specifying return values</a></li>
+<li><a class="nav-link" href="#specifying-default-argument-values"><span class="header-section-number">1.3.2</span> Specifying default argument values</a></li>
+<li><a class="nav-link" href="#aside-environments-and-lexical-scoping"><span class="header-section-number">1.3.3</span> Aside: Environments and lexical scoping</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#control-flow"><span class="header-section-number">2.4</span> Control flow</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#if-and-ifelse"><span class="header-section-number">2.4.1</span> if and ifelse</a></li>
-<li><a class="nav-link" href="#case-when-nested-ifelse"><span class="header-section-number">2.4.2</span> case when (nested ifelse)</a></li>
+<a class="nav-link" href="#control-flow"><span class="header-section-number">1.4</span> Control flow</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#if-and-ifelse"><span class="header-section-number">1.4.1</span> if and ifelse</a></li>
+<li><a class="nav-link" href="#case-when-nested-ifelse"><span class="header-section-number">1.4.2</span> case when (nested ifelse)</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#iteration"><span class="header-section-number">2.5</span> Iteration</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#vectorisation"><span class="header-section-number">2.5.1</span> Vectorisation</a></li>
-<li><a class="nav-link" href="#for-loops"><span class="header-section-number">2.5.2</span> for loops</a></li>
-<li><a class="nav-link" href="#functional-programming"><span class="header-section-number">2.5.3</span> Functional programming</a></li>
-<li><a class="nav-link" href="#create-and-iterate-over-named-functions"><span class="header-section-number">2.5.4</span> Create and iterate over named functions</a></li>
-<li><a class="nav-link" href="#iterate-over-multiple-inputs"><span class="header-section-number">2.5.5</span> Iterate over multiple inputs</a></li>
+<a class="nav-link" href="#iteration"><span class="header-section-number">1.5</span> Iteration</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#vectorisation"><span class="header-section-number">1.5.1</span> Vectorisation</a></li>
+<li><a class="nav-link" href="#for-loops"><span class="header-section-number">1.5.2</span> for loops</a></li>
+<li><a class="nav-link" href="#functional-programming"><span class="header-section-number">1.5.3</span> Functional programming</a></li>
+<li><a class="nav-link" href="#create-and-iterate-over-named-functions"><span class="header-section-number">1.5.4</span> Create and iterate over named functions</a></li>
+<li><a class="nav-link" href="#iterate-over-multiple-inputs"><span class="header-section-number">1.5.5</span> Iterate over multiple inputs</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#further-resources"><span class="header-section-number">2.6</span> Further resources</a></li>
-<li><a class="nav-link" href="#addendum-inspecting-function-source-code"><span class="header-section-number">2.7</span> Addendum: Inspecting function source code</a></li>
+<li><a class="nav-link" href="#further-resources"><span class="header-section-number">1.6</span> Further resources</a></li>
+<li><a class="nav-link" href="#addendum-inspecting-function-source-code"><span class="header-section-number">1.7</span> Addendum: Inspecting function source code</a></li>
 </ul>
 
       <div class="book-extra">

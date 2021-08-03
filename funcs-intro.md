@@ -869,7 +869,7 @@ replace
 #>     x[list] <- values
 #>     x
 #> }
-#> <bytecode: 0x55e1443cd848>
+#> <bytecode: 0x55b248c497f0>
 #> <environment: namespace:base>
 ```
 
@@ -880,7 +880,7 @@ Unfortunately, the simple print-function-to-screen approach doesn't work once yo
 summary
 #> function (object, ...) 
 #> UseMethod("summary")
-#> <bytecode: 0x55e13f3bd7c0>
+#> <bytecode: 0x55b243c37600>
 #> <environment: namespace:base>
 ```
 
@@ -985,7 +985,7 @@ summary.data.frame
 #>     attr(z, "class") <- c("table")
 #>     z
 #> }
-#> <bytecode: 0x55e144944060>
+#> <bytecode: 0x55b2491c00b8>
 #> <environment: namespace:base>
 ```
 
