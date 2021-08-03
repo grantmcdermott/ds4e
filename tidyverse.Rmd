@@ -44,7 +44,7 @@ One point of convenience is that there is often a direct correspondence between 
   
 If you call up the above examples, you'll see that the **tidyverse** alternative typically offers some enhancements or other useful options (and occassional restrictions) over its base counterpart.
 
-## Tidyverse packages
+### Tidyverse packages
 
 Let's load the **tidyverse** meta-package and take a look at the output.
 
@@ -67,7 +67,7 @@ We'll use several of these additional packages later in the book (e.g. **rvest**
 
 These are the workhorse packages for data cleaning and wrangling. They are thus the ones that you will likely use most often in your data science work, especially given how much time data work requires in every project.
 
-## An aside on pipes (`%>%` and `|>`)
+### An aside on pipes (`%>%` and `|>`)
 
 <!-- We already learned about pipes in our [lecture](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#91) on the bash shell.  -->
 The **tidyverse** loads its own pipe operator, which is written as `%>%`.^[The **tidyverse** pipe is also known as the "magrittr" pipe --- [geddit?](https://en.wikipedia.org/wiki/The_Treachery_of_Images) --- and was originally bundled in the **magrittr** package ([link](https://magrittr.tidyverse.org/)). This package can do some other neat things if you're inclined to explore.]
