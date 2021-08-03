@@ -253,9 +253,13 @@ ggplot() +
 
 Now let's limit it to the intersected regions:
 
+> Tip We have to temporarily switch off the underlying `S2` geometry operations in the code below, otherwise we'll trigger an error about invalid geometries. This appears to a known issue at the time of writing (see [here](https://github.com/r-spatial/sf/issues/1732)).
+
 ```{r france_intersected, warning=F, message=F, dependson=seine}
 seine = st_transform(seine, crs = st_crs(france))
+sf::sf_use_s2(FALSE) ## Otherwise will trigger an error about invalid geometries
 france_intersected = st_intersection(france, seine)
+sf::sf_use_s2(TRUE) ## Back to default
 france_intersected
 ```
 
@@ -275,6 +279,8 @@ france_intersected %>%
 If we instead wanted to plot the subsample of intersected provinces (i.e. keeping their full geometries), we have a couple options. We could filter the `france` object by matching its region IDs with the `france_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries:
 
 ```{r france_join, message=F}
+sf::sf_use_s2(FALSE) ## Otherwise will trigger an error about invalid geometries
+
 st_join(france, seine) %>% 
   filter(!is.na(name)) %>% ## Get rid of regions with no overlap
   distinct(ID, .keep_all = T) %>% ## Some regions are duplicated b/c two branches of the river network flow through them 
@@ -282,6 +288,8 @@ st_join(france, seine) %>%
   geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
   geom_sf(data = seine, col = "#05E9FF", lwd = 1) + 
   labs(title = "Intersected regions only") 
+
+sf::sf_use_s2(TRUE) ## Back to default
 ```
 
 That's about as much **sf** functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R "swag". However, I'll try to slip in a few more **sf**-specific operations along the way.
