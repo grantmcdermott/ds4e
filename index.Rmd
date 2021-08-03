@@ -25,7 +25,7 @@ If you're interested in the motivation for this book, here is some placeholder t
 
 > This seminar (ED: book) is targeted at economics PhD students (ED: and other animals) and will introduce you to the modern data science toolkit. While some material will likely overlap with your other quantitative and empirical methods courses, this is not just another econometrics course. Rather, my goal is bring you up to speed on the practical tools and techniques that I feel will most benefit your dissertation work and future research career. This includes many of the seemingly forgotten skills --- like where to find interesting data sets in the "wild" and how to actually clean them --- that are crucial to any successful scientific project, but are typically excluded from core econometrics and statistics classes. We will cover topics like version control and effective project management; programming; data acquisition (e.g. web-scraping), cleaning and visualization; GIS and remote sensing products; and tools for big data analysis (e.g. relational databases, cloud computation and machine learning). In short, we will cover things that I wish someone had taught me when I was starting out in graduate school.
 
-## Install necessary software packages
+## Install necessary software packages {#sw-intro}
 
 The primary programming language used throughout this book is R 
 (https://www.r-project.org/). The book was built against R version 4.1.0.
@@ -47,7 +47,7 @@ renv::restore(prompt = FALSE)
 ### Special requirements for Linux users
 
 Linux users will likely need to install a few system requirements before running
-the `renv::restore()`` command above, mostly related to spatial libraries. (More 
+the `renv::restore()` command above, mostly related to spatial libraries. (More 
 information about individual distro requirements 
 [here](https://github.com/r-spatial/sf#linux).) For Ubuntu users on 20.04 and 
 above, the following commands should suffice:
