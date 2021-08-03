@@ -54,12 +54,12 @@ Let's iterate over this function using the standard `lapply()` method that we're
 tic()
 serial_ex = lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 24.528 sec elapsed
+#> 24.038 sec elapsed
 ```
 
 
 
-As expected, the iteration took about 25 seconds to run because of the enforced break after every sequential iteration (i.e. `Sys.sleep(2)`). On the other hand, this means that we can easily speed things up by iterating in *parallel*.
+As expected, the iteration took about 24 seconds to run because of the enforced break after every sequential iteration (i.e. `Sys.sleep(2)`). On the other hand, this means that we can easily speed things up by iterating in *parallel*.
 
 Before continuing, it's worth pointing out that our ability to go parallel hinges on the number of CPU cores available to us. The simplest way to obtain this information from R is with the `parallel::detectCores()` function:
 
@@ -67,10 +67,10 @@ Before continuing, it's worth pointing out that our ability to go parallel hinge
 ```r
 # future::availableCores() ## Another option
 detectCores()
-#> [1] 3
+#> [1] 2
 ```
 
-So, we have 3 cores to play with on this machine.^[~~A Dell Precision 5530 running Arch Linux, if you're interested.~~A cloud-based virtual machine provided by GitHub, which what we use to build this book.] Adjust expectations for you own system accordingly.
+So, we have 2 cores to play with on this machine.^[~~A Dell Precision 5530 running Arch Linux, if you're interested.~~A cloud-based virtual machine provided by GitHub, which what we use to build this book.] Adjust expectations for you own system accordingly.
 
 Okay, back to our example. We're going to implement the parallel iteration using the **future.apply** package ([link](https://cran.r-project.org/web/packages/future.apply/index.html)) --- more on this later. Note that the parameters of the problem are otherwise unchanged.
 
@@ -82,7 +82,7 @@ Okay, back to our example. We're going to implement the parallel iteration using
 tic()
 future_ex = future_lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 8.612 sec elapsed
+#> 12.24 sec elapsed
 ```
 
 
@@ -107,7 +107,7 @@ For those of you who prefer the `purrr::map()` family of functions for iteration
 tic()
 furrr_ex = future_map_dfr(1:12, slow_square)
 toc()
-#> 8.303 sec elapsed
+#> 12.24 sec elapsed
 ```
 
 How easy was that? We hardly had to change our original code and didn't have to pay a cent for all that extra performance.^[Not to flog a dead horse, but as we pointed out in the very [first lecture](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html#26) of this course: Have you seen the price of a [Stata/MP](https://www.stata.com/statamp/) license recently? Not to mention the fact that you effectively pay *per* core...] Congratulate yourself on already being such an expert at parallel programming.
@@ -159,12 +159,12 @@ set.seed(123L) ## Optional to ensure that the results are the same
 tic()
 sim_serial = lapply(1:1e4, bootstrap)
 toc(log = TRUE)
-#> 17.76 sec elapsed
+#> 16.871 sec elapsed
 ```
 
 
 
-So that took about 25 seconds on this system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of Grant's system monitor, showing that only one core was being used during this serial version.
+So that took about 24 seconds on this system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of Grant's system monitor, showing that only one core was being used during this serial version.
 
 > **Note:** Grant's local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.
 
@@ -200,7 +200,7 @@ Here's the `future.apply::future_lapply()` parallel implementation. Note that we
 tic()
 sim_future = future_lapply(1:1e4, bootstrap, future.seed=123L)
 toc()
-#> 6.63 sec elapsed
+#> 9.524 sec elapsed
 ```
 
 Remember from our previous programming chapters that `lapply` returns a list (in this case: a list of 10,000 single row data frames). So we would have have to bind these elements together in a single, large data frame if that's what we wanted. For example,
@@ -236,7 +236,7 @@ And here's the `furrr::future_map_dfr()` implementation. Similar to the above, n
 tic()
 sim_furrr = future_map_dfr(1:1e4, bootstrap, .options = furrr_options(seed=123L))
 toc()
-#> 6.498 sec elapsed
+#> 9.378 sec elapsed
 
 head(sim_furrr)
 #>       sim   x_coef
@@ -290,7 +290,7 @@ set.seed(123) ## Optional to ensure results are exactly the same.
 tic()
 sim_pblapply = pblapply(1:1e4, bootstrap, cl = parallel::detectCores())
 toc()
-#> 6.495 sec elapsed
+#> 9.403 sec elapsed
 ```
 
 > **Aside:** On the subject of progress bars, check out the **progressr** package ([link](https://github.com/HenrikBengtsson/progressr)) for a unified framework that works with all kinds of functions and (a)syncronous backends.
@@ -339,9 +339,9 @@ Taking a step back, you don't have to worry too much about the difference betwee
 # library(RhpcBLASctl) ## Already loaded
 
 get_num_procs() ## No. of all cores (including logical/hyperthreaded)
-#> [1] 3
+#> [1] 2
 get_num_cores() ## No. of physical cores only
-#> [1] 3
+#> [1] 2
 ```
 
 ### Forking vs Sockets
@@ -379,7 +379,7 @@ plan(multicore) ## NB: Only works on Unix!
 tic()
 future_ex_mc = future_lapply(1:12, slow_square)
 toc(log = TRUE)
-#> 8.367 sec elapsed
+#> 12.128 sec elapsed
 ```
 
 

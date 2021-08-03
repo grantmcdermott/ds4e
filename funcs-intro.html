@@ -6,16 +6,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>2 Functions: Introductory concepts | Data Science for Economists and Other Animals</title>
 <meta name="author" content="Grant McDermott and Ed Rubin">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.7.4/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4/tabs.js"></script><script src="libs/bs3compat-0.2.4/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-76482472-1"></script><script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-76482472-1');
-    </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-76482472-1"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'UA-76482472-1');
+  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -54,15 +54,15 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="funcs-intro" class="section level1" number="2">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="funcs-intro" class="section level1">
 <h1>
 <span class="header-section-number">2</span> Functions: Introductory concepts<a class="anchor" aria-label="anchor" href="#funcs-intro"><i class="fas fa-link"></i></a>
 </h1>
-<div id="software-requirements" class="section level2" number="2.1">
+<div id="software-requirements" class="section level2">
 <h2>
 <span class="header-section-number">2.1</span> Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"><i class="fas fa-link"></i></a>
 </h2>
-<div id="r-packages" class="section level3" number="2.1.1">
+<div id="r-packages" class="section level3">
 <h3>
 <span class="header-section-number">2.1.1</span> R packages<a class="anchor" aria-label="anchor" href="#r-packages"><i class="fas fa-link"></i></a>
 </h3>
@@ -78,7 +78,7 @@
 <span class="fu">pacman</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pacman/man/p_load.html">p_load</a></span><span class="op">(</span><span class="va">pbapply</span>, <span class="va">data.table</span>, <span class="va">tidyverse</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="basic-syntax" class="section level2" number="2.2">
+<div id="basic-syntax" class="section level2">
 <h2>
 <span class="header-section-number">2.2</span> Basic syntax<a class="anchor" aria-label="anchor" href="#basic-syntax"><i class="fas fa-link"></i></a>
 </h2>
@@ -103,7 +103,7 @@
 <code class="sourceCode R"><span class="va">my_short_func</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">ARGUMENTS</span><span class="op">)</span> <span class="va">OPERATION</span></code></pre></div>
 <p>Try to give your functions short, pithy names that are informative to both you and anyone else reading your code. This is harder than it sounds, but will pay off down the road.</p>
 </div>
-<div id="simple-square" class="section level2" number="2.3">
+<div id="simple-square" class="section level2">
 <h2>
 <span class="header-section-number">2.3</span> A simple example<a class="anchor" aria-label="anchor" href="#simple-square"><i class="fas fa-link"></i></a>
 </h2>
@@ -121,7 +121,7 @@
 <blockquote>
 <p><strong>Aside:</strong> We wish to emphasise that our little <code>square()</code> function is not exciting or, indeed, particularly useful. R’s built-in arithmetic functions already take care of (vectorised) exponentiation and do so very efficiently. (See <code><a href="https://rdrr.io/r/base/Arithmetic.html">?Arithmetic</a></code>.) However, we’re going to continue with this conceptually simple example, since it will provide a clear framework for demonstrating some general principles about functions in R.</p>
 </blockquote>
-<div id="specifying-return-values" class="section level3" number="2.3.1">
+<div id="specifying-return-values" class="section level3">
 <h3>
 <span class="header-section-number">2.3.1</span> Specifying return values<a class="anchor" aria-label="anchor" href="#specifying-return-values"><i class="fas fa-link"></i></a>
 </h3>
@@ -172,7 +172,7 @@
 <span class="co">#&gt;   value value_squared</span>
 <span class="co">#&gt; 1    12           144</span></code></pre></div>
 </div>
-<div id="specifying-default-argument-values" class="section level3" number="2.3.2">
+<div id="specifying-default-argument-values" class="section level3">
 <h3>
 <span class="header-section-number">2.3.2</span> Specifying default argument values<a class="anchor" aria-label="anchor" href="#specifying-default-argument-values"><i class="fas fa-link"></i></a>
 </h3>
@@ -194,7 +194,7 @@
 <span class="co">#&gt; 1     2             4</span></code></pre></div>
 <p>We’ll return to the issues of specifying default values, handling invalid inputs, and general debugging in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
 </div>
-<div id="aside-environments-and-lexical-scoping" class="section level3" number="2.3.3">
+<div id="aside-environments-and-lexical-scoping" class="section level3">
 <h3>
 <span class="header-section-number">2.3.3</span> Aside: Environments and lexical scoping<a class="anchor" aria-label="anchor" href="#aside-environments-and-lexical-scoping"><i class="fas fa-link"></i></a>
 </h3>
@@ -202,12 +202,12 @@
 <p>We’ll revisit the ideas of distinct object environments and lexical scoping when we get to functional programming in Section <a href="funcs-intro.html#functional-programming">2.5.3</a> below, and then again in Section <a href="funcs-adv.html#debugging">3.2</a>.</p>
 </div>
 </div>
-<div id="control-flow" class="section level2" number="2.4">
+<div id="control-flow" class="section level2">
 <h2>
 <span class="header-section-number">2.4</span> Control flow<a class="anchor" aria-label="anchor" href="#control-flow"><i class="fas fa-link"></i></a>
 </h2>
 <p>Now that we’ve got a good sense of the basic function syntax, it’s time to learn control flow. That is, we want to control the order (or “flow”) of statements and operations that our functions evaluate.</p>
-<div id="if-and-ifelse" class="section level3" number="2.4.1">
+<div id="if-and-ifelse" class="section level3">
 <h3>
 <span class="header-section-number">2.4.1</span> if and ifelse<a class="anchor" aria-label="anchor" href="#if-and-ifelse"><i class="fas fa-link"></i></a>
 </h3>
@@ -247,7 +247,7 @@
 <span class="co">#&gt; 1     1             1</span></code></pre></div>
 <p>This time, by specifying NULL in the argument — alongside the expanded <code>if()</code> statement — our function now both takes a default value <em>and</em> generates a helpful message.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Think about how you might have tried to achieve this if we’d assigned the &lt;code&gt;x = 1&lt;/code&gt; default directly in function argument as before. It quickly gets complicated, because how can your message discriminate whether a user left the argument blank or deliberately entered &lt;code&gt;square(1)&lt;/code&gt;?&lt;/p&gt;"><sup>6</sup></a> Note too the use of curly brackets for conditional operations that span multiple lines after an <code>if()</code> statement.
 This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. As we’ve already seen , these be written as a single conditional call where the format is:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="funcs-intro.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(CONDITION, DO IF <span class="cn">TRUE</span>, DO IF <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="funcs-intro.html#cb20-1"></a><span class="kw">ifelse</span>(CONDITION, DO IF <span class="ot">TRUE</span>, DO IF <span class="ot">FALSE</span>)</span></code></pre></div>
 <p>Within our own functions, though we’re more likely to write them over several lines. Consider, for example a new function that evaluates whether our <code>square()</code> function is doing its job properly.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eval_square</span> <span class="op">=</span>
@@ -264,7 +264,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
   <span class="op">}</span>
 <span class="fu">eval_square</span><span class="op">(</span><span class="fl">64</span><span class="op">)</span>
 <span class="co">#&gt; Nailed it.</span></code></pre></div>
-<div id="aside-ifelse-gotchas-and-alternatives" class="section level4" number="2.4.1.1">
+<div id="aside-ifelse-gotchas-and-alternatives" class="section level4">
 <h4>
 <span class="header-section-number">2.4.1.1</span> Aside: ifelse gotchas and alternatives<a class="anchor" aria-label="anchor" href="#aside-ifelse-gotchas-and-alternatives"><i class="fas fa-link"></i></a>
 </h4>
@@ -272,7 +272,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] 18730</span></code></pre></div>
+<span class="co">#&gt; [1] 18842</span></code></pre></div>
 <p>You are no doubt surprised to find that our function returns a number instead of a date. This is because <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date(today(TRUE), origin = "1970-01-01")</a></code>.</p>
 <blockquote>
 <p><strong>Aside:</strong> The “dot-dot-dot” argument (<code>...</code>) that we’ve used above is a convenient shortcut that allows users to enter unspecified arguments into a function. This is beyond the scope of this chapter, but can prove to be an incredibly useful and flexible programming strategy. We highly encourage you to look at the <a href="https://adv-r.hadley.nz/functions.html#fun-dot-dot-dot">relevant section</a> of <em>Advanced R</em> to get a better idea.</p>
@@ -282,20 +282,20 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html">if_else</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today2</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] "2021-04-13"</span></code></pre></div>
+<span class="co">#&gt; [1] "2021-08-03"</span></code></pre></div>
 <p>Second, <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">data.table::fifelse()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">today3</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fifelse.html">fifelse</a></span><span class="op">(</span><span class="va">...</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 <span class="fu">today3</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; [1] "2021-04-13"</span></code></pre></div>
+<span class="co">#&gt; [1] "2021-08-03"</span></code></pre></div>
 </div>
 </div>
-<div id="case-when-nested-ifelse" class="section level3" number="2.4.2">
+<div id="case-when-nested-ifelse" class="section level3">
 <h3>
 <span class="header-section-number">2.4.2</span> <em>case when</em> (nested ifelse)<a class="anchor" aria-label="anchor" href="#case-when-nested-ifelse"><i class="fas fa-link"></i></a>
 </h3>
 <p>As you may have guessed, it’s certainly possible to write nested <code><a href="https://rdrr.io/r/base/ifelse.html">ifelse()</a></code> statements. For example,</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="funcs-intro.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ifelse</span>(CONDITION1, DO IF <span class="cn">TRUE</span>, <span class="fu">ifelse</span>(CONDITION2, DO IF <span class="cn">TRUE</span>, <span class="fu">ifelse</span>(...)))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="funcs-intro.html#cb25-1"></a><span class="kw">ifelse</span>(CONDITION1, DO IF <span class="ot">TRUE</span>, <span class="kw">ifelse</span>(CONDITION2, DO IF <span class="ot">TRUE</span>, <span class="kw">ifelse</span>(...)))</span></code></pre></div>
 <p>However, these nested statements quickly become difficult to read and troubleshoot. A better solution was originally developed in SQL with the <code>CASE WHEN</code> statement. Both <strong>dplyr</strong> with <code>case_when()</code> and <strong>data.table</strong> with <code>fcase()</code> provide implementations R. Here is a simple illustration of both implementations.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>
@@ -352,12 +352,12 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 10: 10    big</span></code></pre></div>
 </div>
 </div>
-<div id="iteration" class="section level2" number="2.5">
+<div id="iteration" class="section level2">
 <h2>
 <span class="header-section-number">2.5</span> Iteration<a class="anchor" aria-label="anchor" href="#iteration"><i class="fas fa-link"></i></a>
 </h2>
 <p>Alongside control flow, the most important early programming skill to master is iteration. In particular, we want to write functions that can iterate — or <em>map</em> — over a set of inputs.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;Our focus in this chapter will only be on sequential iteration. We’ll explore parallel iteration in a few chapters.&lt;/p&gt;"><sup>7</sup></a> By far the most common way to iterate across different programming languages is <em>for</em> loops. Indeed, we already saw some examples of <em>for</em> loops back in the shell lecture (see <a href="https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html#95">here</a>). However, while R certainly accepts standard <em>for</em> loops, we’re going to advocate that you adopt what is known as a “functional programming” approach to writing loops. Let’s dive into the reasons why and how these approaches differ.</p>
-<div id="vectorisation" class="section level3" number="2.5.1">
+<div id="vectorisation" class="section level3">
 <h3>
 <span class="header-section-number">2.5.1</span> Vectorisation<a class="anchor" aria-label="anchor" href="#vectorisation"><i class="fas fa-link"></i></a>
 </h3>
@@ -378,7 +378,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>So, again, you may not need to think about explicit iteration at all.</p>
 <p>That being said, there are certainly cases where you <em>will</em> need to think about iteration. For the remainder of this section, we’ll explore with some simple examples — some of which are already vectorised! — that provide a mental springboard for thinking about more complex cases.</p>
 </div>
-<div id="for-loops" class="section level3" number="2.5.2">
+<div id="for-loops" class="section level3">
 <h3>
 <span class="header-section-number">2.5.2</span> <em>for</em> loops<a class="anchor" aria-label="anchor" href="#for-loops"><i class="fas fa-link"></i></a>
 </h3>
@@ -407,7 +407,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; [1] 80.33 82.13 83.93 85.73 87.53 89.33</span></code></pre></div>
 <p>Unfortunately, basic <em>for</em> loops in R also come with some downsides. Historically, they used to be significantly slower and memory consumptive than alternative methods (see below). This has largely been resolved, but we’ve still run into cases where an inconspicuous <em>for</em> loop has brought an entire analysis crashing to its knees.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;&lt;a href="https://github.com/grantmcdermott/bycatch/commit/18dbed157f0762bf4b44dfee437d6f319561c160"&gt;Exhibit A&lt;/a&gt;. Trust us: debugging these cases is not much fun.&lt;/p&gt;'><sup>9</sup></a> The bigger problem with <em>for</em> loops, however, is that they deviate from the norms and best practices of <strong>functional programming</strong>.</p>
 </div>
-<div id="functional-programming" class="section level3" number="2.5.3">
+<div id="functional-programming" class="section level3">
 <h3>
 <span class="header-section-number">2.5.3</span> Functional programming<a class="anchor" aria-label="anchor" href="#functional-programming"><i class="fas fa-link"></i></a>
 </h3>
@@ -430,7 +430,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <li>The <code>map*()</code> family of functions from the <a href="https://purrr.tidyverse.org/"><strong>purrr</strong></a>.</li>
 </ol>
 <p>Let’s explore these in more depth.</p>
-<div id="lapply-and-co." class="section level4" number="2.5.3.1">
+<div id="lapply-and-co." class="section level4">
 <h4>
 <span class="header-section-number">2.5.3.1</span> lapply and co.<a class="anchor" aria-label="anchor" href="#lapply-and-co."><i class="fas fa-link"></i></a>
 </h4>
@@ -468,11 +468,11 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; [[10]]</span>
 <span class="co">#&gt; [1] "J"</span></code></pre></div>
 <p>A couple of things to notice.</p>
-<p>First, check your “Environment” pane in RStudio. Do you see an object called “i” in the Global Environment? (The answer should be“no.”) Again, this is because of R’s lexical scoping rules, which mean that any object created and invoked by a function is evaluated in a sandboxed environment outside of your global environment.</p>
+<p>First, check your “Environment” pane in RStudio. Do you see an object called “i” in the Global Environment? (The answer should be“no”.) Again, this is because of R’s lexical scoping rules, which mean that any object created and invoked by a function is evaluated in a sandboxed environment outside of your global environment.</p>
 <p>Second, notice how little the basic syntax changed when switching over from <code>for()</code> to <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>. Yes, there are some differences, but the essential structure remains the same: We first provide the iteration list (<code>1:10</code>) and then specify the desired function or operation (<code>LETTERS[i]</code>).</p>
 <p>Third, notice that the returned object is a <em>list</em>. The <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> function can take various input types as arguments — vectors, data frames, lists — but always returns a list, where each element of the returned list is the result from one iteration of the loop. (So now you know where the “l” in “<strong>l</strong>apply” comes from.)</p>
 </div>
-<div id="aside-binding-and-simplifying-lists" class="section level4" number="2.5.3.2">
+<div id="aside-binding-and-simplifying-lists" class="section level4">
 <h4>
 <span class="header-section-number">2.5.3.2</span> Aside: Binding and simplifying lists<a class="anchor" aria-label="anchor" href="#aside-binding-and-simplifying-lists"><i class="fas fa-link"></i></a>
 </h4>
@@ -510,7 +510,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="va">LETTERS</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span> 
 <span class="co">#&gt;  [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J"</span></code></pre></div>
-<div id="aside-progress-bars" class="section level5" number="2.5.3.2.1">
+<div id="aside-progress-bars" class="section level5">
 <h5>
 <span class="header-section-number">2.5.3.2.1</span> Aside: Progress bars!<a class="anchor" aria-label="anchor" href="#aside-progress-bars"><i class="fas fa-link"></i></a>
 </h5>
@@ -541,7 +541,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>At the time of writing, there’s also a newish package on the scene, <a href="https://github.com/HenrikBengtsson/progressr"><strong>progressr</strong></a>, which provides a unified API for progress updates across multiple iteration frameworks in R. We won’t cover it here, but it’s pretty neat and simple to use, so check it out.</p>
 </div>
 </div>
-<div id="purrr-package" class="section level4" number="2.5.3.3">
+<div id="purrr-package" class="section level4">
 <h4>
 <span class="header-section-number">2.5.3.3</span> purrr package<a class="anchor" aria-label="anchor" href="#purrr-package"><i class="fas fa-link"></i></a>
 </h4>
@@ -610,7 +610,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <p>Note that this is more efficient (i.e. involves less typing) than the <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> version, since we don’t have to go through the extra step of binding rows at the end.</p>
 </div>
 </div>
-<div id="create-and-iterate-over-named-functions" class="section level3" number="2.5.4">
+<div id="create-and-iterate-over-named-functions" class="section level3">
 <h3>
 <span class="header-section-number">2.5.4</span> Create and iterate over named functions<a class="anchor" aria-label="anchor" href="#create-and-iterate-over-named-functions"><i class="fas fa-link"></i></a>
 </h3>
@@ -645,7 +645,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 3  26   Z</span>
 <span class="co">#&gt; 4   3   C</span></code></pre></div>
 </div>
-<div id="iterate-over-multiple-inputs" class="section level3" number="2.5.5">
+<div id="iterate-over-multiple-inputs" class="section level3">
 <h3>
 <span class="header-section-number">2.5.5</span> Iterate over multiple inputs<a class="anchor" aria-label="anchor" href="#iterate-over-multiple-inputs"><i class="fas fa-link"></i></a>
 </h3>
@@ -671,7 +671,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <li>Use a data frame of input combinations.</li>
 </ol>
 <p>We’ll quickly review both approaches, continuing with the <code>multi_func()</code> function that we just created above.</p>
-<div id="use-mapplymap-or-pmap" class="section level4" number="2.5.5.1">
+<div id="use-mapplymap-or-pmap" class="section level4">
 <h4>
 <span class="header-section-number">2.5.5.1</span> Use <code>mapply()</code>/<code>Map()</code> or <code>pmap()</code><a class="anchor" aria-label="anchor" href="#use-mapplymap-or-pmap"><i class="fas fa-link"></i></a>
 </h4>
@@ -711,7 +711,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt; 4 4  9 6.500000</span>
 <span class="co">#&gt; 5 5 10 6.708204</span></code></pre></div>
 </div>
-<div id="using-a-data-frame-of-input-combinations" class="section level4" number="2.5.5.2">
+<div id="using-a-data-frame-of-input-combinations" class="section level4">
 <h4>
 <span class="header-section-number">2.5.5.2</span> Using a data frame of input combinations<a class="anchor" aria-label="anchor" href="#using-a-data-frame-of-input-combinations"><i class="fas fa-link"></i></a>
 </h4>
@@ -790,7 +790,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 </div>
 </div>
 </div>
-<div id="further-resources" class="section level2" number="2.6">
+<div id="further-resources" class="section level2">
 <h2>
 <span class="header-section-number">2.6</span> Further resources<a class="anchor" aria-label="anchor" href="#further-resources"><i class="fas fa-link"></i></a>
 </h2>
@@ -802,7 +802,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <li>On the other end of the scale, Jenny Bryan (all hail) has created a fairly epic <a href="https://jennybc.github.io/purrr-tutorial">purrr tutorial</a> mini-website. (Bonus: She goes into more depth about working with lists and list columns.)</li>
 </ul>
 </div>
-<div id="addendum-inspecting-function-source-code" class="section level2" number="2.7">
+<div id="addendum-inspecting-function-source-code" class="section level2">
 <h2>
 <span class="header-section-number">2.7</span> Addendum: Inspecting function source code<a class="anchor" aria-label="anchor" href="#addendum-inspecting-function-source-code"><i class="fas fa-link"></i></a>
 </h2>
@@ -814,14 +814,14 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fb590dfddd0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55e1443cd848&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>Unfortunately, the simple print-function-to-screen approach doesn’t work once you start getting into functions that have different dispatch “methods” (e.g. associated with S3 or S4 classes), or rely on compiled code underneath the hood (e.g. written in C or Fortran). The good news is that you can still view the source code, although it does require a bit more legwork. As a quick example, consider what happens if we try to look at the source code for R’s generic <code>summary</code> function.</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">summary</span>
 <span class="co">#&gt; function (object, ...) </span>
 <span class="co">#&gt; UseMethod("summary")</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fb58d675670&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55e13f3bd7c0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/base/UseMethod.html">UseMethod("summary")</a></code> part is telling us that R will invoke different methods for summarising different objects, depending on their class. Obviously, this makes sense. We wouldn’t expect a data frame to be summarised in the same way as a regression object. To see which methods are available to <code>summary</code> in our current R session, we can use the <code><a href="https://rdrr.io/r/utils/methods.html">methods()</a></code> function:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
@@ -918,53 +918,53 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <span class="co">#&gt;     attr(z, "class") &lt;- c("table")</span>
 <span class="co">#&gt;     z</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fb591a14ac8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x55e144944060&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>By the way, it’s also possible to go the other way around; you can view all of the generic methods associated with a particular object class. For example, there are <em>lots</em> of valid methods associated with data frames:</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span> 
 <span class="co">#&gt;   [1] [                 [[                [[&lt;-              [&lt;-              </span>
-<span class="co">#&gt;   [5] $&lt;-               aggregate         anti_join         anyDuplicated    </span>
-<span class="co">#&gt;   [9] anyNA             arrange_          arrange           as_factor        </span>
-<span class="co">#&gt;  [13] as_tibble         as.col_spec       as.data.frame     as.data.table    </span>
-<span class="co">#&gt;  [17] as.list           as.matrix         as.tbl            auto_copy        </span>
-<span class="co">#&gt;  [21] by                cbind             coerce            coerce&lt;-         </span>
-<span class="co">#&gt;  [25] collapse          collect           complete_         complete         </span>
-<span class="co">#&gt;  [29] compute           count             dim               dimnames         </span>
-<span class="co">#&gt;  [33] dimnames&lt;-        distinct_         distinct          do_              </span>
-<span class="co">#&gt;  [37] do                dplyr_col_modify  dplyr_reconstruct dplyr_row_slice  </span>
-<span class="co">#&gt;  [41] drop_na_          drop_na           droplevels        duplicated       </span>
-<span class="co">#&gt;  [45] edit              expand_           expand            extract_         </span>
-<span class="co">#&gt;  [49] extract           fill_             fill              filter_          </span>
-<span class="co">#&gt;  [53] filter            format            formula           fortify          </span>
-<span class="co">#&gt;  [57] full_join         gather_           gather            ggplot_add       </span>
-<span class="co">#&gt;  [61] glimpse           group_by_         group_by          group_data       </span>
-<span class="co">#&gt;  [65] group_indices_    group_indices     group_keys        group_map        </span>
-<span class="co">#&gt;  [69] group_modify      group_nest        group_size        group_split      </span>
-<span class="co">#&gt;  [73] group_trim        group_vars        groups            head             </span>
-<span class="co">#&gt;  [77] initialize        inner_join        intersect         is.na            </span>
-<span class="co">#&gt;  [81] left_join         Math              merge             mutate_          </span>
-<span class="co">#&gt;  [85] mutate            n_groups          na.exclude        na.omit          </span>
-<span class="co">#&gt;  [89] nest_by           nest_join         nest_legacy       nest             </span>
-<span class="co">#&gt;  [93] Ops               pivot_longer      pivot_wider       plot             </span>
-<span class="co">#&gt;  [97] print             prompt            pull              rbind            </span>
-<span class="co">#&gt; [101] relocate          rename_           rename_with       rename           </span>
-<span class="co">#&gt; [105] replace_na        right_join        row.names         row.names&lt;-      </span>
-<span class="co">#&gt; [109] rows_delete       rows_insert       rows_patch        rows_update      </span>
-<span class="co">#&gt; [113] rows_upsert       rowsum            rowwise           same_src         </span>
-<span class="co">#&gt; [117] sample_frac       sample_n          select_           select           </span>
-<span class="co">#&gt; [121] semi_join         separate_         separate_rows_    separate_rows    </span>
-<span class="co">#&gt; [125] separate          setdiff           setequal          show             </span>
-<span class="co">#&gt; [129] slice_            slice_head        slice_max         slice_min        </span>
-<span class="co">#&gt; [133] slice_sample      slice_tail        slice             slotsFromS3      </span>
-<span class="co">#&gt; [137] split             split&lt;-           spread_           spread           </span>
-<span class="co">#&gt; [141] stack             str               subset            summarise_       </span>
-<span class="co">#&gt; [145] summarise         summary           Summary           t                </span>
-<span class="co">#&gt; [149] tail              tally             tbl_vars          transform        </span>
-<span class="co">#&gt; [153] transmute_        transmute         type.convert      ungroup          </span>
-<span class="co">#&gt; [157] union_all         union             unique            unite_           </span>
-<span class="co">#&gt; [161] unite             unnest_legacy     unnest            unstack          </span>
-<span class="co">#&gt; [165] within           </span>
+<span class="co">#&gt;   [5] $&lt;-               add_count         aggregate         anti_join        </span>
+<span class="co">#&gt;   [9] anyDuplicated     anyNA             arrange_          arrange          </span>
+<span class="co">#&gt;  [13] as_factor         as_tibble         as.col_spec       as.data.frame    </span>
+<span class="co">#&gt;  [17] as.data.table     as.list           as.matrix         as.tbl           </span>
+<span class="co">#&gt;  [21] auto_copy         by                cbind             coerce           </span>
+<span class="co">#&gt;  [25] coerce&lt;-          collapse          collect           complete_        </span>
+<span class="co">#&gt;  [29] complete          compute           count             dim              </span>
+<span class="co">#&gt;  [33] dimnames          dimnames&lt;-        distinct_         distinct         </span>
+<span class="co">#&gt;  [37] do_               do                dplyr_col_modify  dplyr_reconstruct</span>
+<span class="co">#&gt;  [41] dplyr_row_slice   drop_na_          drop_na           droplevels       </span>
+<span class="co">#&gt;  [45] duplicated        edit              expand_           expand           </span>
+<span class="co">#&gt;  [49] extract_          extract           fill_             fill             </span>
+<span class="co">#&gt;  [53] filter_           filter            format            formula          </span>
+<span class="co">#&gt;  [57] fortify           full_join         gather_           gather           </span>
+<span class="co">#&gt;  [61] ggplot_add        glimpse           group_by_         group_by         </span>
+<span class="co">#&gt;  [65] group_data        group_indices_    group_indices     group_keys       </span>
+<span class="co">#&gt;  [69] group_map         group_modify      group_nest        group_size       </span>
+<span class="co">#&gt;  [73] group_split       group_trim        group_vars        groups           </span>
+<span class="co">#&gt;  [77] head              initialize        inner_join        intersect        </span>
+<span class="co">#&gt;  [81] is.na             left_join         Math              merge            </span>
+<span class="co">#&gt;  [85] mutate_           mutate            n_groups          na.exclude       </span>
+<span class="co">#&gt;  [89] na.omit           nest_by           nest_join         nest_legacy      </span>
+<span class="co">#&gt;  [93] nest              Ops               pivot_longer      pivot_wider      </span>
+<span class="co">#&gt;  [97] plot              print             prompt            pull             </span>
+<span class="co">#&gt; [101] rbind             relocate          rename_           rename_with      </span>
+<span class="co">#&gt; [105] rename            replace_na        right_join        row.names        </span>
+<span class="co">#&gt; [109] row.names&lt;-       rows_delete       rows_insert       rows_patch       </span>
+<span class="co">#&gt; [113] rows_update       rows_upsert       rowsum            rowwise          </span>
+<span class="co">#&gt; [117] same_src          sample_frac       sample_n          select_          </span>
+<span class="co">#&gt; [121] select            semi_join         separate_         separate_rows_   </span>
+<span class="co">#&gt; [125] separate_rows     separate          setdiff           setequal         </span>
+<span class="co">#&gt; [129] show              slice_            slice_head        slice_max        </span>
+<span class="co">#&gt; [133] slice_min         slice_sample      slice_tail        slice            </span>
+<span class="co">#&gt; [137] slotsFromS3       split             split&lt;-           spread_          </span>
+<span class="co">#&gt; [141] spread            stack             str               subset           </span>
+<span class="co">#&gt; [145] summarise_        summarise         summary           Summary          </span>
+<span class="co">#&gt; [149] t                 tail              tally             tbl_vars         </span>
+<span class="co">#&gt; [153] transform         transmute_        transmute         type.convert     </span>
+<span class="co">#&gt; [157] ungroup           union_all         union             unique           </span>
+<span class="co">#&gt; [161] unite_            unite             unnest_legacy     unnest           </span>
+<span class="co">#&gt; [165] unstack           within            xtfrm            </span>
 <span class="co">#&gt; see '?methods' for accessing help and source code</span></code></pre></div>
 <p>In this brief addendum, we’ve focused on the source code for different dispatch methods. Accessing compiled source code (e.g. written in C or Fortran) is a bit more complicated and, frankly, beyond the scope of what we want to show you here. You are already well-equipped to peruse many of the key R functions that you are likely to be using. For a full length treatment of how to access source code of R functions, we recommend any of the three sources:</p>
 <ul>
@@ -1030,7 +1030,7 @@ This provides a nice segue to <code><a href="https://rdrr.io/r/base/ifelse.html"
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-04-23.</p>
+    <p>"<strong>Data Science for Economists and Other Animals</strong>" was written by Grant McDermott and Ed Rubin. It was last built on 2021-08-03.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

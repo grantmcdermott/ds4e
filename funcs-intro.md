@@ -261,7 +261,7 @@ The base R `ifelse()` function normally works great and we use it all the time. 
 ```r
 today = function(...) ifelse(..., Sys.Date(), Sys.Date()-1)
 today(TRUE)
-#> [1] 18730
+#> [1] 18842
 ```
 
 You are no doubt surprised to find that our function returns a number instead of a date. This is because `ifelse()` automatically converts date objects to numeric as a way to get around some other type conversion strictures. Confirm for yourself by converting it back the other way around with: `as.Date(today(TRUE), origin = "1970-01-01")`. 
@@ -276,7 +276,7 @@ First, `dplyr::if_else()`:
 ```r
 today2 = function(...) dplyr::if_else(..., Sys.Date(), Sys.Date()-1)
 today2(TRUE)
-#> [1] "2021-04-13"
+#> [1] "2021-08-03"
 ```
 
 Second, `data.table::fifelse()`:
@@ -285,7 +285,7 @@ Second, `data.table::fifelse()`:
 ```r
 today3 = function(...) data.table::fifelse(..., Sys.Date(), Sys.Date()-1)
 today3(TRUE)
-#> [1] "2021-04-13"
+#> [1] "2021-08-03"
 ```
 
 ### *case when* (nested ifelse)
@@ -869,7 +869,7 @@ replace
 #>     x[list] <- values
 #>     x
 #> }
-#> <bytecode: 0x7fb590dfddd0>
+#> <bytecode: 0x55e1443cd848>
 #> <environment: namespace:base>
 ```
 
@@ -880,7 +880,7 @@ Unfortunately, the simple print-function-to-screen approach doesn't work once yo
 summary
 #> function (object, ...) 
 #> UseMethod("summary")
-#> <bytecode: 0x7fb58d675670>
+#> <bytecode: 0x55e13f3bd7c0>
 #> <environment: namespace:base>
 ```
 
@@ -985,7 +985,7 @@ summary.data.frame
 #>     attr(z, "class") <- c("table")
 #>     z
 #> }
-#> <bytecode: 0x7fb591a14ac8>
+#> <bytecode: 0x55e144944060>
 #> <environment: namespace:base>
 ```
 
@@ -995,47 +995,47 @@ By the way, it's also possible to go the other way around; you can view all of t
 ```r
 methods(class = "data.frame") 
 #>   [1] [                 [[                [[<-              [<-              
-#>   [5] $<-               aggregate         anti_join         anyDuplicated    
-#>   [9] anyNA             arrange_          arrange           as_factor        
-#>  [13] as_tibble         as.col_spec       as.data.frame     as.data.table    
-#>  [17] as.list           as.matrix         as.tbl            auto_copy        
-#>  [21] by                cbind             coerce            coerce<-         
-#>  [25] collapse          collect           complete_         complete         
-#>  [29] compute           count             dim               dimnames         
-#>  [33] dimnames<-        distinct_         distinct          do_              
-#>  [37] do                dplyr_col_modify  dplyr_reconstruct dplyr_row_slice  
-#>  [41] drop_na_          drop_na           droplevels        duplicated       
-#>  [45] edit              expand_           expand            extract_         
-#>  [49] extract           fill_             fill              filter_          
-#>  [53] filter            format            formula           fortify          
-#>  [57] full_join         gather_           gather            ggplot_add       
-#>  [61] glimpse           group_by_         group_by          group_data       
-#>  [65] group_indices_    group_indices     group_keys        group_map        
-#>  [69] group_modify      group_nest        group_size        group_split      
-#>  [73] group_trim        group_vars        groups            head             
-#>  [77] initialize        inner_join        intersect         is.na            
-#>  [81] left_join         Math              merge             mutate_          
-#>  [85] mutate            n_groups          na.exclude        na.omit          
-#>  [89] nest_by           nest_join         nest_legacy       nest             
-#>  [93] Ops               pivot_longer      pivot_wider       plot             
-#>  [97] print             prompt            pull              rbind            
-#> [101] relocate          rename_           rename_with       rename           
-#> [105] replace_na        right_join        row.names         row.names<-      
-#> [109] rows_delete       rows_insert       rows_patch        rows_update      
-#> [113] rows_upsert       rowsum            rowwise           same_src         
-#> [117] sample_frac       sample_n          select_           select           
-#> [121] semi_join         separate_         separate_rows_    separate_rows    
-#> [125] separate          setdiff           setequal          show             
-#> [129] slice_            slice_head        slice_max         slice_min        
-#> [133] slice_sample      slice_tail        slice             slotsFromS3      
-#> [137] split             split<-           spread_           spread           
-#> [141] stack             str               subset            summarise_       
-#> [145] summarise         summary           Summary           t                
-#> [149] tail              tally             tbl_vars          transform        
-#> [153] transmute_        transmute         type.convert      ungroup          
-#> [157] union_all         union             unique            unite_           
-#> [161] unite             unnest_legacy     unnest            unstack          
-#> [165] within           
+#>   [5] $<-               add_count         aggregate         anti_join        
+#>   [9] anyDuplicated     anyNA             arrange_          arrange          
+#>  [13] as_factor         as_tibble         as.col_spec       as.data.frame    
+#>  [17] as.data.table     as.list           as.matrix         as.tbl           
+#>  [21] auto_copy         by                cbind             coerce           
+#>  [25] coerce<-          collapse          collect           complete_        
+#>  [29] complete          compute           count             dim              
+#>  [33] dimnames          dimnames<-        distinct_         distinct         
+#>  [37] do_               do                dplyr_col_modify  dplyr_reconstruct
+#>  [41] dplyr_row_slice   drop_na_          drop_na           droplevels       
+#>  [45] duplicated        edit              expand_           expand           
+#>  [49] extract_          extract           fill_             fill             
+#>  [53] filter_           filter            format            formula          
+#>  [57] fortify           full_join         gather_           gather           
+#>  [61] ggplot_add        glimpse           group_by_         group_by         
+#>  [65] group_data        group_indices_    group_indices     group_keys       
+#>  [69] group_map         group_modify      group_nest        group_size       
+#>  [73] group_split       group_trim        group_vars        groups           
+#>  [77] head              initialize        inner_join        intersect        
+#>  [81] is.na             left_join         Math              merge            
+#>  [85] mutate_           mutate            n_groups          na.exclude       
+#>  [89] na.omit           nest_by           nest_join         nest_legacy      
+#>  [93] nest              Ops               pivot_longer      pivot_wider      
+#>  [97] plot              print             prompt            pull             
+#> [101] rbind             relocate          rename_           rename_with      
+#> [105] rename            replace_na        right_join        row.names        
+#> [109] row.names<-       rows_delete       rows_insert       rows_patch       
+#> [113] rows_update       rows_upsert       rowsum            rowwise          
+#> [117] same_src          sample_frac       sample_n          select_          
+#> [121] select            semi_join         separate_         separate_rows_   
+#> [125] separate_rows     separate          setdiff           setequal         
+#> [129] show              slice_            slice_head        slice_max        
+#> [133] slice_min         slice_sample      slice_tail        slice            
+#> [137] slotsFromS3       split             split<-           spread_          
+#> [141] spread            stack             str               subset           
+#> [145] summarise_        summarise         summary           Summary          
+#> [149] t                 tail              tally             tbl_vars         
+#> [153] transform         transmute_        transmute         type.convert     
+#> [157] ungroup           union_all         union             unique           
+#> [161] unite_            unite             unnest_legacy     unnest           
+#> [165] unstack           within            xtfrm            
 #> see '?methods' for accessing help and source code
 ```
 

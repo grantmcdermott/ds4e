@@ -90,10 +90,10 @@ Let's print out the `nc` object that we just created and take a look at its stru
 ```r
 nc
 #> Simple feature collection with 100 features and 14 fields
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-#> geographic CRS: NAD27
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+#> Geodetic CRS:  NAD27
 #> First 10 features:
 #>     AREA PERIMETER CNTY_ CNTY_ID        NAME  FIPS FIPSNO CRESS_ID BIR74 SID74
 #> 1  0.114     1.442  1825    1825        Ashe 37009  37009        5  1091     1
@@ -148,16 +148,16 @@ nc %>%
   st_transform(crs = "+proj=moll") %>% ## Reprojecting to a Mollweide CRS
   head(2) ## Saving vertical space
 #> Simple feature collection with 2 features and 14 fields
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -7160488 ymin: 4364312 xmax: -7077217 ymax: 4404766
-#> CRS:            +proj=moll
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -7160486 ymin: 4364317 xmax: -7077213 ymax: 4404770
+#> CRS:           +proj=moll
 #>    AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74
 #> 1 0.114     1.442  1825    1825      Ashe 37009  37009        5  1091     1
 #> 2 0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0
 #>   NWBIR74 BIR79 SID79 NWBIR79                       geometry
-#> 1      10  1364     0      19 MULTIPOLYGON (((-7145982 43...
-#> 2      10   542     3      12 MULTIPOLYGON (((-7118092 43...
+#> 1      10  1364     0      19 MULTIPOLYGON (((-7145980 43...
+#> 2      10   542     3      12 MULTIPOLYGON (((-7118089 43...
 ```
 
 Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.
@@ -193,10 +193,10 @@ nc %>%
   mutate(AREA_1000 = AREA*1000) %>%
   select(NAME, contains("AREA"), everything())
 #> Simple feature collection with 3 features and 15 fields
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -79.01814 ymin: 35.85786 xmax: -75.95718 ymax: 36.55629
-#> geographic CRS: NAD27
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -79.01814 ymin: 35.85786 xmax: -75.95718 ymax: 36.55629
+#> Geodetic CRS:  NAD27
 #>          NAME  AREA AREA_1000 PERIMETER CNTY_ CNTY_ID  FIPS FIPSNO CRESS_ID
 #> 1 Northampton 0.153       153     2.206  1832    1832 37131  37131       66
 #> 2      Camden 0.062        62     1.547  1834    1834 37029  37029       15
@@ -242,7 +242,6 @@ nc %>%
   ggplot() +
   geom_sf(fill=NA, col="black") +
   labs(title = "Outline of North Carolina") 
-#> although coordinates are longitude/latitude, st_union assumes that they are planar
 ```
 
 <img src="spatial_files/figure-html/nc_union-1.png" width="672" style="display: block; margin: auto;" />
@@ -253,7 +252,7 @@ Or, you can get the `st_area()`, `st_centroid()`, `st_boundary()`, `st_buffer()`
 ```r
 nc %>% st_area() %>% head(5) ## Only show the area of the first five counties to save space.
 #> Units: [m^2]
-#> [1] 1137388604  611077263 1423489919  694546292 1520740530
+#> [1] 1137107793  610916077 1423145355  694378925 1520366979
 ```
 
 And:
@@ -333,16 +332,22 @@ ggplot() +
 
 Now let's limit it to the intersected regions:
 
+> Tip We have to temporarily switch off the underlying `S2` geometry operations in the code below, otherwise we'll trigger an error about invalid geometries. This appears to a known issue at the time of writing (see [here](https://github.com/r-spatial/sf/issues/1732)).
+
 
 ```r
 seine = st_transform(seine, crs = st_crs(france))
+sf::sf_use_s2(FALSE) ## Otherwise will trigger an error about invalid geometries
+#> Spherical geometry (s2) switched off
 france_intersected = st_intersection(france, seine)
+sf::sf_use_s2(TRUE) ## Back to default
+#> Spherical geometry (s2) switched on
 france_intersected
 #> Simple feature collection with 22 features and 2 fields
-#> geometry type:  GEOMETRY
-#> dimension:      XY
-#> bbox:           xmin: 0.4931747 ymin: 47.04007 xmax: 5.407725 ymax: 49.52717
-#> geographic CRS: WGS 84
+#> Geometry type: GEOMETRY
+#> Dimension:     XY
+#> Bounding box:  xmin: 0.4931747 ymin: 47.04007 xmax: 5.407725 ymax: 49.52717
+#> Geodetic CRS:  WGS 84
 #> First 10 features:
 #>                     ID  name                           geom
 #> 6                Aisne Marne LINESTRING (3.608053 49.089...
@@ -377,6 +382,9 @@ If we instead wanted to plot the subsample of intersected provinces (i.e. keepin
 
 
 ```r
+sf::sf_use_s2(FALSE) ## Otherwise will trigger an error about invalid geometries
+#> Spherical geometry (s2) switched off
+
 st_join(france, seine) %>% 
   filter(!is.na(name)) %>% ## Get rid of regions with no overlap
   distinct(ID, .keep_all = T) %>% ## Some regions are duplicated b/c two branches of the river network flow through them 
@@ -384,6 +392,9 @@ st_join(france, seine) %>%
   geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
   geom_sf(data = seine, col = "#05E9FF", lwd = 1) + 
   labs(title = "Intersected regions only") 
+
+sf::sf_use_s2(TRUE) ## Back to default
+#> Spherical geometry (s2) switched on
 ```
 
 <img src="spatial_files/figure-html/france_join-1.png" width="672" style="display: block; margin: auto;" />
@@ -425,10 +436,10 @@ The good news is that all of this information is still there. It's just hidden f
 ```r
 nc_dt$geometry
 #> Geometry set for 100 features 
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
-#> geographic CRS: NAD27
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965
+#> Geodetic CRS:  NAD27
 #> First 5 geometries:
 #> MULTIPOLYGON (((-81.47276 36.23436, -81.54084 3...
 #> MULTIPOLYGON (((-81.23989 36.36536, -81.24069 3...
@@ -447,7 +458,6 @@ nc_dt[, .(geometry = st_union(geometry))] %>% ## Explicitly refer to 'geometry' 
     geom_sf(fill=NA, col="black") +
     labs(title = "Outline of North Carolina", 
          subtitle = "This time brought to you by data.table") 
-#> although coordinates are longitude/latitude, st_union assumes that they are planar
 ```
 
 <img src="spatial_files/figure-html/ncd_dt3-1.png" width="672" style="display: block; margin: auto;" />
@@ -531,11 +541,30 @@ The latest and greatest projection, however, is the "[Equal Earth](http://equal-
 countries = 
   ne_countries(returnclass = "sf") %>%
   st_transform(8857) ## Transform to equal earth projection
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
   # st_transform("+proj=eqearth +wktext") ## PROJ string alternative
 
 ggplot(countries) +
   geom_sf(fill = "grey80", col = "grey40", lwd = 0.3) +
   labs(title = "The world", subtitle = "Equal Earth projection")
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
 ```
 
 <img src="spatial_files/figure-html/equal_earth-1.png" width="672" style="display: block; margin: auto;" />
@@ -551,6 +580,26 @@ world %>%
   ggplot() +
   geom_sf(fill = "grey80", col = "grey40", lwd = 0.3) +
   labs(title = "The... uh, world", subtitle = "Projection fail")
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
+
+#> Warning in CPL_transform(x, crs, aoi, pipeline, reverse, desired_accuracy, :
+#> GDAL Error 1: PROJ: proj_as_wkt: Unsupported conversion method: Equal Earth
 ```
 
 <img src="spatial_files/figure-html/equal_earth_bad-1.png" width="672" style="display: block; margin: auto;" />
@@ -639,23 +688,23 @@ rent
 
 ```
 #> Simple feature collection with 2292 features and 5 fields (with 10 geometries empty)
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -124.7631 ymin: 41.99179 xmax: -116.4635 ymax: 49.00249
-#> geographic CRS: NAD83
-#> # A tibble: 2,292 x 6
-#>    GEOID  NAME         variable estimate   moe                          geometry
-#>    <chr>  <chr>        <chr>       <dbl> <dbl>                <MULTIPOLYGON [°]>
-#>  1 53061… Census Trac… DP04_01…     1181   168 (((-122.2311 48.00875, -122.2288…
-#>  2 53033… Census Trac… DP04_01…     1208    97 (((-122.3551 47.52103, -122.3551…
-#>  3 53077… Census Trac… DP04_01…      845   208 (((-120.9789 46.66908, -120.9792…
-#>  4 53033… Census Trac… DP04_01…     1727   112 (((-122.3555 47.65542, -122.3555…
-#>  5 53027… Census Trac… DP04_01…      727   147 (((-123.7275 47.07135, -123.7264…
-#>  6 53061… Census Trac… DP04_01…     2065   331 (((-122.1409 48.06446, -122.1402…
-#>  7 53033… Census Trac… DP04_01…     1333   142 (((-122.3551 47.50711, -122.3551…
-#>  8 53077… Census Trac… DP04_01…     1290   155 (((-120.5724 46.59989, -120.5619…
-#>  9 53011… Census Trac… DP04_01…     1272    62 (((-122.5589 45.62102, -122.5548…
-#> 10 53021… Census Trac… DP04_01…      550   189 (((-119.0936 46.28581, -119.0934…
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -124.7631 ymin: 41.99179 xmax: -116.4635 ymax: 49.00249
+#> Geodetic CRS:  NAD83
+#> # A tibble: 2,292 × 6
+#>    GEOID       NAME       variable estimate   moe                       geometry
+#>    <chr>       <chr>      <chr>       <dbl> <dbl>             <MULTIPOLYGON [°]>
+#>  1 53061040100 Census Tr… DP04_01…     1181   168 (((-122.2311 48.00875, -122.2…
+#>  2 53033011300 Census Tr… DP04_01…     1208    97 (((-122.3551 47.52103, -122.3…
+#>  3 53077002900 Census Tr… DP04_01…      845   208 (((-120.9789 46.66908, -120.9…
+#>  4 53033004900 Census Tr… DP04_01…     1727   112 (((-122.3555 47.65542, -122.3…
+#>  5 53027000400 Census Tr… DP04_01…      727   147 (((-123.7275 47.07135, -123.7…
+#>  6 53061052708 Census Tr… DP04_01…     2065   331 (((-122.1409 48.06446, -122.1…
+#>  7 53033026801 Census Tr… DP04_01…     1333   142 (((-122.3551 47.50711, -122.3…
+#>  8 53077000800 Census Tr… DP04_01…     1290   155 (((-120.5724 46.59989, -120.5…
+#>  9 53011041322 Census Tr… DP04_01…     1272    62 (((-122.5589 45.62102, -122.5…
+#> 10 53021020700 Census Tr… DP04_01…      550   189 (((-119.0936 46.28581, -119.0…
 #> # … with 2,282 more rows
 ```
 
@@ -703,23 +752,23 @@ or_rent =
     ) 
 or_rent
 #> Simple feature collection with 595 features and 6 fields
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -124.1587 ymin: 43.43739 xmax: -121.5144 ymax: 46.38863
-#> geographic CRS: NAD83
-#> # A tibble: 595 x 7
-#>    GEOID  NAME   variable estimate   moe                    geometry metro_name 
-#>  * <chr>  <chr>  <chr>       <dbl> <dbl>          <MULTIPOLYGON [°]> <chr>      
-#>  1 53011… Censu… DP04_01…     1272    62 (((-122.5589 45.62102, -12… Portland-V…
-#>  2 53011… Censu… DP04_01…     1185   112 (((-122.5528 45.69343, -12… Portland-V…
-#>  3 53011… Censu… DP04_01…      866    64 (((-122.6143 45.63259, -12… Portland-V…
-#>  4 53011… Censu… DP04_01…     1268    62 (((-122.5282 45.60814, -12… Portland-V…
-#>  5 53011… Censu… DP04_01…     1268   267 (((-122.6002 45.78026, -12… Portland-V…
-#>  6 53011… Censu… DP04_01…     1274   107 (((-122.5603 45.66535, -12… Portland-V…
-#>  7 53011… Censu… DP04_01…     1092    77 (((-122.3562 45.57666, -12… Portland-V…
-#>  8 53011… Censu… DP04_01…     1427   106 (((-122.6576 45.69122, -12… Portland-V…
-#>  9 53011… Censu… DP04_01…     1148   132 (((-122.667 45.6664, -122.… Portland-V…
-#> 10 53011… Censu… DP04_01…     1074    76 (((-122.6716 45.62722, -12… Portland-V…
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -124.1587 ymin: 43.43739 xmax: -121.5144 ymax: 46.38863
+#> Geodetic CRS:  NAD83
+#> # A tibble: 595 × 7
+#>    GEOID       NAME  variable estimate   moe                  geometry metro_name
+#>  * <chr>       <chr> <chr>       <dbl> <dbl>        <MULTIPOLYGON [°]> <chr>     
+#>  1 53011041322 Cens… DP04_01…     1272    62 (((-122.5589 45.62102, -… Portland-…
+#>  2 53011040711 Cens… DP04_01…     1185   112 (((-122.5528 45.69343, -… Portland-…
+#>  3 53011042900 Cens… DP04_01…      866    64 (((-122.6143 45.63259, -… Portland-…
+#>  4 53011041323 Cens… DP04_01…     1268    62 (((-122.5282 45.60814, -… Portland-…
+#>  5 53011040413 Cens… DP04_01…     1268   267 (((-122.6002 45.78026, -… Portland-…
+#>  6 53011041312 Cens… DP04_01…     1274   107 (((-122.5603 45.66535, -… Portland-…
+#>  7 53011040507 Cens… DP04_01…     1092    77 (((-122.3562 45.57666, -… Portland-…
+#>  8 53011040809 Cens… DP04_01…     1427   106 (((-122.6576 45.69122, -… Portland-…
+#>  9 53011041010 Cens… DP04_01…     1148   132 (((-122.667 45.6664, -12… Portland-…
+#> 10 53011042500 Cens… DP04_01…     1074    76 (((-122.6716 45.62722, -… Portland-…
 #> # … with 585 more rows
 ```
 
@@ -760,10 +809,10 @@ oregon
 
 ```
 #> Simple feature collection with 36 features and 5 fields
-#> geometry type:  MULTIPOLYGON
-#> dimension:      XY
-#> bbox:           xmin: -124.5662 ymin: 41.99179 xmax: -116.4635 ymax: 46.29204
-#> geographic CRS: NAD83
+#> Geometry type: MULTIPOLYGON
+#> Dimension:     XY
+#> Bounding box:  xmin: -124.5662 ymin: 41.99179 xmax: -116.4635 ymax: 46.29204
+#> Geodetic CRS:  NAD83
 #> First 10 features:
 #>    GEOID                     NAME   variable estimate moe
 #> 1  41017 Deschutes County, Oregon B01003_001   186251  NA
