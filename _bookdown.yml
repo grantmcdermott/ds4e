@@ -8,7 +8,7 @@ delete_merged_file: true
 rmd_files: [
   "index.Rmd",
 
-  "intro.Rmd",
+  # "intro.Rmd",
   
   # Programming section
   "funcs-intro.Rmd",
