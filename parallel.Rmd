@@ -1,5 +1,7 @@
 # Parallel programming {#parallel}
 
+> **Important:** The online version of the book that you're reading was built using a small virtual machine in the cloud. This means that that the timings for this chapter will not be a fair reflection of the gains of parallel computing. We strongly advise that readers run the code on their own machines to get a true sense of the benefits.
+
 ## Software requirements
 
 ### R packages 
@@ -83,7 +85,7 @@ toc(log = TRUE)
 t_f_ex = as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]])))
 ```
 
-Look at at that: A `r round(t_s_ex/t_f_ex, 0)`× speedup! Even more impressively, consider how little the syntax changed. We just had to tell R that we wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend our `lapply()` call (i.e. <code>**future_**lapply()</code>). 
+Look at at that: A `r round(t_s_ex/t_f_ex, 1)`× speedup! Even more impressively, consider how little the syntax changed. We just had to tell R that we wanted to implement the iteration in parallel (i.e. <code>**plan(multisession)**</code>) and slightly amend our `lapply()` call (i.e. <code>**future_**lapply()</code>). 
 
 Let's confirm that the output is the same.
 
@@ -159,9 +161,9 @@ toc(log = TRUE)
 t_s = round(as.numeric(gsub(" sec elapsed", "", (tic.log()[[1]]))), 0)
 ```
 
-So that took about `r t_s` seconds on this system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of Grant's system monitor, showing that only one core was being used during this serial version.
+So that took about `r round(t_s, 0)` seconds on this system. Not a huge pain, but let's see if we can do better by switching to a parallel (multicore) implementation. For the record, though here is a screenshot of Grant's system monitor, showing that only one core was being used during this serial version.
 
-> **Note:** Grant's local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.
+> **Note:** Again: Grant's local computer has 12 cores, which may differ from the cloud-based virtual machine that was used to build the online version of the book that you are reading.
 
 ```{r serial_png, echo=FALSE, out.width = "100%"}
 knitr::include_graphics("pics/parallel/serial.png")
